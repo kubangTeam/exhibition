@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * author sunquan
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * Date 2020.2.15
  */
 @Mapper
+@Repository
 public interface UserInformationMapper {
 
     UserInformation selectById(int id);
