@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="947fff00-b582-4427-ace0-36312f012f66" name="Default Changelist" comment="" />
+    <list default="true" id="947fff00-b582-4427-ace0-36312f012f66" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserInformationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserInformationMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,6 +36,7 @@
     </option>
   </component>
   <component name="ProjectId" id="1XpDvZ0uWQrLrskOJsoW3dlVb8z" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -109,7 +114,30 @@
       <option name="presentableId" value="Default" />
       <updated>1581734373618</updated>
     </task>
+    <task id="LOCAL-00001" summary="第一次提交：项目Demo">
+      <created>1581742131343</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1581742131343</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="第一次提交：项目Demo" />
+    <option name="LAST_COMMIT_MESSAGE" value="第一次提交：项目Demo" />
   </component>
   <component name="WindowStateProjectService">
     <state x="773" y="137" key="#com.intellij.ide.util.MemberChooser" timestamp="1581738845833">
@@ -121,10 +149,14 @@
       <screen x="0" y="23" width="1280" height="732" />
     </state>
     <state x="721" y="412" width="559" height="276" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.23.1280.732@0.23.1280.732" timestamp="1581740625192" />
-    <state x="312" y="23" key="CommitChangelistDialog2" timestamp="1581742036251">
+    <state x="147" y="23" key="CommitChangelistDialog2" timestamp="1581742130739">
       <screen x="0" y="23" width="1280" height="733" />
     </state>
-    <state x="312" y="23" key="CommitChangelistDialog2/0.23.1280.733@0.23.1280.733" timestamp="1581742036251" />
+    <state x="147" y="23" key="CommitChangelistDialog2/0.23.1280.733@0.23.1280.733" timestamp="1581742130739" />
+    <state x="701" y="301" key="Github.ShareDialog" timestamp="1581742226388">
+      <screen x="0" y="23" width="1280" height="733" />
+    </state>
+    <state x="701" y="301" key="Github.ShareDialog/0.23.1280.733@0.23.1280.733" timestamp="1581742226388" />
     <state width="1348" height="175" key="GridCell.Tab.0.bottom" timestamp="1581742036332">
       <screen x="0" y="23" width="1280" height="733" />
     </state>
