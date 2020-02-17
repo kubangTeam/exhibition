@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b7b89150-73c7-4a1a-a51c-baeba8b8d7dc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/controller/BindEmailController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserCodeDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserEmailDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/entity/UserCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/service/IUserEmailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/service/impl/UserEmailServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserCodeMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserEmailMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/cn/edu/hqu/cst/kubang/exhibition/ServiceTests/LoginTests/sendMailTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserInformationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hqu/cst/kubang/exhibition/dao/UserInformationMapper.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="E:\localRepository" />
+        <option name="mavenHome" value="C:/Program Files/Java/apache-maven-3.6.2" />
+        <option name="userSettingsFile" value="C:\Program Files\Java\apache-maven-3.6.2\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XvukuIp6g1aNVNNOCz8PiRmtFT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortByType" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+  </component>
+  <component name="RunManager">
+    <configuration name="ExhibitionApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="exhibition" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b7b89150-73c7-4a1a-a51c-baeba8b8d7dc" name="Default Changelist" comment="" />
+      <created>1581939035090</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1581939035090</updated>
+      <workItem from="1581939038579" duration="1876000" />
+      <workItem from="1581940933938" duration="561000" />
+      <workItem from="1581941514546" duration="865000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="合并了一下代码" />
+    <option name="LAST_COMMIT_MESSAGE" value="合并了一下代码" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="233" y="2" key="#Notifications" timestamp="1581939961327">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="233" y="2" key="#Notifications/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581939961327" />
+    <state x="32" y="0" key="CommitChangelistDialog2" timestamp="1581941924275">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="32" y="0" key="CommitChangelistDialog2/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941924275" />
+    <state width="1237" height="163" key="GridCell.Tab.0.bottom" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.0.bottom/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.0.center" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.0.center/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.0.left" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.0.left/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.0.right" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.0.right/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.1.bottom" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.1.bottom/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.1.center" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.1.center/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.1.left" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.1.left/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state width="1237" height="163" key="GridCell.Tab.1.right" timestamp="1581941840519">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="163" key="GridCell.Tab.1.right/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941840519" />
+    <state x="233" y="77" key="Vcs.Push.Dialog.v2" timestamp="1581942368352">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="233" y="77" key="Vcs.Push.Dialog.v2/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581942368352" />
+    <state x="435" y="143" key="git4idea.merge.GitMergeDialog" timestamp="1581939123784">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="435" y="143" key="git4idea.merge.GitMergeDialog/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581939123784" />
+    <state x="340" y="143" key="git4idea.merge.GitPullDialog" timestamp="1581941966000">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="340" y="143" key="git4idea.merge.GitPullDialog/0.0.1280.680/-1440.0.1440.900@0.0.1280.680" timestamp="1581941966000" />
+  </component>
+</project>
