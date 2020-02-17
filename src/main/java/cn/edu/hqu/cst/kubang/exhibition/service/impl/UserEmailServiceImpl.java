@@ -120,6 +120,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
             //额外逻辑操作
             return 503; //Invalid Addresses 邮件地址不正确
         } catch (Exception e) {
+            e.printStackTrace();
             return 500; //很多错误 不一一列举 除了邮件地址不正确导致发送失败 其余异常统一500
         }
         return 200;
