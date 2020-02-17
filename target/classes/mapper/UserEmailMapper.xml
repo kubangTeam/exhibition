@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao">
+
+    <select id="queryUserByEmail" parameterType="String" resultType="int">
+        select count(userId) from userinformation where userEmail = #{email};
+    </select>
+
+    <select id="queryUserById" parameterType="Integer" resultType="UserInformation">
+        select * from userinformation where userId = #{userId};
+    </select>
+
+    <update id="saveUserEmail" parameterType="map">
+        update userinformation set userEmail = #{userEmail} where userId = #{userId};
+    </update>
+</mapper>

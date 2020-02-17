@@ -1,0 +1,17 @@
+spring:
+  mail: ## QQ邮箱配置,也可以用其他邮箱比如163，但是配置要稍稍修改
+    host: smtp.qq.com #发送邮件服务器
+    username: 1359862182@qq.com #发送方
+    password:  hptnvimobrvqfgab #客户端授权码，不是邮箱密码，这个在qq邮箱设置里面自动生成的
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          port: 465 #端口号465或587
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+    ##用来注入的值 发送邮件的地址，和上面username一致
+    from: 1359862182@qq.com
