@@ -1,7 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
@@ -23,8 +22,6 @@ public class UserEmailServiceImpl implements IUserEmailService {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserEmailDao userEmailDao;
-    @Autowired
-    private UserCodeDao userCodeDao;
     @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.from}")
@@ -48,7 +45,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
             return false;
         }
         //数据库根据email获取对应的code和sendingTime
-        UserCode userCode = userCodeDao.queryUserCodeByEmail(email);
+        UserCode userCode = userEmailDao.queryUserCodeByEmail(email);
         Long sendingTime = Long.valueOf(userCode.getSendingTime());
         String oldCode = userCode.getCode();
         //计算时间差
@@ -132,7 +129,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
     public Integer saveUserCode(UserCode userCode) {
         if (StringUtils.isEmpty(userCode))
             return -1;
-        Integer res = userCodeDao.saveUserCode(userCode);
+        Integer res = userEmailDao.saveUserCode(userCode);
         //额外的逻辑操作...
         return res;
     }
@@ -141,7 +138,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
     public UserCode queryUserCodeByEmail(String email) {
         if (StringUtils.isEmpty(email))
             return null;
-        UserCode userCode = userCodeDao.queryUserCodeByEmail(email);
+        UserCode userCode = userEmailDao.queryUserCodeByEmail(email);
         //额外的逻辑操作...
         return userCode;
     }

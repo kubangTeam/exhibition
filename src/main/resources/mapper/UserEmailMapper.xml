@@ -15,4 +15,12 @@
     <update id="saveUserEmail" parameterType="map">
         update userinformation set userEmail = #{userEmail} where userId = #{userId};
     </update>
+
+    <insert id="saveUserCode" parameterType="UserCode">
+        insert into usercode(email,code,sending_time) values(#{email}, #{code},#{sendingTime});
+    </insert>
+
+    <select id="queryUserCodeByEmail" parameterType="String" resultType="UserCode">
+        select * from usercode where email = #{email} order by sending_time+0 desc limit 1;
+    </select>
 </mapper>
