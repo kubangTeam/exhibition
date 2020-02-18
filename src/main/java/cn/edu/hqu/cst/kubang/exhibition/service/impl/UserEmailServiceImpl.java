@@ -1,12 +1,11 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 
+import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
@@ -19,7 +18,6 @@ import java.util.Calendar;
 
 @Service
 public class UserEmailServiceImpl implements IUserEmailService {
-    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserEmailDao userEmailDao;
     @Autowired
@@ -28,22 +26,14 @@ public class UserEmailServiceImpl implements IUserEmailService {
     private String from;
 
     @Override
+    @NullDisable
     public int bindUserEmail(Integer userId, String userEmail) {
-        if (StringUtils.isEmpty(userId) && StringUtils.isEmpty(userEmail)) {
-            logger.error("用户主键或用户邮箱为空或为null");
-            return -1;
-        }
-        int res = userEmailDao.saveUserEmail(userId, userEmail);
-        //额外的逻辑操作...
-        return res;
+        return userEmailDao.saveUserEmail(userId, userEmail);
     }
 
     @Override
+    @NullDisable
     public Boolean checkCode(String email, String newCode) {
-        if (StringUtils.isEmpty(email) || StringUtils.isEmpty(newCode)) {
-            System.out.println("邮箱或验证码为空！");
-            return false;
-        }
         //数据库根据email获取对应的code和sendingTime
         UserCode userCode = userEmailDao.queryUserCodeByEmail(email);
         Long sendingTime = Long.valueOf(userCode.getSendingTime());
@@ -64,34 +54,16 @@ public class UserEmailServiceImpl implements IUserEmailService {
     }
 
     @Override
+    @NullDisable
     public boolean isUserEmailSingle(String email) {
-        if (StringUtils.isEmpty(email)) {
-            return false;
-        }
-        int res = userEmailDao.queryUserByEmail(email);
-        if (res == 0) {
-            //额外逻辑操作
-            return true;
-        } else {
-            //额外逻辑操作
-            return false;
-        }
+        return userEmailDao.queryUserByEmail(email) == 0 ? true : false;
     }
 
     @Override
+    @NullDisable
     public boolean isUserEmailBound(Integer userId) {
-        if (StringUtils.isEmpty(userId)) {
-            return false;
-        }
         UserInformation user = userEmailDao.queryUserById(userId);
-        System.out.println(user.toString());
-        if (StringUtils.isEmpty(user.getUserEmail())) {
-            //额外逻辑操作
-            return false;
-        } else {
-            //额外逻辑操作
-            return true;
-        }
+        return !StringUtils.isEmpty(user.getUserEmail());
     }
 
     /**
@@ -127,20 +99,14 @@ public class UserEmailServiceImpl implements IUserEmailService {
     }
 
     @Override
+    @NullDisable
     public Integer saveUserCode(UserCode userCode) {
-        if (StringUtils.isEmpty(userCode))
-            return -1;
-        Integer res = userEmailDao.saveUserCode(userCode);
-        //额外的逻辑操作...
-        return res;
+        return userEmailDao.saveUserCode(userCode);
     }
 
     @Override
+    @NullDisable
     public UserCode queryUserCodeByEmail(String email) {
-        if (StringUtils.isEmpty(email))
-            return null;
-        UserCode userCode = userEmailDao.queryUserCodeByEmail(email);
-        //额外的逻辑操作...
-        return userCode;
+        return userEmailDao.queryUserCodeByEmail(email);
     }
 }

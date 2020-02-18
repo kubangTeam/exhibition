@@ -1,6 +1,8 @@
 package cn.edu.hqu.cst.kubang.exhibition.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,6 +14,8 @@ import java.util.Date;
  *  @Description:
  */
 @Data
+@NoArgsConstructor //无参构造
+@AllArgsConstructor //满参构造
 public class Exhibition implements Serializable {
     private Integer id;
     private String name;
@@ -27,28 +31,7 @@ public class Exhibition implements Serializable {
     private String period;
     private String introduction;
     private String Tel;
-    private Integer status; // 0保存成功待上传 1上传成功待审核 2审核通过 3 审核未通过 4 假删除状态 5 过期
+    // 0保存成功待上传 1上传成功待审核 2审核通过 3 审核未通过 4 假删除状态 5 过期
+    private Integer status;
     private String picture;
-
-    @Override
-    public String toString() {
-        return "Exhibition{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", exhibitionHallId=" + exhibitionHallId +
-                ", showRoom='" + showRoom + '\'' +
-                ", acreage=" + acreage +
-                ", trade='" + trade + '\'' +
-                ", organizer='" + organizer + '\'' +
-                ", contractorId=" + contractorId +
-                ", session=" + session +
-                ", period='" + period + '\'' +
-                ", introduction='" + introduction + '\'' +
-                ", Tel='" + Tel + '\'' +
-                ", status='" + status + '\'' +
-                ", picture='" + picture + '\'' +
-                '}';
-    }
 }

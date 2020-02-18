@@ -8,7 +8,7 @@ package cn.edu.hqu.cst.kubang.exhibition.pub;
 
 public class ParamException extends RuntimeException {
 
-    private static final long serialVersionUID = -4993447045204262508L;
+    private static final long serialVersionUID = -8475947045204262508L;
 
     public ParamException() {
         super("参数不能为空");

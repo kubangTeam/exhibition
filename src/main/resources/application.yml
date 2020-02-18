@@ -15,3 +15,10 @@ spring:
             enable: true
     ##用来注入的值 发送邮件的地址，和上面username一致
     from: 1359862182@qq.com
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  pageSize: 5 #每页多少 自定义属性用于注入

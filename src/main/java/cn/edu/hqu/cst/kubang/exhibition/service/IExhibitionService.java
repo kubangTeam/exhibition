@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -11,12 +12,14 @@ import java.util.List;
  */
 
 public interface IExhibitionService {
+    //查询所有
+    List<Exhibition> queryAllExhibitions();
     //根据 id查询
     Exhibition queryExhibitionByID(Integer id);
-    //根据 状态查询 默认一次显示5页，每页10个
-    List<Exhibition> queryExhibitionByStatus(Integer status);
-    //根据 关键词查询 默认一次显示5页，每页10个
-    List<Exhibition> queryExhibitionByKeyWord(String keyWord);
+    //根据 状态查询所有
+    List<Exhibition> queryExhibitionsByStatus(Integer status);
+    //根据 关键词查询所有
+    List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
     // 新增
     int saveExhibition(Exhibition exhibition);
     // 修改

@@ -1,8 +1,10 @@
 package cn.edu.hqu.cst.kubang.exhibition.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor //无参构造
 public class UserInformation {
     private int userId;
     private String userAccount;
@@ -14,21 +16,4 @@ public class UserInformation {
     private String userPicture;
     private String userChooseCity;
     private String userEmail;
-
-
-    @Override
-    public String toString() {
-        return "UserInforamtion{" +
-                "userId=" + userId +
-                ", userAccount='" + userAccount + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userSex='" + userSex + '\'' +
-                ", userIntegral='" + userIntegral + '\'' +
-                ", userReccode='" + userReccode + '\'' +
-                ", userPicture='" + userPicture + '\'' +
-                ", userChooseCity='" + userChooseCity + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                '}';
-    }
 }

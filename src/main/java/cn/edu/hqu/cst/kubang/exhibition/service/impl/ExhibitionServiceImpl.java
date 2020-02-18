@@ -11,9 +11,9 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 /**
- *  @author: 邢佳成
- *  @Date: 2020.02.18 00:30
- *  @Description: 关于查询如果id=-1表示查找结果不存在
+ * @author: 邢佳成
+ * @Date: 2020.02.18 00:30
+ * @Description: 关于查询如果id=-1表示查找结果不存在
  */
 @Service
 public class ExhibitionServiceImpl implements IExhibitionService {
@@ -22,51 +22,55 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     private ExhibitionDao exhibitionDao;
 
     @Override
+    public List<Exhibition> queryAllExhibitions() {
+        return exhibitionDao.queryAllExhibitions();
+    }
+
+    @Override
     @NullDisable
     public Exhibition queryExhibitionByID(Integer id) {
-        Exhibition exhibition = exhibitionDao.queryExhibitionByID(id);
-        if (StringUtils.isEmpty(exhibition)){
-            exhibition.setId(-1);
-        }
-        return exhibition;
+        return exhibitionDao.queryExhibitionByID(id);
     }
 
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionByStatus(Integer status) {
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionByStatus(status);
-        if (null == exhibitionList && exhibitionList.isEmpty()){
-            Exhibition exhibition = new Exhibition();
-            exhibition.setId(-1);
-            exhibitionList.add(exhibition);
-        }
-        return exhibitionList;
+    public List<Exhibition> queryExhibitionsByStatus(Integer status) {
+        return exhibitionDao.queryExhibitionsByStatus(status);
     }
 
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionByKeyWord(String keyWord) {
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionByKeyWord(keyWord);
-        if (null == exhibitionList && exhibitionList.isEmpty()){
-            Exhibition exhibition = new Exhibition();
-            exhibition.setId(-1);
-            exhibitionList.add(exhibition);
-        }
-        return exhibitionList;
+    public List<Exhibition> queryExhibitionsByKeyWord(String keyWord) {
+        return exhibitionDao.queryExhibitionsByKeyWord(keyWord);
     }
 
     @Override
     public int saveExhibition(Exhibition exhibition) {
-        return 0;
+        //在数据库中 name start_time end_time exhibiton_hall_id status为非空字段
+        if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
+                && StringUtils.isEmpty(exhibition.getExhibitionHallId()) && StringUtils.isEmpty(exhibition.getStatus())) {
+            System.out.println("name start_time end_time exhibiton_hall_id status 为空");
+            return -1;
+        }
+        int i = exhibitionDao.saveExhibition(exhibition);
+        return i;
     }
 
     @Override
     public int modifyExhibition(Exhibition exhibition) {
-        return 0;
+        //在数据库中 name start_time end_time exhibiton_hall_id status为非空字段
+        if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
+                && StringUtils.isEmpty(exhibition.getExhibitionHallId()) && StringUtils.isEmpty(exhibition.getStatus())) {
+            System.out.println("name start_time end_time exhibiton_hall_id status 为空");
+            return -1;
+        }
+        int i = exhibitionDao.modifyExhibition(exhibition);
+        return i;
     }
 
     @Override
+    @NullDisable
     public int deleteExhibition(Integer id) {
-        return 0;
+        return exhibitionDao.deleteExhibition(id);
     }
 }

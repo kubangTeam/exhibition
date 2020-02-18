@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
-@NoArgsConstructor
+@Data// setter/getter、equals、canEqual、hashCode、toString
+@NoArgsConstructor//无参构造
 public class UserCode implements Serializable {
     private Integer id; //数据库主键
     private String email;//用户邮箱
@@ -17,15 +17,5 @@ public class UserCode implements Serializable {
         this.email = email;
         this.code = code;
         this.sendingTime = sendingTime;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", code='" + code + '\'' +
-                ", sendingTime='" + sendingTime + '\'' +
-                '}';
     }
 }
