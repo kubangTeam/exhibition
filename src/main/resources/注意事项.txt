@@ -1,0 +1,9 @@
+自己写代码时候遇到的坑或者注意点，大家分享少踩坑了
+1、邮箱验证、检查必须提交表单数据
+2、统一了接口返回格式格式以及全局异常拦截处理，效果可以查看：
+	http://localhost:8080/exhibition/exhibition/status/0/1 （查询状态是0的展会，一页5个显示，0表示status，1表示当前第一页）
+	http://localhost:8080/exhibition/exhibition/id/1 （查询id=1的展会）
+	http://localhost:8080/exhibition/exhibition/testNullArg  （空参数抛出异常）
+ 目前有个小问题待解决，在测试返回值String类型会报错：转换异常。如果返回String等类型提示无法转换，可以通过Map<String,String>或其他方法代替。
+3、@NullDisable只能用于 方法上面  当被修饰表示所有参数都不允许为空 目前有bug 有地方扫描不到  还在修复中
+4、分页查询需要两个参数，一个是第几页，前端提供；另一个是一页 多少个，可在yml中修改pageSize，目前设置为5

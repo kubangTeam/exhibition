@@ -22,8 +22,8 @@ public interface IExhibitionService {
     List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
     // 新增
     int saveExhibition(Exhibition exhibition);
-    // 修改
+    // 修改 1、状态为0用户可以修改 2、状态非0 只有管理员才可以修改
     int modifyExhibition(Exhibition exhibition);
-    // 根据id删除
+    // 根据id修改status=4 不是真正的删除
     int deleteExhibition(Integer id);
 }

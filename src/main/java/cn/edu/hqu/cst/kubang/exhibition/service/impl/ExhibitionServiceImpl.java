@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author: 邢佳成
  * @Date: 2020.02.18 00:30
- * @Description: 关于查询如果id=-1表示查找结果不存在
+ * @Description:
  */
 @Service
 public class ExhibitionServiceImpl implements IExhibitionService {

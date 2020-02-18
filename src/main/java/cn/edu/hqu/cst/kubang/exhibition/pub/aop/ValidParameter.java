@@ -1,9 +1,10 @@
-package cn.edu.hqu.cst.kubang.exhibition.pub;
+package cn.edu.hqu.cst.kubang.exhibition.pub.aop;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
+import cn.edu.hqu.cst.kubang.exhibition.pub.exception.ParamException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -26,7 +27,7 @@ public class ValidParameter {
     public void valid() {}
 
     @Before("valid()")
-    public void check(JoinPoint joinPoint) throws Throwable {
+    public void check(JoinPoint joinPoint) {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -41,6 +42,7 @@ public class ValidParameter {
         //如果该方法被@NullDisable修饰，那就要检查参数
         if (null != annotation){
             for (int i = 0; i < parameters.length; i++){
+                System.out.println("--"+names[i]+": "+args[i]);
                 //循环扫描所有参数，如果第i个参数为空
                 if (StringUtils.isEmpty(args[i])){
                     throw new ParamException("参数 '"+names[i]+"' 不能为空！");

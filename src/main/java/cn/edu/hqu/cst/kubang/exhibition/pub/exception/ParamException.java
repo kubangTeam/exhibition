@@ -1,4 +1,4 @@
-package cn.edu.hqu.cst.kubang.exhibition.pub;
+package cn.edu.hqu.cst.kubang.exhibition.pub.exception;
 
 /**
  * @author: 邢佳成

@@ -49,8 +49,8 @@
          where id = #{id}
     </update>
 
-    <delete id="deleteExhibition" parameterType="int">
-        delete from exhibitiondetail where id = #{id}
-    </delete>
+    <update id="deleteExhibition" parameterType="int">
+        update exhibitiondetail set status = 4 where id = #{id}
+    </update>
 
 </mapper>
