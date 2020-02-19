@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class UserInformation implements Serializable {
     private Integer userId;
     private String userAccount;
+    private Integer userCompanyId;
     private String userName;
     private String userPassword;
     private String userSex;

@@ -165,42 +165,4 @@ public class ExhibitionController {
 //        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
 //        return pageInfo;
 //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //------------------测试@NullDisable接口----------------------
-    @GetMapping("/testNullArg")
-    public List<Exhibition> test() {
-        Integer status = null;
-        List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByStatus(status);
-        return exhibitionList;
-    }
-
-    @GetMapping("/testNullArg2")
-    public int test2() {
-        String key = "";
-        exhibitionService.queryExhibitionsByKeyWord(key);
-        return 1;
-    }
-
-    @GetMapping("/testNullArg3")
-    public int test3() {
-        Integer id = 1;
-        String e = null;
-        UserEmailServiceImpl u = new UserEmailServiceImpl();
-        u.bindUserEmail(id, e);
-        return 1;
-    }
 }

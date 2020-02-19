@@ -11,5 +11,5 @@
 	http://localhost:8080/exhibition/exhibition/id/1 （查询id=1的展会）
 	http://localhost:8080/exhibition/exhibition/testNullArg  （空参数抛出异常）
  目前有个小问题待解决，在测试返回值String类型会报错：转换异常。如果返回String等类型提示无法转换，可以通过Map<String,String>或其他方法代替。
-3、@NullDisable只能用于 方法上面  当被修饰表示所有参数都不允许为空 目前有bug 有地方扫描不到  还在修复中
+3、
 4、分页查询需要两个参数，一个是第几页，前端提供；另一个是一页 多少个，可在yml中修改pageSize，目前设置为5
