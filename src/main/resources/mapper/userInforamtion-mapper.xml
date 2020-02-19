@@ -4,9 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationMapper">
     <select id="selectById" resultType="UserInformation">
-        select userId,userAccount,userName,userPassword,userSex,userIntegral,userReccode,userPicture, userEmail
-        from userinformation
-        where userId = #{id}
+        select * from userinformation where userId = #{id}
     </select>
 
 </mapper>

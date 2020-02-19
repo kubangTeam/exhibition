@@ -44,9 +44,10 @@ public class ExhibitionController {
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
-    //根据关键字分页查询
-    @GetMapping("/keyWord/{keyWord}/{pageNum}")
-    public PageInfo<Exhibition> queryExhibitionsByKeyWord(@PathVariable String keyWord,@PathVariable int pageNum) {
+    //根据关键字分页查询 因为带中文 不好使用路径传参
+    @GetMapping("/keyWord")
+    public PageInfo<Exhibition> queryExhibitionsByKeyWord(@RequestParam String keyWord,@RequestParam int pageNum) {
+        System.out.println(keyWord);
         PageHelper.startPage(pageNum,pageSize);
         List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByKeyWord(keyWord);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);

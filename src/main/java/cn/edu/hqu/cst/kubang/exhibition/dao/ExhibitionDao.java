@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.dao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,8 +24,10 @@ public interface ExhibitionDao {
     List<Exhibition> queryExhibitionsByStatus(Integer status);
     //根据 关键词查询所有
     List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
-    // 新增
+    // 新增 保存修改 都是status = 0
     int saveExhibition(Exhibition exhibition);
+    // 修改展会状态 比如点击上传把status改为1
+    int modifyExhibitionStatus(@Param("id")Integer id, @Param("status")Integer status);
     // 修改
     int modifyExhibition(Exhibition exhibition);
     // 根据id删除

@@ -25,9 +25,8 @@ public class BindEmailController {
     @Autowired
     private IUserEmailService userEmailService;
 
-    //前端必须是表单数据,如果是其他比如json格式则会报错
     @PostMapping("/check")
-    public Map<String, String> checkCode(@RequestParam("userId") Integer userId, @RequestParam("email") String email, @RequestParam("newCode") String newCode) {
+    public Map<String, String> checkCode(@RequestParam  Integer userId, @RequestParam String email, @RequestParam String newCode) {
         System.out.println("checkCode: ");
         System.out.println("userId: " + userId);
         System.out.println("email: " + email);

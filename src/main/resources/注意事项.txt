@@ -1,5 +1,5 @@
 自己写代码时候遇到的坑或者注意点，大家分享少踩坑了
-1、邮箱验证、检查必须提交表单数据
+1、
 2、统一了接口返回格式格式以及全局异常拦截处理，效果可以查看：
 	http://localhost:8080/exhibition/exhibition/status/0/1 （查询状态是0的展会，一页5个显示，0表示status，1表示当前第一页）
 	http://localhost:8080/exhibition/exhibition/id/1 （查询id=1的展会）
