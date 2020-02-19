@@ -17,7 +17,7 @@ public enum ResponseCodeEnums {
     REPEAT_REGISTER("001", "重复注册"),
     NO_USER_EXIST("002", "用户不存在"),
     INVALID_PASSWORD("003", "密码错误"),
-    NO_PERMISSION("004", "非法请求！"),
+    NO_PERMISSION("004", "无权限！"),
     SUCCESS_OPTION("005", "操作成功！"),
     NOT_MATCH("-007", "用户名和密码不匹配"),
     FAIL_GETDATA("-008", "获取信息失败"),

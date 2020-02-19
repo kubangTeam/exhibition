@@ -89,11 +89,9 @@ public class UserEmailServiceImpl implements IUserEmailService {
         try {
             mailSender.send(message);
         } catch (MailSendException mailSendException) {
-            //额外逻辑操作
-            return 503; //Invalid Addresses 邮件地址不正确
+            throw mailSendException;
         } catch (Exception e) {
-            e.printStackTrace();
-            return 500; //很多错误 不一一列举 除了邮件地址不正确导致发送失败 其余异常统一500
+            throw e;
         }
         return 200;
     }

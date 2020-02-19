@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +50,18 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     }
 
     @Override
+    @NullDisable
+    public List<Exhibition> queryExhibitionsByStatusAndKeyWord(Integer status, String keyWord) {
+        List<Exhibition> list = new ArrayList<>();
+        List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        keyList.forEach( item ->{
+            if (status == item.getStatus())
+                list.add(item);
+        });
+        return list;
+    }
+
+    @Override
     public int saveExhibition(Exhibition exhibition) {
         //在数据库中 name start_time end_time exhibiton_hall_id status为非空字段
         if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
@@ -76,8 +89,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
          */
         if (null == exhibition.getStatus() || userInformationDao.selectById(userId).getUserPermission() == 0)
             exhibition.setStatus(0);
-        int i = exhibitionDao.modifyExhibition(exhibition);
-        return i;
+        return exhibitionDao.modifyExhibition(exhibition);
     }
 
     @Override
