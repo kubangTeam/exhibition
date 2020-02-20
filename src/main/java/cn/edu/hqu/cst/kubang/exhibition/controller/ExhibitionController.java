@@ -3,15 +3,11 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,17 +24,10 @@ public class ExhibitionController {
     @Autowired
     private IExhibitionService exhibitionService;
 
-    @Value("${pagehelper.pageSize}")
-    private int pageSize;//一页显示几个，默认为10个
-
-
     //商家查询我的公司的的展会(不包括已删除) 如果想要细查某个状态的展会，交给前端处理
     @GetMapping("/seller/query/companyExhibitions/{userId}/{pageNum}")
     public PageInfo<Exhibition> sellerQueryCompanyExhibitions(@PathVariable int userId, @PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryAllExhibitionsByUserId(userId);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+        return exhibitionService.queryAllExhibitionsByUserId(userId, pageNum);
     }
 
     //管理员根据id查询展会,不会显示已删除（status=4）
@@ -50,27 +39,21 @@ public class ExhibitionController {
     //管理员根据关键词查询所有的展会（除了删除的）
     @GetMapping("/admin/query/keyWord")
     public PageInfo<Exhibition> adminQueryKeyWord(String keyWord, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByKeyWord(keyWord);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByKeyWord(keyWord, pageNum);
         return pageInfo;
     }
 
     //管理员根据状态查询所有的展会,不显示已删除
     @GetMapping("/admin/query/{status}/{pageNum}")
     public PageInfo<Exhibition> adminQueryByStatus(@PathVariable int status, @PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByStatus(status);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatus(status, pageNum);
         return pageInfo;
     }
 
     //管理员查询所有状态的展会,不显示已删除
     @GetMapping("/admin/query/allStatus/{pageNum}")
     public PageInfo<Exhibition> adminQueryAllStatus(@PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryAllExhibitions();
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        PageInfo<Exhibition> pageInfo = exhibitionService.queryAllExhibitions(pageNum);
         return pageInfo;
     }
 
@@ -104,9 +87,7 @@ public class ExhibitionController {
     //用户查询所有展会，一定是通过审核（status=2）的
     @GetMapping("/user/query/all/{pageNum}")
     public PageInfo<Exhibition> userQueryAll(@PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByStatus(2);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatus(2, pageNum);
         return pageInfo;
     }
 
@@ -157,9 +138,7 @@ public class ExhibitionController {
     //所有用户根据关键词查询所有的展会（已通过审核）
     @GetMapping("/all/query/keyWord")
     public PageInfo<Exhibition> allQueryKeyWord(String keyWord, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, 2);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, pageNum, 2);
         return pageInfo;
     }
 

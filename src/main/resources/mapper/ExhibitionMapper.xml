@@ -5,11 +5,11 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao">
 
     <select id="queryAllExhibitions" resultType="Exhibition">
-        select * from exhibitiondetail
+        select * from exhibitiondetail where `status` != 4
     </select>
 
     <select id="queryExhibitionByID" parameterType="int" resultType="Exhibition">
-        select * from exhibitiondetail where id = #{id}
+        select * from exhibitiondetail where id = #{id} and `status` != 4
     </select>
 
     <select id="queryExhibitionsByStatus" parameterType="Integer" resultType="Exhibition">
@@ -17,7 +17,7 @@
     </select>
 
     <select id="queryExhibitionsByKeyWord" parameterType="String" resultType="Exhibition">
-        select * from exhibitiondetail where `name` like "%"#{name}"%"
+        select * from exhibitiondetail where `status` != 4 and `name` like "%"#{name}"%"
     </select>
 
     <insert id="saveExhibition" parameterType="Exhibition">
@@ -58,6 +58,12 @@
 
     <select id="queryExhibitionByCompanyId" parameterType="int" resultType="int">
         select exhibitionId from companyjoinexibition where companyId = #{companyId}
+    </select>
+
+    <select id="queryExhibitionsByUserId" parameterType="int" resultType="Exhibition">
+        select * from exhibitiondetail e where e.`status`!=4 and e.id in
+         (select ce.exhibitionId from companyjoinexibition ce where ce.companyId =
+         (select u.userCompanyId from userinformation u where u.userId = #{userId}))
     </select>
 
 </mapper>

@@ -1,7 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +33,6 @@ public interface ExhibitionDao {
     int deleteExhibition(Integer id);
     // 根据公司id查找它的展会id
     List<Integer> queryExhibitionByCompanyId(Integer companyId);
+    // 根据用户id查找公司的展品
+    List<Exhibition> queryExhibitionsByUserId(Integer userId);
 }

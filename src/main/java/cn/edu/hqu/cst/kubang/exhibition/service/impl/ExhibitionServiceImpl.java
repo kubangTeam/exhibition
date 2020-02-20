@@ -5,7 +5,10 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationMapper;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -26,66 +29,54 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Autowired
     private UserInformationMapper userInformationDao;
 
+    @Value("${pagehelper.pageSize}")
+    private int pageSize;//一页显示几个，默认为10个
+
+    //查询所有展会 不包括删除
     @Override
-    public List<Exhibition> queryAllExhibitions() {
+    @NullDisable
+    public PageInfo<Exhibition> queryAllExhibitions(int pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
-        if (null != exhibitionList) {
-            exhibitionList.forEach(item -> {
-                if (item.getStatus() == 4)
-                    exhibitionList.remove(item);
-            });
-        }
-        return exhibitionList;
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
     }
 
+    //根据 id查询 不包括删除
     @Override
     @NullDisable
     public Exhibition queryExhibitionByID(Integer id) {
-        Exhibition exhibition = exhibitionDao.queryExhibitionByID(id);
-        if (exhibition.getStatus() == 4)
-            exhibition = null;
-        return exhibition;
+        return exhibitionDao.queryExhibitionByID(id);
     }
 
+    //根据 状态查询所有 不包括删除
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionsByStatus(Integer status) {
+    public PageInfo<Exhibition> queryExhibitionsByStatus(Integer status, int pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(status);
-        if (null != exhibitionList) {
-            exhibitionList.forEach(e -> {
-                if (e.getStatus() == 4)
-                    exhibitionList.remove(e);
-            });
-        }
-        return exhibitionList;
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
     }
 
+    //根据 关键词查询所有  不包括删除
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionsByKeyWord(String keyWord) {
-//        System.out.println(exhibitionDao.queryExhibitionsByKeyWord(keyWord));
+    public PageInfo<Exhibition> queryExhibitionsByKeyWord(String keyWord, int pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
-        if (null != exhibitionList) {
-            exhibitionList.forEach(item -> {
-                if (item.getStatus() != 4)
-                    exhibitionList.remove(item);
-            });
-        }
-        return exhibitionList;
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
     }
 
+    //根据状态和关键词查询 比如查找未通过审核的关键词为“1”的所有展品 不包括已删除
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, Integer... status) {
-        List<Exhibition> list = new ArrayList<>();
+    public PageInfo<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, int pageNum, Integer... status) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
-        keyList.forEach(item -> {
-            for (int i : status) {
-                if (i == item.getStatus())
-                    list.add(item);
-            }
-        });
-        return list;
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(keyList);
+        return pageInfo;
     }
 
     @Override
@@ -133,26 +124,13 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         return exhibitionDao.deleteExhibition(id);
     }
 
+    //根据用户id查询他的公司的展品
     @Override
     @NullDisable
-    public List<Exhibition> queryAllExhibitionsByUserId(Integer userId) {
-        Integer userCompanyId = userInformationDao.selectById(userId).getUserCompanyId();
-        System.out.println("userCompanyId: " + userCompanyId);
-        if (null != userCompanyId) {
-            List<Exhibition> list = new ArrayList<>();
-            List<Integer> companyIdList = exhibitionDao.queryExhibitionByCompanyId(userCompanyId);
-            if (null != companyIdList) {
-                companyIdList.forEach(item -> {
-                    Exhibition exhibition = exhibitionDao.queryExhibitionByID(item);
-                    //4为删除状态
-                    if (null != exhibition && exhibition.getStatus() != 4) {
-                        list.add(exhibition);
-                    }
-                });
-            }
-            return list;
-        } else {
-            return null;
-        }
+    public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId,int pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
     }
 }
