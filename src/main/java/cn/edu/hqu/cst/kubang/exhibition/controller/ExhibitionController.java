@@ -24,7 +24,7 @@ public class ExhibitionController {
     @Autowired
     private IExhibitionService exhibitionService;
 
-    //所有人添加一个展会，展会状态为0
+    //商家添加一个展会，展会状态为0
     @PostMapping("/seller/add")
     public Map<String, String> sellerAdd(Exhibition exhibition) {
         String value = "";
