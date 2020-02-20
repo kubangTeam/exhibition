@@ -44,7 +44,6 @@
         period = #{period},
         introduction = #{introduction},
         Tel = #{Tel},
-        status = #{status},
         picture = #{picture}
          where id = #{id}
     </update>
@@ -56,5 +55,9 @@
     <update id="modifyExhibitionStatus" parameterType="map">
         update exhibitiondetail set status = #{status} where id = #{id}
     </update>
+
+    <select id="queryExhibitionByCompanyId" parameterType="int" resultType="int">
+        select exhibitionId from companyjoinexibition where companyId = #{companyId}
+    </select>
 
 </mapper>

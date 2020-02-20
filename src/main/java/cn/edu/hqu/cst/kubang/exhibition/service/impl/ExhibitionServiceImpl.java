@@ -28,48 +28,73 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 
     @Override
     public List<Exhibition> queryAllExhibitions() {
-        return exhibitionDao.queryAllExhibitions();
+        List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
+        if (null != exhibitionList) {
+            exhibitionList.forEach(item -> {
+                if (item.getStatus() == 4)
+                    exhibitionList.remove(item);
+            });
+        }
+        return exhibitionList;
     }
 
     @Override
     @NullDisable
     public Exhibition queryExhibitionByID(Integer id) {
-        return exhibitionDao.queryExhibitionByID(id);
+        Exhibition exhibition = exhibitionDao.queryExhibitionByID(id);
+        if (exhibition.getStatus() == 4)
+            exhibition = null;
+        return exhibition;
     }
 
     @Override
     @NullDisable
     public List<Exhibition> queryExhibitionsByStatus(Integer status) {
-        return exhibitionDao.queryExhibitionsByStatus(status);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(status);
+        if (null != exhibitionList) {
+            exhibitionList.forEach(e -> {
+                if (e.getStatus() == 4)
+                    exhibitionList.remove(e);
+            });
+        }
+        return exhibitionList;
     }
 
     @Override
     @NullDisable
     public List<Exhibition> queryExhibitionsByKeyWord(String keyWord) {
-        return exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+//        System.out.println(exhibitionDao.queryExhibitionsByKeyWord(keyWord));
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        if (null != exhibitionList) {
+            exhibitionList.forEach(item -> {
+                if (item.getStatus() != 4)
+                    exhibitionList.remove(item);
+            });
+        }
+        return exhibitionList;
     }
 
     @Override
     @NullDisable
-    public List<Exhibition> queryExhibitionsByStatusAndKeyWord(Integer status, String keyWord) {
+    public List<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, Integer... status) {
         List<Exhibition> list = new ArrayList<>();
         List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
-        keyList.forEach( item ->{
-            if (status == item.getStatus())
-                list.add(item);
+        keyList.forEach(item -> {
+            for (int i : status) {
+                if (i == item.getStatus())
+                    list.add(item);
+            }
         });
         return list;
     }
 
     @Override
     public int saveExhibition(Exhibition exhibition) {
-        //在数据库中 name start_time end_time exhibiton_hall_id status为非空字段
         if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
                 && StringUtils.isEmpty(exhibition.getExhibitionHallId())) {
             System.out.println("name start_time end_time exhibiton_hall_id 不允许为空");
             return -1;
         }
-        //0状态：保存未上传  用户可修改
         exhibition.setStatus(0);
         int i = exhibitionDao.saveExhibition(exhibition);
         return i;
@@ -103,8 +128,31 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public int deleteExhibition(Integer id, Integer userId) {
-        if (userInformationDao.selectById(userId).getUserPermission() == 0)
+        if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.selectById(userId).getUserPermission() == 0)
             return -1;//权限不足
         return exhibitionDao.deleteExhibition(id);
+    }
+
+    @Override
+    @NullDisable
+    public List<Exhibition> queryAllExhibitionsByUserId(Integer userId) {
+        Integer userCompanyId = userInformationDao.selectById(userId).getUserCompanyId();
+        System.out.println("userCompanyId: " + userCompanyId);
+        if (null != userCompanyId) {
+            List<Exhibition> list = new ArrayList<>();
+            List<Integer> companyIdList = exhibitionDao.queryExhibitionByCompanyId(userCompanyId);
+            if (null != companyIdList) {
+                companyIdList.forEach(item -> {
+                    Exhibition exhibition = exhibitionDao.queryExhibitionByID(item);
+                    //4为删除状态
+                    if (null != exhibition && exhibition.getStatus() != 4) {
+                        list.add(exhibition);
+                    }
+                });
+            }
+            return list;
+        } else {
+            return null;
+        }
     }
 }

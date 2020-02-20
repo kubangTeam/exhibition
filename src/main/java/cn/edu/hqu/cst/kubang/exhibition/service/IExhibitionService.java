@@ -19,7 +19,7 @@ public interface IExhibitionService {
     //根据 关键词查询所有
     List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
     //根据状态和关键词查询 比如查找未通过审核的关键词为“1”的所有展品
-    List<Exhibition> queryExhibitionsByStatusAndKeyWord(Integer status,String keyWord);
+    List<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord,Integer ...status);
     // 新增
     int saveExhibition(Exhibition exhibition);
     // 修改 1、状态为0用户可以修改 2、状态非0 只有管理员才可以修改
@@ -28,4 +28,6 @@ public interface IExhibitionService {
     int modifyExhibitionStatus(Integer id,Integer userId,Integer status);
     // 根据id修改status=4 不是真正的删除
     int deleteExhibition(Integer id,Integer userId);
+    // 根据用户id找到它公司所有的展会,不显示已删除
+    List<Exhibition> queryAllExhibitionsByUserId(Integer userId);
 }

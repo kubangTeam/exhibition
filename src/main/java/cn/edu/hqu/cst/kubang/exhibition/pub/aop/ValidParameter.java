@@ -35,8 +35,17 @@ public class ValidParameter {
         Annotation nullDisable = method.getAnnotation(NullDisable.class);
         //如果该方法被@NullDisable修饰，那就要检查参数
         if (null != nullDisable) {
+//            System.out.println("------------@NullDisable-↓--------");
+//            System.out.println("names.length:"+names.length);
+//            System.out.println("values.length:"+values.length);
+//            for (int i = 0; i < names.length; i++) {
+//                System.out.println();
+//                System.out.println("names: " + names[i]);
+//                System.out.println("values: " + values[i]);
+//                System.out.println();
+//            }
+//            System.out.println("------------@NullDisable-↑--------");
             for (int i = 0; i < names.length; i++) {
-                System.out.println("@NullDisable: " + names[i] + ": " + values[i]);
                 //循环扫描所有参数，如果第i个参数为空
                 if (StringUtils.isEmpty(values[i])) {
                     throw new ParamException("参数 '" + names[i] + "' 不能为空！");

@@ -32,4 +32,6 @@ public interface ExhibitionDao {
     int modifyExhibition(Exhibition exhibition);
     // 根据id删除
     int deleteExhibition(Integer id);
+    // 根据公司id查找它的展会id
+    List<Integer> queryExhibitionByCompanyId(Integer companyId);
 }

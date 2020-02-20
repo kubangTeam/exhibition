@@ -80,6 +80,12 @@
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.2.12</version>
 		</dependency>
+		<!--热部署-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 
