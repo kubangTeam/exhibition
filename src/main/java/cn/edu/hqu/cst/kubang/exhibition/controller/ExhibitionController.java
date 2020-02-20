@@ -24,6 +24,21 @@ public class ExhibitionController {
     @Autowired
     private IExhibitionService exhibitionService;
 
+    //所有人添加一个展会，展会状态为0
+    @PostMapping("/seller/add")
+    public Map<String, String> sellerAdd(Exhibition exhibition) {
+        String value = "";
+        String code = "";
+        if (exhibitionService.saveExhibition(exhibition) > 0) {
+            value = "添加成功";
+            code = "005";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
     //商家查询我的公司的的展会(不包括已删除) 如果想要细查某个状态的展会，交给前端处理
     @GetMapping("/seller/query/companyExhibitions/{userId}/{pageNum}")
     public PageInfo<Exhibition> sellerQueryCompanyExhibitions(@PathVariable int userId, @PathVariable int pageNum) {
@@ -141,20 +156,4 @@ public class ExhibitionController {
         PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, pageNum, 2);
         return pageInfo;
     }
-
-    //所有人添加一个展会，展会状态为0
-    @PostMapping("/all/add")
-    public Map<String, String> allUAdd(Exhibition exhibition) {
-        String value = "";
-        String code = "";
-        if (exhibitionService.saveExhibition(exhibition) > 0) {
-            value = "添加成功";
-            code = "005";
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
-    }
-
 }
