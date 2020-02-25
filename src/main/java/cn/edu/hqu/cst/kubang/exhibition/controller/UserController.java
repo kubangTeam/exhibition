@@ -219,7 +219,8 @@ public class UserController {
     @RequestMapping("forgot")
     public ModelAndView forgotPassword()
     {
-
+        JsonBuilder json = new JsonBuilder();
+        return json.getJsonResult();
     }
 }
 
