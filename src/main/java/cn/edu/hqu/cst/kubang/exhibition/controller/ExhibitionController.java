@@ -151,7 +151,7 @@ public class ExhibitionController {
     }
 
     //所有用户根据关键词查询所有的展会（已通过审核）
-    @GetMapping("/all/query/keyWord")
+    @RequestMapping("/all/query/keyWord")
     public PageInfo<Exhibition> allQueryKeyWord(String keyWord, int pageNum) {
         PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, pageNum, 2);
         return pageInfo;

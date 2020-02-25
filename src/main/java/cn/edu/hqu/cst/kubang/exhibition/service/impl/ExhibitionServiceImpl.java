@@ -2,7 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationMapper;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import com.github.pagehelper.PageHelper;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     private ExhibitionDao exhibitionDao;
 
     @Autowired
-    private UserInformationMapper userInformationDao;
+    private UserInformationDao userInformationDao;
 
     @Value("${pagehelper.pageSize}")
     private int pageSize;//一页显示几个，默认为10个
@@ -103,7 +102,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
          如果是管理员，那么可以修改任何状态，修改界面显示status且必须填写，后台得到的结果不是null
          这样根据是不是null来判断是不是管理员，为了确保正确性，可以进行双重判断
          */
-        if (null == exhibition.getStatus() || userInformationDao.selectById(userId).getUserPermission() == 0)
+        if (null == exhibition.getStatus() || userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
             exhibition.setStatus(0);
         return exhibitionDao.modifyExhibition(exhibition);
     }
@@ -111,7 +110,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public int modifyExhibitionStatus(Integer id, Integer userId, Integer status) {
-        if (userInformationDao.selectById(userId).getUserPermission() == 0)
+        if (userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
             return -1;//权限不足
         return exhibitionDao.modifyExhibitionStatus(id, status);
     }
@@ -119,7 +118,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public int deleteExhibition(Integer id, Integer userId) {
-        if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.selectById(userId).getUserPermission() == 0)
+        if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
             return -1;//权限不足
         return exhibitionDao.deleteExhibition(id);
     }

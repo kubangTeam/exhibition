@@ -80,6 +80,12 @@
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.2.12</version>
 		</dependency>
+		<!--阿里云-->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>4.0.3</version>
+		</dependency>
 		<!--热部署-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

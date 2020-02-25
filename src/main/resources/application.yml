@@ -22,3 +22,10 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
   pageSize: 5 #每页多少 自定义属性用于注入
+
+SMS:
+  accessKeyId: LTAI4FsEudzSht2tKHgD6LCE
+  accessKeySecret: VdJC8u8Pxd7XVqZw0hi4XtL74CegvD
+  signName: 酷邦网
+  templateCode: SMS_175574488
+

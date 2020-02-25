@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserSMSDao">
+    <select id="queryUserAccount" parameterType="String" resultType="int">
+        select count(userId) from userinformation where userAccount = #{account}
+    </select>
+
+    <insert id="saveUserCode" parameterType="UserCode">
+        insert into usercode(account,code,sending_time) values(#{account}, #{code},#{sendingTime})
+    </insert>
+
+    <select id="queryUserCodeByAccount" parameterType="String" resultType="UserCode">
+        select * from usercode where account = #{email} order by sending_time+0 desc limit 1
+    </select>
+</mapper>

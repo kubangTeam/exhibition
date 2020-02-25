@@ -6,5 +6,28 @@
     <select id="selectById" resultType="UserInformation">
         select * from userinformation where userId = #{id}
     </select>
+    <insert id="UserRegisterFromPhoneNumber" parameterType="String">
+        INSERT INTO `kubang`.`userinformation` (`userId`, `userAccount`, `userName`, `userPassword`, `userSex`, `userIntegral`, `userReccode`)
+        VALUES (#{UserID}, #{phoneNumber}, #{newUserName}, #{password}, 'male', '0', #{newRecCode})
+    </insert>
+    <insert id="UserRegisterFromEmail" parameterType="String">
+        INSERT INTO `kubang`.`userinformation` (`userId`, `userAccount`, `userName`, `userPassword`, `userSex`, `userIntegral`, `userReccode`)
+        VALUES (#{UserID}, #{email}, #{newUserName}, #{password}, 'male', '0', #{newRecCode})
+    </insert>
+    <select id="GetUseInfoFromAccount" parameterType="String" resultType="UserInformation">
+        SELECT * from `kubang`.`userinformation` where userAccount=#{account}
+    </select>
+    <select id="GetUserInfoFromId" parameterType="int" resultType="UserInformation">
+        SELECT * from `kubang`.`userinformation` where userId=#{userId}
+    </select>
+    <update id="AddUserPoint" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userIntegral`='userIntegral'+10 WHERE `userRecCode`=#{recCode};
+    </update>
+    <update id="UpdatePassword" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userPassword`=#{newPassword} WHERE  `userAccount`=#{account}
+    </update>
+    <update id="UpdateUserInfo" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userName`=#{userName},`userSex`=#{userSex},`userPicture`=#{picture} WHERE userAccount=#{account}
+    </update>
 
 </mapper>

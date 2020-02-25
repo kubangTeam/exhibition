@@ -18,6 +18,7 @@ import java.util.Calendar;
 
 @Service
 public class UserEmailServiceImpl implements IUserEmailService {
+
     @Autowired
     private UserEmailDao userEmailDao;
     @Autowired

@@ -5,7 +5,7 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao">
 
     <select id="queryUserByEmail" parameterType="String" resultType="int">
-        select count(userId) from userinformation where userEmail = #{email};
+        select count(userId) from userinformation where userEmail = #{account};
     </select>
 
     <select id="queryUserById" parameterType="Integer" resultType="UserInformation">
@@ -17,10 +17,10 @@
     </update>
 
     <insert id="saveUserCode" parameterType="UserCode">
-        insert into usercode(email,code,sending_time) values(#{email}, #{code},#{sendingTime});
+        insert into usercode(account,code,sending_time) values(#{account}, #{code},#{sendingTime});
     </insert>
 
     <select id="queryUserCodeByEmail" parameterType="String" resultType="UserCode">
-        select * from usercode where email = #{email} order by sending_time+0 desc limit 1;
+        select * from usercode where account = #{account} order by sending_time+0 desc limit 1;
     </select>
 </mapper>
