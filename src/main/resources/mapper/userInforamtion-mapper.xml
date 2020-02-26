@@ -30,4 +30,10 @@
         UPDATE `kubang`.`userinformation` SET `userName`=#{userName},`userSex`=#{userSex},`userPicture`=#{picture} WHERE userAccount=#{account}
     </update>
 
+    <update parameterType="map" id="BindUserEmail">
+        update `kubang`.`userinformation` set userEmail = #{userEmail} where userId = #{userId};
+    </update>
+    <select id="IsAccountRegistered" parameterType="String" resultType="int">
+        select count(*) from userInformation where userAccount = #{account}
+    </select>
 </mapper>
