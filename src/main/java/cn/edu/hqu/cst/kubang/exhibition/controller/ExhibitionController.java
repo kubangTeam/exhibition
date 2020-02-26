@@ -7,8 +7,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: 邢佳成
@@ -151,7 +150,7 @@ public class ExhibitionController {
     }
 
     //所有用户根据关键词查询所有的展会（已通过审核）
-    @RequestMapping("/all/query/keyWord")
+    @GetMapping("/all/query/keyWord")
     public PageInfo<Exhibition> allQueryKeyWord(String keyWord, int pageNum) {
         PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, pageNum, 2);
         return pageInfo;

@@ -63,7 +63,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @NullDisable
     public PageInfo<Exhibition> queryExhibitionsByKeyWord(String keyWord, int pageNum) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -73,7 +73,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @NullDisable
     public PageInfo<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, int pageNum, Integer... status) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
         PageInfo<Exhibition> pageInfo = new PageInfo<>(keyList);
         return pageInfo;
     }
@@ -126,7 +126,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     //根据用户id查询他的公司的展品
     @Override
     @NullDisable
-    public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId,int pageNum) {
+    public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
         PageHelper.startPage(pageNum, pageSize);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
