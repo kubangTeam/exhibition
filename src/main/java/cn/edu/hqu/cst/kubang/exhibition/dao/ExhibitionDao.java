@@ -22,7 +22,7 @@ public interface ExhibitionDao {
     //根据 状态查询所有
     List<Exhibition> queryExhibitionsByStatus(Integer status);
     //根据 关键词查询所有
-    List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
+    List<Exhibition> queryExhibitionsByKeyWord(String[] keyWords);
     // 新增 保存修改 都是status = 0
     int saveExhibition(Exhibition exhibition);
     // 修改展会状态 比如点击上传把status改为1

@@ -35,3 +35,4 @@ build/
 *.tar.gz
 *.rar
 hs_err_pid*
+!src/main/resources/application.yml

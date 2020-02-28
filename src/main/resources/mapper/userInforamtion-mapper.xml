@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationMapper">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao">
     <select id="selectById" resultType="UserInformation">
         select * from userinformation where userId = #{id}
     </select>
@@ -30,4 +30,10 @@
         UPDATE `kubang`.`userinformation` SET `userName`=#{userName},`userSex`=#{userSex},`userPicture`=#{picture} WHERE userAccount=#{account}
     </update>
 
+    <update parameterType="map" id="BindUserEmail">
+        update `kubang`.`userinformation` set userEmail = #{userEmail} where userId = #{userId};
+    </update>
+    <select id="IsAccountRegistered" parameterType="String" resultType="int">
+        select count(*) from userInformation where userAccount = #{account}
+    </select>
 </mapper>

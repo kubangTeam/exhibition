@@ -20,7 +20,7 @@ public interface IExhibitionService {
     PageInfo<Exhibition> queryExhibitionsByKeyWord(String keyWord,int pageNum);
     // 根据用户id找到它公司所有的展会,不显示已删除
     PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId,int pageNum);
-    //根据状态和关键词查询 比如查找未通过审核的关键词为“1”的所有展品
+    //根据状态和关键词查询 比如查找未通过审核的关键词为“1”的所有展会
     PageInfo<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord,int pageNum,Integer ...status);
     // 新增
     int saveExhibition(Exhibition exhibition);

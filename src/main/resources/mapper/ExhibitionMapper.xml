@@ -17,7 +17,10 @@
     </select>
 
     <select id="queryExhibitionsByKeyWord" parameterType="String" resultType="Exhibition">
-        select * from exhibitiondetail where `status` != 4 and `name` like "%"#{name}"%"
+        select * from exhibitiondetail where `status` != 4 and (
+        <foreach collection="array" item="key" separator=" or " close=")">
+            `name` like "%"#{key}"%"
+        </foreach>
     </select>
 
     <insert id="saveExhibition" parameterType="Exhibition">
