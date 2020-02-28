@@ -27,7 +27,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
     private UserInformationDao userDao;
     @Autowired
     private JavaMailSender mailSender;
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.username}")
     private String from;
 
     @Override
