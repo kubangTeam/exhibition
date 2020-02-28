@@ -40,7 +40,7 @@ public class GoodsController {
         List<Map<String, Object>> list = new ArrayList<>();
         List recId = new ArrayList();
         recId= getRandomNumList(4, 1, 9);
-        System.out.println(recId);
+        //System.out.println(recId);
         for(int i = 0; i < recId.size(); i++) {
             int id = (int) recId.get(i);
             if(goodsService.queryGoodsStatus(id) == 1) {
@@ -60,7 +60,7 @@ public class GoodsController {
                 map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
                 list.add(map);
-                System.out.println(map.get("goodsId"));
+                //System.out.println(map.get("goodsId"));
             }
         }
         return list;
