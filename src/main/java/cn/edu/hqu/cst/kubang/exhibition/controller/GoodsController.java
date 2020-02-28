@@ -22,6 +22,7 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    //从start到end随机取nums个不重复的整数
     public static List getRandomNumList(int nums,int start,int end){
         List list = new ArrayList();
         Random r = new Random();
@@ -33,13 +34,14 @@ public class GoodsController {
         }
         return list;
     }
-    //推荐4个展品
+    //展品推荐  个数：recNum  goodsStatus为0的不推荐
     @RequestMapping(path = "/recommend", method =  RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>>  getRecommendGoods(){
         List<Map<String, Object>> list = new ArrayList<>();
         List recId = new ArrayList();
-        recId= getRandomNumList(4, 1, 9);
+        int recNum = 4; //推荐个数
+        recId= getRandomNumList(recNum, 1, 9);
         //System.out.println(recId);
         for(int i = 0; i < recId.size(); i++) {
             int id = (int) recId.get(i);

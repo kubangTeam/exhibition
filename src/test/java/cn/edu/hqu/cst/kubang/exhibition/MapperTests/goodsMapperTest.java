@@ -5,6 +5,7 @@ import cn.edu.hqu.cst.kubang.exhibition.controller.GoodsController;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,11 @@ public class goodsMapperTest {
         //Goods goods = goodsDao.selectGoodsById(3);
         //System.out.println(goods);
         //System.out.println(goodsController.getRandomNumList(10,0,100));
-        List<Map<String, Object>> list = new ArrayList<>();
+        /*List<Map<String, Object>> list = new ArrayList<>();
         list = goodsController.getRecommendGoods();
         for(int i = 0;i < list.size();i++){
            System.out.println(list.get(i));
-        }
-        //System.out.println(goodsDao.selectStatusById(1));
+        }*/
+        System.out.println(goodsDao.selectStatusById(1));
     }
 }
