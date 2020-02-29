@@ -10,6 +10,7 @@ public class ExhibitionApplication {
 		SpringApplication.run(ExhibitionApplication.class, args);
 
 		//nothing
+		System.out.println("启动程序");
 	}
 
 }
