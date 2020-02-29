@@ -11,3 +11,7 @@
 3、
 4、分页查询需要两个参数，一个是第几页，前端提供；另一个是一页 多少个，可在yml中修改pageSize，目前设置为5
    分页插件太娇弱，不按格式就出错，具体代码看展会查询代码
+5. 怎样加密
+  1. 将明文写到PwdGenerate.encryptPwd()中；
+  2. 运行测试方法输出密文
+  3. copy密文到需要填密码的配置文件中，并在配置文件中加入 jasypt.encryptor.password=thisissalt, 密文要写在ENC里面，eg：ENC(********)
