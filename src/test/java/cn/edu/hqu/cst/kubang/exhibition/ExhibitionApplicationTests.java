@@ -8,7 +8,7 @@ class ExhibitionApplicationTests {
 
 	@Test
 	void contextLoads() {
-		System.out.println("hello");
+		System.out.println("hello world");
 	}
 
 }

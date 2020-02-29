@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao">
+
+    <sql id="selectFields">
+        goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodIntroduce,startTime,endTime,goodsStatus,identifyStatus,priority
+    </sql>
+    <select id="selectGoodsById" resultType="Goods">
+           select <include refid="selectFields"></include>
+           from goodsintroduce
+           where goodsStatus = #{goodsStatus}
+           <if test="goodsId != 0">
+               and goodsId = #{goodsId}
+           </if>
+    </select>
+    <select id="selectGoodsByName" resultType="Goods">
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where goodsStatus = #{goodsStatus} and goodsName = #{goodsName}
+    </select>
+    <select id="selectGoodsByCompanyName" resultType="Goods">
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where goodsStatus = #{goodsStatus} and companyId = #{companyId}
+    </select>
+    <select id="selectGoodsBysByKeyword" resultType="Goods">
+    select <include refid="selectFields"></include>
+    from goodsintroduce
+    where goodsStatus = #{goodsStatus} and keyword = #{keyword}
+    </select>
+    <select id="selectStatusById" resultType="int">
+        select goodsStatus
+        from goodsintroduce
+        where goodsId = #{goodId}
+    </select>
+    <insert id="insertGoods" parameterType="Goods">
+        insert into goodsintroduce
+        (goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodIntroduce,
+        startName,endTime,goodStatus,identifyStatus,priority)
+        values
+        (#{goodsId}, #{goodsName},#{categoryId},#{goodsAreaNumber},#{companyId},#{website},#{originPlace},#{orginalPrice},
+        #{currentPrice},#{goodsIntroduce},#{startTime},#{endTime},#{goodStatus},#{identifyStatus},#{priority})
+    </insert>
+    <update id="updateStatus">
+        update goodintroduce set goodStatus = #{goodsStatus} where goodsId = #{goodsId}
+    </update>
+</mapper>
