@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserSessionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
@@ -28,6 +29,8 @@ public class UserController {
     @Autowired
     private UserSessionDao sessionDao;
 
+    @Autowired
+    private UserCodeDao userCodeDao;
     //接口 register，注册
     //请求参数1: account 账户（手机号码/邮箱）
     //请求参数2: pwd 密码
@@ -43,12 +46,22 @@ public class UserController {
 
         JsonBuilder json= new JsonBuilder();
         UserInformation user = userDao.GetUseInfoFromAccount(account);
+        String verifyCode =userCodeDao.queryUserCode(account).getCode();
         //用户已经存在
         if(user!=null){
             json.add("success","false");
-            json.add("errMsg","用户已经存在!");
+            json.add("errCode","1301");
+            json.add("errMsg","注册失败!用户已经存在!");
             return json.getJsonResult();
         }
+        //验证码错误
+        if(verifyCode.equals(code)){
+            json.add("success","false");
+            json.add("errCode","1302");
+            json.add("errMsg","注册失败!验证码错误!");
+            return json.getJsonResult();
+        }
+
         userDao.UserRegisterFromPhoneNumber(account,"用户"+ UUID.randomUUID(),password,recCode);
 
         json.add("success","true");
@@ -179,7 +192,13 @@ public class UserController {
         String sessionId = request.getRequestedSessionId();
         int userId = sessionDao.queryBySessionId(sessionId);
         UserInformation user = userDao.GetUserInfoFromId(Integer.valueOf(userId));
-        userDao.UpdateUserInfo(user.getUserAccount(),userName,userSex,userPicture);
+        userDao.UpdateUserInfo_UserName(user.getUserAccount(),userName);
+        userDao.UpdateUserInfo_UserSex(user.getUserAccount(),userSex);
+
+        //这里用户头像的修改，修改的是 文件名，如果在客户端没有选择新的头像，userpicture 这个字段为空，不更新 数据库中的用户头像字段
+        if( userPicture !=null &&userPicture != ""){
+            userDao.UpdateUserInfo_UserPicture(user.getUserAccount(),userPicture);
+        }
     }
 
     //接口 ModifyPassword,修改密码
@@ -201,13 +220,17 @@ public class UserController {
         UserInformation user = userDao.GetUserInfoFromId(Integer.valueOf(userId));
 
         if(user.getUserPassword().equals(oldPwd)){
-            json.add("result","原密码错误");
+            json.add("success","false");
+            json.add("errCode","1201");
+            json.add("errMsg","修改密码错误!旧密码错误!");
             return json.getJsonResult();
         }
 
         //新密码不能和原密码相同
         if(oldPwd.equals(newPwd)){
-            json.add("result","新密码不能和原密码相同");
+            json.add("success","false");
+            json.add("errCode","1202");
+            json.add("errMsg","新密码不能和原密码相同");
             return json.getJsonResult();
         }
 
@@ -217,10 +240,23 @@ public class UserController {
     }
 
     //接口 forgot 忘记密码
-    @RequestMapping("forgot")
-    public ModelAndView forgotPassword()
+    @RequestMapping("/forgot")
+    public ModelAndView forgotPassword(@RequestParam("account") String account,@RequestParam("verfiyCode") String verfiyCode,@RequestParam("newPwd") String newPwd)
     {
         JsonBuilder json = new JsonBuilder();
+        String code = userCodeDao.queryUserCode(account).getCode();
+
+        //验证码错误
+        if(code.equals(verfiyCode)){
+            json.add("success","false");
+            json.add("errCode","901");
+            json.add("errMsg","修改密码失败！验证码错误");
+            return json.getJsonResult();
+        }
+
+        userDao.UpdatePassword(account,newPwd);
+
+        json.add("success","true");
         return json.getJsonResult();
     }
 }

@@ -20,5 +20,8 @@ public interface UserInformationDao {
     void AddUserPoint(String recCode);
     boolean CheckPassword(String account, String password);
     void UpdatePassword(String account, String newPassword);
-    void UpdateUserInfo(String account, String userName, String userSex, String picture);
+    void UpdateUserInfo_UserName(String account, String userName);
+    void UpdateUserInfo_UserSex(String account, String userSex);
+    void UpdateUserInfo_UserPicture(String account,String picture);
+
 }
