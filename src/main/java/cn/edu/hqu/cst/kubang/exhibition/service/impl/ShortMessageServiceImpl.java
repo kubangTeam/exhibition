@@ -1,7 +1,8 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserSMSDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IShortMessageService;
 import com.aliyuncs.CommonRequest;
@@ -17,12 +18,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class ShortMessageServiceImpl implements IShortMessageService
 {
     @Autowired
-    private UserCodeDao userCodeDao;
+    private UserSMSDao SMSDao;
 
     @Autowired
     private UserInformationDao userDao;
@@ -46,7 +48,7 @@ public class ShortMessageServiceImpl implements IShortMessageService
     @Override
     public Boolean checkCode(String phoneNumber, String newCode) {
         //数据库根据email获取对应的code和sendingTime
-        UserCode userCode = userCodeDao.queryUserCode(phoneNumber);
+        UserCode userCode = SMSDao.queryUserCodeByAccount(phoneNumber);
         Long sendingTime = Long.valueOf(userCode.getSendingTime());
         String oldCode = userCode.getCode();
         //计算时间差
@@ -101,11 +103,11 @@ public class ShortMessageServiceImpl implements IShortMessageService
 
     @Override
     public void saveUserCode(UserCode userCode) {
-        userCodeDao.saveUserCode(userCode);
+       SMSDao.saveUserCode(userCode);
     }
 
     @Override
     public UserCode queryUserCodeByEmail(String phone) {
-        return userCodeDao.queryUserCode(phone);
+        return SMSDao.queryUserCodeByAccount(phone);
     }
 }
