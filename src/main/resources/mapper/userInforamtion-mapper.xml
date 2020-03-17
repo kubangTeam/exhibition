@@ -26,8 +26,13 @@
     <update id="UpdatePassword" parameterType="String">
         UPDATE `kubang`.`userinformation` SET `userPassword`=#{newPassword} WHERE  `userAccount`=#{account}
     </update>
-    <update id="UpdateUserInfo" parameterType="String">
-        UPDATE `kubang`.`userinformation` SET `userName`=#{userName},`userSex`=#{userSex},`userPicture`=#{picture} WHERE userAccount=#{account}
+    <update id="UpdateUserInfo_Name" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userName`=#{userName}WHERE userAccount=#{account}
     </update>
-
+    <update id="UpdateUserInfo_UserSex" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userSex`=#{userSex} WHERE userAccount=#{account}
+    </update>
+    <update id="UpdateUserInfo_UserPicture" parameterType="String">
+        UPDATE `kubang`.`userinformation` SET `userPicture`=#{picture} WHERE userAccount=#{account}
+    </update>
 </mapper>
