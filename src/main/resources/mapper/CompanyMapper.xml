@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao">
+    <insert id="addUnidentifiedCompanyInfo" parameterType="String">
+        INSERT INTO `kubang`.`CompanyInformation`(name,type,address,website,telephone,introduction,identityStatus,codeCertificateType,codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicure)
+        VALUES(#{name},#{type},#{website},#{telephone},#{introduction},'未认证',#{codeCertificateType},#{codeCertificateId},#{codeCertificatePic},#{responsiblePersonName},#{responsiblePersonIdcard},#{headPicure})
+    </insert>
+
+    <update id="identifyCompany" parameterType="String">
+        UPDATE `kubang`.`CompanyInformation`
+        SET identifyStatus = '已认证'
+        WHERE id = #{companyId}
+    </update>
+
+    <select id="getUnidentifiedCompanies">
+        SELECT * FROM `kubang`.`CompanyInformation`
+        WHERE identifyStatus = '未认证'
+    </select>
+</mapper>
