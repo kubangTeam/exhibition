@@ -35,4 +35,10 @@
     <update id="UpdateUserInfo_UserPicture" parameterType="String">
         UPDATE `kubang`.`userinformation` SET `userPicture`=#{picture} WHERE userAccount=#{account}
     </update>
+    <update id="saveUserEmail" parameterType="map">
+        update userinformation set userEmail = #{userEmail} where userId = #{userId};
+    </update>
+    <select id="IsUserEmailBind" parameterType="String" resultType="int">
+        select count(userId) from userinformation where userEmail = #{email};
+    </select>
 </mapper>

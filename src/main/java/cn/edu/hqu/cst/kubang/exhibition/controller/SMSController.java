@@ -1,7 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserSMSDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IShortMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 //短信发送服务
 @Controller
@@ -22,7 +19,7 @@ import java.util.Map;
 public class SMSController {
 
     @Autowired
-    private UserSMSDao smsDao;
+    private UserCodeDao smsDao;
 
     @Autowired
     private IShortMessageService smsService;

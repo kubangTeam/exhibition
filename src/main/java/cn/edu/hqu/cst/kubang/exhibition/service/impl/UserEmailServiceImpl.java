@@ -2,7 +2,8 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserEmailDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
@@ -20,7 +21,10 @@ import java.util.Calendar;
 public class UserEmailServiceImpl implements IUserEmailService {
 
     @Autowired
-    private UserEmailDao userEmailDao;
+    private UserCodeDao userCodeDao;
+
+    @Autowired
+    private UserInformationDao userDao;
     @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
@@ -29,14 +33,14 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Override
     @NullDisable
     public int bindUserEmail(Integer userId, String userEmail) {
-        return userEmailDao.saveUserEmail(userId, userEmail);
+        return userDao.saveUserEmail(userId, userEmail);
     }
 
     @Override
     @NullDisable
     public Boolean checkCode(String email, String newCode) {
         //数据库根据email获取对应的code和sendingTime
-        UserCode userCode = userEmailDao.queryUserCodeByEmail(email);
+        UserCode userCode = userCodeDao.queryUserCode(email);
         Long sendingTime = Long.valueOf(userCode.getSendingTime());
         String oldCode = userCode.getCode();
         //计算时间差
@@ -57,13 +61,13 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Override
     @NullDisable
     public boolean isUserEmailSingle(String email) {
-        return userEmailDao.queryUserByEmail(email) == 0 ? true : false;
+        return userDao.IsUserEmailBind(email) == 0 ? true : false;
     }
 
     @Override
     @NullDisable
     public boolean isUserEmailBound(Integer userId) {
-        UserInformation user = userEmailDao.queryUserById(userId);
+        UserInformation user = userDao.GetUserInfoFromId(userId);
         return !StringUtils.isEmpty(user.getUserEmail());
     }
 
@@ -100,12 +104,12 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Override
     @NullDisable
     public Integer saveUserCode(UserCode userCode) {
-        return userEmailDao.saveUserCode(userCode);
+        return userCodeDao.saveUserCode(userCode);
     }
 
     @Override
     @NullDisable
     public UserCode queryUserCodeByEmail(String email) {
-        return userEmailDao.queryUserCodeByEmail(email);
+        return userCodeDao.queryUserCode(email);
     }
 }
