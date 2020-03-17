@@ -66,7 +66,9 @@ public class GoodsController {
         }
         return list;
     }
-    //根据类别Id查询所有在展的商品
+    //根据类别Id查询所有在展的商品；
+    // 请求参数：展品ID；
+    //默认查询在展商品
     @RequestMapping(value = "/query/category", method =  RequestMethod.GET)
     @ResponseBody
     public List<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId){
@@ -74,7 +76,9 @@ public class GoodsController {
         list = goodsService.queryAllGoodsByCategoryId(categoryId,1);
         return list;
     }
-    //根据公司Id查询所有在展的商品
+    //根据公司Id查询所有在展的商品;
+    //参数：公司Id
+    //默认查询在展商品
     @RequestMapping(value = "/query/company", method =  RequestMethod.GET)
     @ResponseBody
     public List<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId){
@@ -83,6 +87,8 @@ public class GoodsController {
         return list;
     }
     //根据关键词查询所有在展的商品
+    //参数：关键词
+    //默认查询在展商品
     @RequestMapping(value = "/query/keyword", method =  RequestMethod.GET)
     @ResponseBody
     public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword){
@@ -91,6 +97,8 @@ public class GoodsController {
         return list;
     }
     //添加展品信息
+    //参数：展品类
+    //错误状态码：-008
     @RequestMapping(value = "/add", method =  RequestMethod.POST)
     public Map<String, String> addGoods(@RequestParam(value = "goods")Goods goods) {
         String value = "";
@@ -99,12 +107,21 @@ public class GoodsController {
             value = "添加成功";
             code = "005";
         }
+        else{
+            value = "添加失败";
+            code = "-008";
+        }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);
         return map;
     }
-    //修改展品状态
+    /*
+    修改展品状态
+    参数1：展品ID
+    参数2：展品状态
+    错误状态码：-008
+    */
     @RequestMapping(value = "/modify/goodStatus", method =  RequestMethod.POST)
     public Map<String, String> modifyGoodsStatus(@RequestParam(value = "goodsId")int goodsId,
                                         @RequestParam(value = "goodsStatus")int goodsStatus) {
@@ -114,12 +131,21 @@ public class GoodsController {
             value = "修改成功";
             code = "005";
         }
+        else{
+            value = "修改失败";
+            code = "-008";
+        }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);
         return map;
     }
-    //修改展品优先级
+     /*
+    修改展品优先级
+    参数1：展品ID
+    参数2：展品优先级
+    错误状态码：-008
+    */
     @RequestMapping(value = "/modify/priority", method =  RequestMethod.POST)
     public Map<String, String> modifyGoodsPriority(@RequestParam(value = "goodsId")int goodsId,
                                                  @RequestParam(value = "priority")int priority) {
@@ -129,12 +155,20 @@ public class GoodsController {
             value = "修改成功";
             code = "005";
         }
+        else{
+            value = "修改失败";
+            code = "-008";
+        }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);
         return map;
     }
-    //删除展品
+    /*
+    从数据库中删除该展品
+    参数：展品ID
+    错误状态码：-008
+    */
     @RequestMapping(value = "/delete", method =  RequestMethod.POST)
     public Map<String, String> deleteGoods(@RequestParam(value = "goodsId")int goodsId) {
         String value = "";
@@ -142,6 +176,10 @@ public class GoodsController {
         if (goodsService.deleteGoods(goodsId) > 0) {
             value = "删除成功";
             code = "005";
+        }
+        else{
+            value = "删除失败";
+            code = "-008";
         }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
