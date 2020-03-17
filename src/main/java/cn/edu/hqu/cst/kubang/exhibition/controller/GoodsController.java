@@ -1,12 +1,11 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -17,7 +16,7 @@ import java.util.*;
  * @Description:处理与展品相关的请求
  */
 @Controller
-@RequestMapping("/Goods")
+@RequestMapping("/goods")
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
@@ -67,4 +66,88 @@ public class GoodsController {
         }
         return list;
     }
+    //根据类别Id查询所有在展的商品
+    @RequestMapping(value = "/query/category", method =  RequestMethod.GET)
+    @ResponseBody
+    public List<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId){
+        List<Goods> list = new ArrayList<>();
+        list = goodsService.queryAllGoodsByCategoryId(categoryId,1);
+        return list;
+    }
+    //根据公司Id查询所有在展的商品
+    @RequestMapping(value = "/query/company", method =  RequestMethod.GET)
+    @ResponseBody
+    public List<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId){
+        List<Goods> list = new ArrayList<>();
+        list = goodsService.queryAllGoodsByCompanyId(companyId,1);
+        return list;
+    }
+    //根据关键词查询所有在展的商品
+    @RequestMapping(value = "/query/keyword", method =  RequestMethod.GET)
+    @ResponseBody
+    public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword){
+        List<Goods> list = new ArrayList<>();
+        list = goodsService.queryAllGoodsByKeyword(keyword,1);
+        return list;
+    }
+    //添加展品信息
+    @RequestMapping(value = "/add", method =  RequestMethod.POST)
+    public Map<String, String> addGoods(@RequestParam(value = "goods")Goods goods) {
+        String value = "";
+        String code = "";
+        if (goodsService.addGoods(goods) > 0) {
+            value = "添加成功";
+            code = "005";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+    //修改展品状态
+    @RequestMapping(value = "/modify/goodStatus", method =  RequestMethod.POST)
+    public Map<String, String> modifyGoodsStatus(@RequestParam(value = "goodsId")int goodsId,
+                                        @RequestParam(value = "goodsStatus")int goodsStatus) {
+        String value = "";
+        String code = "";
+        if (goodsService.modifyGoodsStatus(goodsId, goodsStatus) > 0) {
+            value = "修改成功";
+            code = "005";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+    //修改展品优先级
+    @RequestMapping(value = "/modify/priority", method =  RequestMethod.POST)
+    public Map<String, String> modifyGoodsPriority(@RequestParam(value = "goodsId")int goodsId,
+                                                 @RequestParam(value = "priority")int priority) {
+        String value = "";
+        String code = "";
+        if (goodsService.modifyGoodsPriority(goodsId, priority) > 0) {
+            value = "修改成功";
+            code = "005";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+    //删除展品
+    @RequestMapping(value = "/delete", method =  RequestMethod.POST)
+    public Map<String, String> deleteGoods(@RequestParam(value = "goodsId")int goodsId) {
+        String value = "";
+        String code = "";
+        if (goodsService.deleteGoods(goodsId) > 0) {
+            value = "删除成功";
+            code = "005";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+
 }
