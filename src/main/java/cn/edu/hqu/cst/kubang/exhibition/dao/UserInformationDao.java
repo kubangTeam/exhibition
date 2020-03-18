@@ -23,5 +23,6 @@ public interface UserInformationDao {
     void UpdateUserInfo_UserName(String account, String userName);
     void UpdateUserInfo_UserSex(String account, String userSex);
     void UpdateUserInfo_UserPicture(String account,String picture);
-
+    int saveUserEmail(Integer userId, String userEmail);
+    int IsUserEmailBind(String email);
 }
