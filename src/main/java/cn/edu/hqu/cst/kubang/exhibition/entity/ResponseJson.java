@@ -4,6 +4,9 @@ import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * @author: 邢佳成
@@ -13,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public final class ResponseJson<T> {
+@Accessors(chain = true)
+public final class ResponseJson<T> implements Serializable {
     private Boolean success;
     private String errCode;
     private String errMsg;

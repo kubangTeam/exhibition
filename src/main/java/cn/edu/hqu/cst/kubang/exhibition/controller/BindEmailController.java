@@ -4,6 +4,10 @@ import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/email")
+@Api(tags = "邮箱服务")
 public class BindEmailController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,8 +36,14 @@ public class BindEmailController {
     @Autowired
     private UserInformationDao userDao;
 
+    @ApiOperation(value = "绑定邮箱")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "newCode", value = "用户输入的验证码", required = true, dataType = "String", paramType = "query")
+    })
     @PostMapping("/check/bind")
-    public Map<String, String> bindcheckCode(@RequestParam  Integer userId, @RequestParam String email, @RequestParam String newCode) {
+    public Map<String, String> bindcheckCode(@RequestParam Integer userId, @RequestParam String email, @RequestParam String newCode) {
         System.out.println("checkCode: ");
         System.out.println("userId: " + userId);
         System.out.println("email: " + email);
@@ -62,8 +73,17 @@ public class BindEmailController {
         return map;
     }
 
+    @ApiOperation(value = "邮箱注册")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "pwd", value = "用户密码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
+    })
     @PostMapping("/check/register")
-    public ModelAndView registerCheckCode(@RequestParam("email") String email,@RequestParam("pwd") String password,@RequestParam("code") String verifyCode,@RequestParam("recCode") String recCode) {
+    public ModelAndView registerCheckCode(@RequestParam("email") String email
+            , @RequestParam("pwd") String password, @RequestParam("code") String verifyCode
+            , @RequestParam("recCode") String recCode) {
         Boolean res = userEmailService.checkCode(email, verifyCode);
         JsonBuilder json = new JsonBuilder();
         if (res) {
@@ -71,22 +91,26 @@ public class BindEmailController {
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
                 //验证通过,用户注册成功
-                userDao.UserRegisterFromEmail(email,password,recCode);
-                json.add("success","true)");
+                userDao.UserRegisterFromEmail(email, password, recCode);
+                json.add("success", "true)");
             } else {
-                json.add("success","true)");
-                json.add("errCode","301");
-                json.add("errMsg","该邮箱已被其他用户绑定！");
+                json.add("success", "true)");
+                json.add("errCode", "301");
+                json.add("errMsg", "该邮箱已被其他用户绑定！");
             }
         } else {
-            json.add("success","true)");
-            json.add("errCode","302");
-            json.add("errMsg","验证码错误！");
+            json.add("success", "true)");
+            json.add("errCode", "302");
+            json.add("errMsg", "验证码错误！");
         }
         return json.getJsonResult();
     }
 
-    @RequestMapping("send/forgot")
+    @ApiOperation(value = "忘记密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("send/forgot")
     public ModelAndView forgotSendEmail(@RequestParam("email") String email) {
         JsonBuilder json = new JsonBuilder();
         //查邮箱是否已被注册
@@ -123,7 +147,12 @@ public class BindEmailController {
         return json.getJsonResult();
     }
 
-    @RequestMapping("/send/bind")
+    @ApiOperation(value = "绑定邮箱")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "to", value = "用户填写的邮箱", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/send/bind")
     public Map<String, String> bindSendEmail(@RequestParam("userId") Integer userId, @RequestParam("to") String to) {
         //首先检查该用户是否已经绑定了邮箱
         boolean isUserEmailBound = userEmailService.isUserEmailBound(userId);
@@ -161,7 +190,7 @@ public class BindEmailController {
         }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
-        map.put("code",code);
+        map.put("code", code);
         return map;
     }
 }
