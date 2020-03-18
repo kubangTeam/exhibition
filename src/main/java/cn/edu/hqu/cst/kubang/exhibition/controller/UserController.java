@@ -7,6 +7,10 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserSessionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +24,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/User")
-//提供用户注册，登录，获取用户信息等服务有关的控制器
+@Api(tags = "提供用户注册，登录，获取用户信息等服务")
 public class UserController {
 
     @Autowired
@@ -31,18 +35,21 @@ public class UserController {
 
     @Autowired
     private UserCodeDao userCodeDao;
-    //接口 register，注册
-    //请求参数1: account 账户（手机号码/邮箱）
-    //请求参数2: pwd 密码
-    //请求参数3: verifyCode 验证码
-    //请求参数4: recCode 推荐码
 
+    @ApiOperation(value = "用户注册")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "用户地手机号码或邮箱", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query")
+    })
     @RequestMapping(value = "/register")
     public ModelAndView Register(@RequestParam("account") String account, @RequestParam("pwd") String password,
                                  @RequestParam("code") String code, @RequestParam("recCode") String recCode,
-                                 HttpServletRequest request, HttpSession session)
-    {
+                                 HttpServletRequest request){
         System.out.println("User Register called");
+
+        HttpSession session = request.getSession();
 
         JsonBuilder json= new JsonBuilder();
         UserInformation user = userDao.GetUseInfoFromAccount(account);
@@ -69,6 +76,12 @@ public class UserController {
     }
 
     //接口 getUserInfo
+    @ApiOperation(value = "获取用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "employeeId", value = "员工id", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "restaurantId", value = "套餐id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "dishesVo", value = "菜品", required = true, dataType = "DishesVO", paramType = "body")
+    })
     @RequestMapping(value = "/getUserInfo")
     public ModelAndView getUserInfo(HttpServletRequest request){
         System.out.println("getUserInfo called");
@@ -91,6 +104,11 @@ public class UserController {
     //接口 login，登录
     //请求参数1: account 账户（手机号码/邮箱）
     //请求参数2: pwd 密码
+    @ApiOperation(value = "用户登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "账户", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String", paramType = "query")
+    })
     @RequestMapping(value = "/login",produces = "application/json;charset=UTF-8")
     public @ResponseBody
     ModelAndView Login(@RequestParam("account") String account,@RequestParam("password") String password,
@@ -167,10 +185,14 @@ public class UserController {
 
     //接口 CancelLogin，注销
     //请求参数1：phoneNumber 手机号码
+    @ApiOperation(value = "注销")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query")
+    })
     @RequestMapping(value = "/cancelLogin",produces = "application/json;charset=UTF-8")
-    public @ResponseBody
-    void  CancelLogin(HttpSession session, HttpServletRequest request){
+    public @ResponseBody void  CancelLogin(HttpServletRequest request){
         System.out.println("CancelLogin called");
+        HttpSession session = request.getSession();
 
         JsonBuilder json= new JsonBuilder();
         //让seesion失效，并且移除记录，则实现注销
@@ -178,13 +200,15 @@ public class UserController {
         sessionDao.removeByUserId(sessionDao.queryBySessionId(request.getRequestedSessionId()));
     }
 
-    //接口 UpdateUserInfo,修改用户信息
-    //请求参数1:userName 昵称
-    //请求参数2:userSex 性别
     @RequestMapping(value = "/updateUserInfo",produces =  "application/json;charset=UTF-8")
-    public @ResponseBody
-    void  UpdateUserInfo(HttpServletRequest request, HttpSession session){
+    @ApiOperation(value = "修改用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userName", value = "昵称", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userSex", value = "性别", required = true, dataType = "String", paramType = "query")
+    })
+    public @ResponseBody void  UpdateUserInfo(HttpServletRequest request){
         System.out.println("UpdateUserInfo called!");
+        HttpSession session = request.getSession();
         String userName = request.getParameter("userName");
         String userSex = request.getParameter("userSex");
         String userPicture = request.getParameter("userPicture");
