@@ -5,7 +5,7 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao">
 
     <sql id="selectFields">
-        goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodIntroduce,startTime,endTime,goodsStatus,identifyStatus,priority
+        goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,identifyStatus,priority
     </sql>
     <select id="selectGoodsById" resultType="Goods">
            select <include refid="selectFields"></include>
