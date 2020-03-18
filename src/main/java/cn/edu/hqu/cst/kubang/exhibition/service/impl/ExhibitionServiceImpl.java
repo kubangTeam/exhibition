@@ -28,14 +28,20 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Autowired
     private UserInformationDao userInformationDao;
 
-    @Value("${pagehelper.pageSize}")
-    private int pageSize;//一页显示几个，默认为10个
+    @Value("${pagehelper.pageSize1}")
+    private int pageSize1;//一页显示10个
+
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8个
+
+    @Value("${pagehelper.pageSize3}")
+    private int pageSize3;//一页显示4个
 
     //查询所有展会 不包括删除
     @Override
     @NullDisable
     public PageInfo<Exhibition> queryAllExhibitions(int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
@@ -52,7 +58,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public PageInfo<Exhibition> queryExhibitionsByStatus(Integer status, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(status);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
@@ -62,7 +68,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public PageInfo<Exhibition> queryExhibitionsByKeyWord(String keyWord, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
@@ -72,7 +78,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public PageInfo<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, int pageNum, Integer... status) {
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
         PageInfo<Exhibition> pageInfo = new PageInfo<>(keyList);
         return pageInfo;
@@ -127,7 +133,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     @NullDisable
     public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
