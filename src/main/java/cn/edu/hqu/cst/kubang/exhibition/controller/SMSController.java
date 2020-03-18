@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,11 +30,13 @@ public class SMSController {
     @Autowired
     private IShortMessageService smsService;
 
-    @ApiOperation(value = "发送短信验证码")
+    //接口 send，发送短信 验证码 到手机
+    //请求参数1：phoneNumber 手机号码
+    @ApiOperation(value = "发送短信 验证码 到手机")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/send")
+    @PostMapping(value = "/send")
     public ModelAndView sendVerifyCode(@RequestParam("phoneNumber")String phoneNumber, HttpServletRequest request){
         System.out.println("SMS send called");
 

@@ -1,8 +1,11 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,34 +20,37 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/goods")
+@Api(tags = "商品管理服务")
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
     //从start到end随机取nums个不重复的整数
-    public static List getRandomNumList(int nums,int start,int end){
+    public static List getRandomNumList(int nums, int start, int end) {
         List list = new ArrayList();
         Random r = new Random();
-        while(list.size() != nums){
-            int num = r.nextInt(end-start) + start;
-            if(!list.contains(num)){
+        while (list.size() != nums) {
+            int num = r.nextInt(end - start) + start;
+            if (!list.contains(num)) {
                 list.add(num);
             }
         }
         return list;
     }
+
     //展品推荐  个数：recNum  goodsStatus为0的不推荐
-    @RequestMapping(path = "/recommend", method =  RequestMethod.GET)
+    @ApiOperation(value = "展品推荐", notes = "貌似无参")
+    @RequestMapping(path = "/recommend", method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String, Object>>  getRecommendGoods(){
+    public List<Map<String, Object>> getRecommendGoods() {
         List<Map<String, Object>> list = new ArrayList<>();
         List recId = new ArrayList();
         int recNum = 4; //推荐个数
-        recId= getRandomNumList(recNum, 1, 9);
+        recId = getRandomNumList(recNum, 1, 9);
         //System.out.println(recId);
-        for(int i = 0; i < recId.size(); i++) {
+        for (int i = 0; i < recId.size(); i++) {
             int id = (int) recId.get(i);
-            if(goodsService.queryGoodsStatus(id) == 1) {
+            if (goodsService.queryGoodsStatus(id) == 1) {
                 Goods goods = goodsService.queryGoodsById(id, 1);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
@@ -56,7 +62,7 @@ public class GoodsController {
                 map.put("originPlace", goods.getOriginPlace());
                 map.put("originalPrice", goods.getOriginalPrice());
                 map.put("currentPrice", goods.getCurrentPrice());
-                map.put("goodIntroduce", goods.getGoodIntroduce());
+                map.put("goodIntroduce", goods.getGoodsIntroduce());
                 map.put("goodsStatus", goods.getGoodsStatus());
                 map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
@@ -66,48 +72,67 @@ public class GoodsController {
         }
         return list;
     }
+
     //根据类别Id查询所有在展的商品；
     // 请求参数：展品ID；
     //默认查询在展商品
-    @RequestMapping(value = "/query/category", method =  RequestMethod.GET)
+    @ApiOperation(value = "根据类别Id查询所有在展的商品", notes = "默认查询在展商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "categoryId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/query/category", method = RequestMethod.GET)
     @ResponseBody
-    public List<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId){
+    public List<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId) {
         List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByCategoryId(categoryId,1);
+        list = goodsService.queryAllGoodsByCategoryId(categoryId, 1);
         return list;
     }
+
     //根据公司Id查询所有在展的商品;
     //参数：公司Id
     //默认查询在展商品
-    @RequestMapping(value = "/query/company", method =  RequestMethod.GET)
+    @ApiOperation(value = "根据公司Id查询所有在展的商品", notes = "默认查询在展商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/query/company", method = RequestMethod.GET)
     @ResponseBody
-    public List<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId){
+    public List<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId) {
         List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByCompanyId(companyId,1);
+        list = goodsService.queryAllGoodsByCompanyId(companyId, 1);
         return list;
     }
+
     //根据关键词查询所有在展的商品
     //参数：关键词
     //默认查询在展商品
-    @RequestMapping(value = "/query/keyword", method =  RequestMethod.GET)
+    @RequestMapping(value = "/query/keyword", method = RequestMethod.GET)
+    @ApiOperation(value = "根据关键词查询符合要求")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query")
+    })
     @ResponseBody
-    public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword){
+    public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword) {
         List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByKeyword(keyword,1);
+        list = goodsService.queryAllGoodsByKeyword(keyword, 1);
         return list;
     }
+
     //添加展品信息
     //参数：展品类
     //错误状态码：-008
-    @RequestMapping(value = "/add", method =  RequestMethod.POST)
-    public Map<String, String> addGoods(@RequestParam(value = "goods")Goods goods) {
+    @ApiOperation(value = "添加展品信息", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goods", value = "展品类", required = true, dataType = "Goods", paramType = "body")
+    })
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public Map<String, String> addGoods(@RequestBody Goods goods) {
         String value = "";
         String code = "";
         if (goodsService.addGoods(goods) > 0) {
             value = "添加成功";
             code = "005";
-        }
-        else{
+        } else {
             value = "添加失败";
             code = "-008";
         }
@@ -116,69 +141,28 @@ public class GoodsController {
         map.put("code", code);
         return map;
     }
+
     /*
     修改展品状态
     参数1：展品ID
     参数2：展品状态
     错误状态码：-008
     */
-    @RequestMapping(value = "/modify/goodStatus", method =  RequestMethod.POST)
-    public Map<String, String> modifyGoodsStatus(@RequestParam(value = "goodsId")int goodsId,
-                                        @RequestParam(value = "goodsStatus")int goodsStatus) {
+    @ApiOperation(value = "修改展品状态", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "goodsStatus", value = "展品状态", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/modify/goodStatus", method = RequestMethod.POST)
+    public Map<String, String> modifyGoodsStatus(@RequestParam(value = "goodsId") int goodsId,
+                                                 @RequestParam(value = "goodsStatus") int goodsStatus) {
         String value = "";
         String code = "";
         if (goodsService.modifyGoodsStatus(goodsId, goodsStatus) > 0) {
             value = "修改成功";
             code = "005";
-        }
-        else{
+        } else {
             value = "修改失败";
-            code = "-008";
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
-    }
-     /*
-    修改展品优先级
-    参数1：展品ID
-    参数2：展品优先级
-    错误状态码：-008
-    */
-    @RequestMapping(value = "/modify/priority", method =  RequestMethod.POST)
-    public Map<String, String> modifyGoodsPriority(@RequestParam(value = "goodsId")int goodsId,
-                                                 @RequestParam(value = "priority")int priority) {
-        String value = "";
-        String code = "";
-        if (goodsService.modifyGoodsPriority(goodsId, priority) > 0) {
-            value = "修改成功";
-            code = "005";
-        }
-        else{
-            value = "修改失败";
-            code = "-008";
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
-    }
-    /*
-    从数据库中删除该展品
-    参数：展品ID
-    错误状态码：-008
-    */
-    @RequestMapping(value = "/delete", method =  RequestMethod.POST)
-    public Map<String, String> deleteGoods(@RequestParam(value = "goodsId")int goodsId) {
-        String value = "";
-        String code = "";
-        if (goodsService.deleteGoods(goodsId) > 0) {
-            value = "删除成功";
-            code = "005";
-        }
-        else{
-            value = "删除失败";
             code = "-008";
         }
         Map<String, String> map = new HashMap<>();
@@ -187,5 +171,59 @@ public class GoodsController {
         return map;
     }
 
+    /*
+   修改展品优先级
+   参数1：展品ID
+   参数2：展品优先级
+   错误状态码：-008
+   */
+    @ApiOperation(value = "修改展品优先级", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "priority", value = "展品优先级", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/modify/priority", method = RequestMethod.POST)
+    public Map<String, String> modifyGoodsPriority(@RequestParam(value = "goodsId") int goodsId,
+                                                   @RequestParam(value = "priority") int priority) {
+        String value = "";
+        String code = "";
+        if (goodsService.modifyGoodsPriority(goodsId, priority) > 0) {
+            value = "修改成功";
+            code = "005";
+        } else {
+            value = "修改失败";
+            code = "-008";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+    /*
+    从数据库中删除该展品
+    参数：展品ID
+    错误状态码：-008
+    */
+    @ApiOperation(value = "删除展品", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+    })
+    @DeleteMapping(value = "/delete")
+    public Map<String, String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
+        String value = "";
+        String code = "";
+        if (goodsService.deleteGoods(goodsId) > 0) {
+            value = "删除成功";
+            code = "005";
+        } else {
+            value = "删除失败";
+            code = "-008";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
 
 }

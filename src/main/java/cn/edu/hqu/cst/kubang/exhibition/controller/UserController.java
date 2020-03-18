@@ -13,9 +13,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +23,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/User")
 @Api(tags = "提供用户注册，登录，获取用户信息等服务")
+//提供用户注册，登录，获取用户信息等服务有关的控制器
 public class UserController {
 
     @Autowired
@@ -36,20 +35,23 @@ public class UserController {
     @Autowired
     private UserCodeDao userCodeDao;
 
+    //接口 register，注册
+    //请求参数1: account 账户（手机号码/邮箱）
+    //请求参数2: pwd 密码
+    //请求参数3: verifyCode 验证码
+    //请求参数4: recCode 推荐码
     @ApiOperation(value = "用户注册")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "用户地手机号码或邮箱", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "account", value = "账户（手机号码/邮箱）", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/register")
+    @PostMapping(value = "/register")
     public ModelAndView Register(@RequestParam("account") String account, @RequestParam("pwd") String password,
                                  @RequestParam("code") String code, @RequestParam("recCode") String recCode,
-                                 HttpServletRequest request){
+                                 HttpServletRequest request, HttpSession session){
         System.out.println("User Register called");
-
-        HttpSession session = request.getSession();
 
         JsonBuilder json= new JsonBuilder();
         UserInformation user = userDao.GetUseInfoFromAccount(account);
@@ -76,13 +78,8 @@ public class UserController {
     }
 
     //接口 getUserInfo
-    @ApiOperation(value = "获取用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "employeeId", value = "员工id", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "restaurantId", value = "套餐id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "dishesVo", value = "菜品", required = true, dataType = "DishesVO", paramType = "body")
-    })
-    @RequestMapping(value = "/getUserInfo")
+    @GetMapping(value = "/getUserInfo")
+    @ApiOperation(value = "获取用户信息", notes = "貌似好像没有参数")
     public ModelAndView getUserInfo(HttpServletRequest request){
         System.out.println("getUserInfo called");
 
@@ -104,14 +101,13 @@ public class UserController {
     //接口 login，登录
     //请求参数1: account 账户（手机号码/邮箱）
     //请求参数2: pwd 密码
+    @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "用户登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "account", value = "账户", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "account", value = "账户（手机号码/邮箱）", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/login",produces = "application/json;charset=UTF-8")
-    public @ResponseBody
-    ModelAndView Login(@RequestParam("account") String account,@RequestParam("password") String password,
+    public @ResponseBody ModelAndView Login(@RequestParam("account") String account,@RequestParam("password") String password,
                        HttpServletRequest request, HttpSession session) {
         System.out.println("User login called");
 
@@ -181,34 +177,34 @@ public class UserController {
         return json.getJsonResult();
     }
 
-
-
     //接口 CancelLogin，注销
     //请求参数1：phoneNumber 手机号码
-    @ApiOperation(value = "注销")
+    @ApiOperation(value = "用户注销",notes = "这接口有问题，待议")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query")
     })
-    @RequestMapping(value = "/cancelLogin",produces = "application/json;charset=UTF-8")
-    public @ResponseBody void  CancelLogin(HttpServletRequest request){
+    @PostMapping(value = "/cancelLogin",produces = "application/json;charset=UTF-8")
+    public @ResponseBody void CancelLogin(HttpSession session, HttpServletRequest request){
         System.out.println("CancelLogin called");
-        HttpSession session = request.getSession();
 
         JsonBuilder json= new JsonBuilder();
         //让seesion失效，并且移除记录，则实现注销
         session.invalidate();
         sessionDao.removeByUserId(sessionDao.queryBySessionId(request.getRequestedSessionId()));
     }
-
-    @RequestMapping(value = "/updateUserInfo",produces =  "application/json;charset=UTF-8")
+    //接口 UpdateUserInfo,修改用户信息
+    //请求参数1:userName 昵称
+    //请求参数2:userSex 性别
     @ApiOperation(value = "修改用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "昵称", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "userSex", value = "性别", required = true, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "userSex", value = "性别", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "userPicture", value = "头像", required = true, dataType = "String", paramType = "query")
     })
-    public @ResponseBody void  UpdateUserInfo(HttpServletRequest request){
+    @PutMapping(value = "/updateUserInfo",produces =  "application/json;charset=UTF-8")
+    public @ResponseBody
+    void  UpdateUserInfo(HttpServletRequest request, HttpSession session){
         System.out.println("UpdateUserInfo called!");
-        HttpSession session = request.getSession();
         String userName = request.getParameter("userName");
         String userSex = request.getParameter("userSex");
         String userPicture = request.getParameter("userPicture");
@@ -228,7 +224,12 @@ public class UserController {
     //接口 ModifyPassword,修改密码
     //请求参数1:oldpwd 原密码
     //请求参数2++:newpdw 新密码
-    @RequestMapping(value = "/modifyPassword",produces =  "application/json;charset=UTF-8")
+    @ApiOperation(value = "修改密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "oldpwd", value = "原密码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "newpwd", value = "新密码", required = true, dataType = "String", paramType = "query")
+    })
+    @PutMapping(value = "/modifyPassword",produces =  "application/json;charset=UTF-8")
     public @ResponseBody
     ModelAndView ModifyPassword(HttpServletRequest request, HttpSession session){
         String oldPwd = request.getParameter("oldpwd");
@@ -264,9 +265,15 @@ public class UserController {
     }
 
     //接口 forgot 忘记密码
-    @RequestMapping("/forgot")
-    public ModelAndView forgotPassword(@RequestParam("account") String account,@RequestParam("verfiyCode") String verfiyCode,@RequestParam("newPwd") String newPwd)
-    {
+    @PostMapping("/forgot")
+    @ApiOperation(value = "忘记密码", notes = "此接口有问题，暂停使用")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "account", value = "用户账号", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "verfiyCode", value = "验证码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "newPwd", value = "新密码", required = true, dataType = "String", paramType = "query")
+    })
+    public ModelAndView forgotPassword(@RequestParam("account") String account
+            ,@RequestParam("verfiyCode") String verfiyCode,@RequestParam("newPwd") String newPwd){
         JsonBuilder json = new JsonBuilder();
         String code = userCodeDao.queryUserCode(account).getCode();
 
