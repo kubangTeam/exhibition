@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,19 +40,19 @@ public class GoodsController {
     }
 
     //展品推荐  个数：recNum  goodsStatus为0的不推荐
-    @ApiOperation(value = "展品推荐", notes = "貌似无参")
+    @ApiOperation(value = "展品推荐", notes = "无参")
     @RequestMapping(path = "/recommend", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getRecommendGoods() {
         List<Map<String, Object>> list = new ArrayList<>();
         List recId = new ArrayList();
-        int recNum = 4; //推荐个数
-        recId = getRandomNumList(recNum, 1, 9);
+        int recNum = 6; //推荐个数
+        recId = getRandomNumList(recNum, 1, goodsService.queryGoodsCount());
         //System.out.println(recId);
         for (int i = 0; i < recId.size(); i++) {
             int id = (int) recId.get(i);
             if (goodsService.queryGoodsStatus(id) == 1) {
-                Goods goods = goodsService.queryGoodsById(id, 1);
+                Goods goods = goodsService.queryGoodsById(id);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
                 map.put("goodsName", goods.getGoodsName());
@@ -72,49 +73,73 @@ public class GoodsController {
         }
         return list;
     }
-
-    //根据类别Id查询所有在展的商品；
-    // 请求参数：展品ID；
-    //默认查询在展商品
-    @ApiOperation(value = "根据类别Id查询所有在展的商品", notes = "默认查询在展商品")
+    //热门展品  个数：recNum  goodsStatus为0的不推荐
+    @ApiOperation(value = "热门展品", notes = "无参")
+    @RequestMapping(path = "/hot", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Map<String, Object>> getHotGoods() {
+        List<Map<String, Object>> list =  this.getRecommendGoods();
+        return list;
+    }
+    //根据展品Id查询所有在展的商品；
+    //请求参数：展品ID；
+    @ApiOperation(value = "根据展品Id查询商品")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "categoryId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
+    @ResponseBody
+    public Goods queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
+        Goods goods  = goodsService.queryGoodsById(goodsId);
+        return goods;
+    }
+    //根据类别Id查询所有在展的商品；
+    // 请求参数：类别ID；
+    //默认查询在展商品
+    @ApiOperation(value = "根据类别Id查询所有在展的商品", notes = "分页查询，，默认查询在展，结果按优先级升序排列")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "categoryId", value = "类别ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/category", method = RequestMethod.GET)
     @ResponseBody
-    public List<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId) {
-        List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByCategoryId(categoryId, 1);
-        return list;
+    public PageInfo<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,
+                                                     @RequestParam(value = "pageNum") int pageNum,
+                                                     @RequestParam(value = "pageSize") int pageSize) {
+        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCategoryId(categoryId,pageNum,pageSize);
+        return pageInfo;
     }
-
     //根据公司Id查询所有在展的商品;
-    //参数：公司Id
+    //参数：公司Id8
     //默认查询在展商品
-    @ApiOperation(value = "根据公司Id查询所有在展的商品", notes = "默认查询在展商品")
+    @ApiOperation(value = "根据公司Id查询所有在展的商品", notes = "分页查询，默认查询在展商品")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/company", method = RequestMethod.GET)
     @ResponseBody
-    public List<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId) {
-        List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByCompanyId(companyId, 1);
-        return list;
+    public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
+                                                    @RequestParam(value = "pageNum") int pageNum,
+                                                    @RequestParam(value = "pageSize") int pageSize) {
+        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCompanyId(companyId,pageNum,pageSize);
+        return pageInfo;
     }
 
     //根据关键词查询所有在展的商品
     //参数：关键词
     //默认查询在展商品
     @RequestMapping(value = "/query/keyword", method = RequestMethod.GET)
-    @ApiOperation(value = "根据关键词查询符合要求")
+    @ApiOperation(value = "根据关键词查询")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query")
     })
     @ResponseBody
     public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword) {
         List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByKeyword(keyword, 1);
+        list = goodsService.queryAllGoodsByName(keyword);
         return list;
     }
 
@@ -129,7 +154,7 @@ public class GoodsController {
     public Map<String, String> addGoods(@RequestBody Goods goods) {
         String value = "";
         String code = "";
-        if (goodsService.addGoods(goods) > 0) {
+        if (goodsService.addGoods(goods) > 0 ) {
             value = "添加成功";
             code = "005";
         } else {

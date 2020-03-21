@@ -1,7 +1,11 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,31 +23,48 @@ public class GoodsService {
     private GoodsDao goodsDao;
     //查询展品
         //根据ID和状态查询在展和不在展的商品
-    public Goods queryGoodsById(int goodsId, int goodsStatus){
-        return goodsDao.selectGoodsById(goodsId, goodsStatus);
+    public Goods queryGoodsById(int goodsId){
+        return goodsDao.selectGoodsById(goodsId);
     }
         //根据公司ID和状态查询在展和不在展的商品
-    public List<Goods> queryAllGoodsByCompanyId(int companyId, int goodsStatus) {
-        return goodsDao.selectGoodsByCompanyId(companyId, goodsStatus);
+    public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, 1);
+        PageInfo<Goods> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
-        //根据公司ID和状态查询在展和不在展的商品
-    public List<Goods> queryAllGoodsByCategoryId(int categoryId, int goodsStatus) {
-        return goodsDao.selectGoodsByCompanyId(categoryId, goodsStatus);
+        //根据分类ID和状态查询在展商品
+    public PageInfo<Goods> queryAllGoodsByCategoryId(int categoryId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, 1);
+        PageInfo<Goods> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
-        //根据关键词查询在展和不在展的商品
-    public List<Goods> queryAllGoodsByKeyword(String keyword, int goodsStatus) {
-        return goodsDao.selectGoodsByKeyword(keyword, goodsStatus);
+        //根据名字查询在展和不在展的商品
+    public List<Goods> queryAllGoodsByName(String name) {
+        return goodsDao.selectGoodsByName(name,1);
+    }
+    //查询商品总数
+    public int queryGoodsCount(){
+        return goodsDao.selectGoodsCount();
     }
         //查询展品的是否在展
     public int queryGoodsStatus(int goodsId){
         return goodsDao.selectStatusById(goodsId);
     }
-    //添加展品
+    //添加展品图片
     public int addGoods(Goods goods){
         if(goods != null)
             return goodsDao.insertGoods(goods);
         else
-            return -1;//商品为空
+            return -1;//商品图片为空
+    }
+    //添加展品图片
+    public int addGoodsPic(GoodsPic goodsPic){
+        if(goodsPic != null)
+            return goodsDao.insertGoodsPic(goodsPic);
+        else
+            return -1;//商品图片为空
     }
     //修改展品优先级
     public int modifyGoodsPriority(int goodsId, int priority){
