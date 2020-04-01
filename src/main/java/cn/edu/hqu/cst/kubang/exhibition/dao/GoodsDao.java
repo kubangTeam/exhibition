@@ -1,8 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
-import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

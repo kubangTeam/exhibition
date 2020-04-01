@@ -1,9 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
-import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
