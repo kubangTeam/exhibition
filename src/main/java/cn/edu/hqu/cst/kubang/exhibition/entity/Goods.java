@@ -31,8 +31,7 @@ public class Goods implements Serializable{
     private String goodsIntroduce;//简介
     private Date startTime;//参展开始时间
     private Date endTime;//参展结束时间
-    private int goodsStatus;//展品状态（未上线为0，已上线为1）
-    private String identifyStatus;
+    private int goodsStatus;//展品状态（未上线为0，已上线为1,已删除为2）
     private String pic;//展品图片
     private int picId;//图片ID
     private int priority;//优先级

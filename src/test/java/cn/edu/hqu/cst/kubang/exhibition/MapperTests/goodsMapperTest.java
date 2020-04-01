@@ -37,11 +37,11 @@ public class goodsMapperTest {
         //Goods goods = goodsDao.selectGoodsById(3);
         //System.out.println(goods);
         //System.out.println(goodsController.getRandomNumList(10,0,100));
-        /*List<Map<String, Object>> list = new ArrayList<>();
+       /* List<Map<String, Object>> list = new ArrayList<>();
         list = goodsController.getRecommendGoods();
         for(int i = 0;i < list.size();i++){
            System.out.println(list.get(i));
         }*/
-        System.out.println(goodsDao.selectStatusById(1));
+        System.out.println(goodsDao.selectGoodsCount());
     }
 }

@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -10,7 +11,11 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -19,7 +24,7 @@ import java.util.*;
  * @Version 1.0
  * @Description:处理与展品相关的请求
  */
-@Controller
+@RestController
 @RequestMapping("/goods")
 @Api(tags = "商品管理服务")
 public class GoodsController {
@@ -27,12 +32,13 @@ public class GoodsController {
     private GoodsService goodsService;
 
     //从start到end随机取nums个不重复的整数
-    public static List getRandomNumList(int nums, int start, int end) {
+    public List getRandomNumList(int nums, int start, int end) {
         List list = new ArrayList();
         Random r = new Random();
         while (list.size() != nums) {
             int num = r.nextInt(end - start) + start;
-            if (!list.contains(num)) {
+            //id不重复且该展品的状态为在展
+            if (!list.contains(num) && goodsService.queryGoodsStatus(num) == 1) {
                 list.add(num);
             }
         }
@@ -40,7 +46,7 @@ public class GoodsController {
     }
 
     //展品推荐  个数：recNum  goodsStatus为0的不推荐
-    @ApiOperation(value = "展品推荐", notes = "无参")
+    @ApiOperation(value = "展品推荐", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/recommend", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getRecommendGoods() {
@@ -65,7 +71,7 @@ public class GoodsController {
                 map.put("currentPrice", goods.getCurrentPrice());
                 map.put("goodIntroduce", goods.getGoodsIntroduce());
                 map.put("goodsStatus", goods.getGoodsStatus());
-                map.put("identifyStatus", goods.getIdentifyStatus());
+               // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
                 list.add(map);
                 //System.out.println(map.get("goodsId"));
@@ -74,7 +80,7 @@ public class GoodsController {
         return list;
     }
     //热门展品  个数：recNum  goodsStatus为0的不推荐
-    @ApiOperation(value = "热门展品", notes = "无参")
+    @ApiOperation(value = "热门展品", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getHotGoods() {
@@ -146,27 +152,65 @@ public class GoodsController {
     //添加展品信息
     //参数：展品类
     //错误状态码：-008
-    @ApiOperation(value = "添加展品信息", notes = "错误状态码：-008")
+    @ApiOperation(value = "添加展品信息，支持图片批量上传", notes = "错误状态码：-008")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "goods", value = "展品类", required = true, dataType = "Goods", paramType = "body")
+            @ApiImplicitParam(name = "goods", value = "展品对象", required = true, dataType = "Goods", paramType = "body"),
+            @ApiImplicitParam(name = "files", value = "文件数组", required = true, dataType = "MultipartFile[]", paramType = "query")
     })
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Map<String, String> addGoods(@RequestBody Goods goods) {
-        String value = "";
-        String code = "";
+    public Map<String, String> addGoods(@RequestBody Goods goods,
+                                        @RequestParam(value = "files") MultipartFile[] files,
+                                        HttpServletRequest request) throws IOException {
+        String infoValue;
+        String picValue = "";
+        String code;
+        String path = request.getServletContext().getRealPath("/GoodsPictures");
         if (goodsService.addGoods(goods) > 0 ) {
-            value = "添加成功";
+            for(MultipartFile file:files){
+                if(file.isEmpty())
+                    picValue = "未选择文件";
+                else
+                    goodsService.addGoodsPic(goods.getGoodsId(),uploadFile(path,file));
+            }
+            infoValue = "添加成功";
             code = "005";
         } else {
-            value = "添加失败";
+            infoValue = "添加失败";
             code = "-008";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", infoValue + picValue);
+        map.put("code", code);
+        return map;
+    }
+    //上传展品图片
+    @ApiOperation(value = "单张上传展品图片（已知展品Id）", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "展品图片", required = true, dataType = "MultipartFile", paramType = "query")
+            @ApiImplicitParam(name = "goodId", value = "展品Id", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
+    public Map<String,String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
+                                            @RequestParam(value = "goodsId")int goodsId,
+                                            HttpServletRequest httpServletRequest) throws IOException {
+        String value;
+        String code;
+        String path = httpServletRequest.getServletContext().getRealPath("/GoodsPictures");
+        if(file.isEmpty()){
+            value = "未选择文件";
+            code = "021";
+        }
+        else{
+            goodsService.addGoodsPic(goodsId,uploadFile(path,file));
+            value = "上传成功";
+            code = "005";
+
         }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);
         return map;
     }
-
     /*
     修改展品状态
     参数1：展品ID
@@ -226,11 +270,11 @@ public class GoodsController {
     }
 
     /*
-    从数据库中删除该展品
+    删除该展品（将展品状态改为2，不从数据库删除）
     参数：展品ID
     错误状态码：-008
     */
-    @ApiOperation(value = "删除展品", notes = "错误状态码：-008")
+    @ApiOperation(value = "删除展品（将展品状态改为2，不从数据库删除）", notes = "错误状态码：-008")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
     })
@@ -238,7 +282,7 @@ public class GoodsController {
     public Map<String, String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
         String value = "";
         String code = "";
-        if (goodsService.deleteGoods(goodsId) > 0) {
+        if (goodsService.modifyGoodsStatus(goodsId,2) > 0) {
             value = "删除成功";
             code = "005";
         } else {
@@ -249,6 +293,22 @@ public class GoodsController {
         map.put("response", value);
         map.put("code", code);
         return map;
+    }
+    public static String uploadFile(String path, MultipartFile file) throws IOException {
+
+        String fileName = file.getOriginalFilename();  // 文件名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 后缀名
+        fileName = UUID.randomUUID() + suffixName; // 新文件名
+        // 创建文件实例
+        File filePath = new File(path, fileName);
+        // 如果文件目录不存在，创建目录
+        if (!filePath.getParentFile().exists()) {
+            filePath.getParentFile().mkdirs();
+            System.out.println("创建目录" + filePath);
+        }
+        // 写入文件
+        file.transferTo(filePath);
+        return filePath.toString();
     }
 
 }

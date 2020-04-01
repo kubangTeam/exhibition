@@ -52,17 +52,17 @@ public class GoodsService {
     public int queryGoodsStatus(int goodsId){
         return goodsDao.selectStatusById(goodsId);
     }
-    //添加展品图片
+    //添加展品
     public int addGoods(Goods goods){
         if(goods != null)
             return goodsDao.insertGoods(goods);
         else
-            return -1;//商品图片为空
+            return -1;//商品为空
     }
     //添加展品图片
-    public int addGoodsPic(GoodsPic goodsPic){
-        if(goodsPic != null)
-            return goodsDao.insertGoodsPic(goodsPic);
+    public int addGoodsPic(int goodsId,String pic){
+        if(pic != null)
+            return goodsDao.insertGoodsPic(goodsId, pic);
         else
             return -1;//商品图片为空
     }
