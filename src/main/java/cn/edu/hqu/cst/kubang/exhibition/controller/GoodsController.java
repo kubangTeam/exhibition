@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
@@ -27,7 +28,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/goods")
 @Api(tags = "商品管理服务")
-public class GoodsController {
+public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
 
@@ -51,13 +52,11 @@ public class GoodsController {
     @ResponseBody
     public List<Map<String, Object>> getRecommendGoods() {
         List<Map<String, Object>> list = new ArrayList<>();
-        List recId = new ArrayList();
-        int recNum = 6; //推荐个数
-        recId = getRandomNumList(recNum, 1, goodsService.queryGoodsCount());
-        //System.out.println(recId);
-        for (int i = 0; i < recId.size(); i++) {
-            int id = (int) recId.get(i);
-            if (goodsService.queryGoodsStatus(id) == 1) {
+        int recNum = COUNT_RECOMMEND;
+        List recId = getRandomNumList(recNum, 0, goodsService.queryGoodsCount());
+        for (Object object:recId) {
+            int id = Integer.parseInt(object.toString());
+            if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
                 Goods goods = goodsService.queryGoodsById(id);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
@@ -282,7 +281,7 @@ public class GoodsController {
     public Map<String, String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
         String value = "";
         String code = "";
-        if (goodsService.modifyGoodsStatus(goodsId,2) > 0) {
+        if (goodsService.modifyGoodsStatus(goodsId,STATE_IS_DELETED) > 0) {
             value = "删除成功";
             code = "005";
         } else {

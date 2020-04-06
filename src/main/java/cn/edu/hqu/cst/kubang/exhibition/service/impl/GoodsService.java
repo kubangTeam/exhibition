@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import com.github.pagehelper.PageHelper;
@@ -16,7 +17,7 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class GoodsService {
+public class GoodsService implements Constants {
     @Autowired
     private GoodsDao goodsDao;
     //查询展品
@@ -27,20 +28,20 @@ public class GoodsService {
         //根据公司ID和状态查询在展和不在展的商品
     public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, 1);
+        List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW);
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
         //根据分类ID和状态查询在展商品
     public PageInfo<Goods> queryAllGoodsByCategoryId(int categoryId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, 1);
+        List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, STATE_IS_ON_SHOW);
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {
-        return goodsDao.selectGoodsByName(name,1);
+        return goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW);
     }
     //查询商品总数
     public int queryGoodsCount(){
