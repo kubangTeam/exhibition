@@ -5,26 +5,31 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao">
 
     <sql id="selectFields">
-        goodsintroduce.goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority,pic,picId
+        goodsintroduce.goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority
     </sql>
+    <select id="selectAllGoods" resultType="Goods">
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where goodsStatus = 1;
+    </select>
     <select id="selectGoodsById" resultType="Goods">
            select <include refid="selectFields"></include>
-           from goodsintroduce left join goodspicture on(goodsintroduce.goodsId=goodspicture.goodsId)
-           where goodsintroduce.goodsId = #{goodsId}
+           from goodsintroduce
+           where goodsId = #{goodsId}
     </select>
     <select id="selectGoodsByName" resultType="Goods">
         select <include refid="selectFields"></include>
-        from goodsintroduce left join goodspicture on(goodsintroduce.goodsId=goodspicture.goodsId)
+        from goodsintroduce
         where goodsStatus = #{goodsStatus} and goodsName = #{goodsName}
     </select>
     <select id="selectGoodsByCompanyId" resultType="Goods">
         select <include refid="selectFields"></include>
-        from goodsintroduce left join goodspicture on(goodsintroduce.goodsId=goodspicture.goodsId)
+        from goodsintroduce
         where goodsStatus = #{goodsStatus} and companyId = #{companyId}
     </select>
     <select id="selectGoodsByCategoryId" resultType="Goods">
         select <include refid="selectFields"></include>
-        from goodsintroduce left join goodspicture on(goodsintroduce.goodsId=goodspicture.goodsId)
+        from goodsintroduce
         where goodsStatus = #{goodsStatus} and categoryId = #{categoryId}
         order by priority
     </select>
@@ -32,12 +37,11 @@
         select count(*)
         from goodsintroduce
     </select>
-   <!-- <select id="selectGoodsByKeyword" resultType="Goods">
-    select <include refid="selectFields"></include>
-    from goodsintroduce join goodskeywords
-    on goosintroduce.goodsId = goodskeywords.goodsId
-    where goodsStatus = #{goodsStatus} and keyword = #{keyword}
-    </select>-->
+   <select id="selectGoodsPicByGoodsId" resultType="GoodsPic">
+    select picId, goodsId, pic
+    from goodspicture
+    where goodsId = #{goodsId}
+    </select>
     <select id="selectStatusById" resultType="int">
         select goodsStatus
         from goodsintroduce
@@ -51,7 +55,7 @@
         (#{goodsName},#{categoryId},#{goodsAreaNumber},#{companyId},#{website},#{originPlace},#{orginalPrice},
         #{currentPrice},#{goodsIntroduce},#{startTime},#{endTime},#{goodStatus},#{priority})
     </insert>
-    <insert id="insertGoodsPic">
+    <insert id="insertGoodsPic" parameterType="GoodsPic" useGeneratedKeys="true" keyProperty="picId">
         insert into goodspicture
         (goodsId,pic)
         value
@@ -64,8 +68,11 @@
         update goodsintroduce set goodsStatus = #{goodsStatus} where goodsId = #{goodsId}
     </update>
     <delete id="deleteGoods">
-        delete from goodsintroduce left join goodspicture on(goodsintroduce.goodsId=goodspicture.goodsId)
+        delete from goodsintroduce
         where goodsId = #{goodsId}
     </delete>
-
+    <delete id="deleteGoodsPic">
+        delete from goodsintroduce
+        where picId = #{picId}
+    </delete>
 </mapper>
