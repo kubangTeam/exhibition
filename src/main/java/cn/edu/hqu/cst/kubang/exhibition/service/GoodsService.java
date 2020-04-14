@@ -1,13 +1,15 @@
-package cn.edu.hqu.cst.kubang.exhibition.service.impl;
+package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +27,16 @@ public class GoodsService implements Constants {
     public Goods queryGoodsById(int goodsId){
         return goodsDao.selectGoodsById(goodsId);
     }
-        //根据公司ID和状态查询在展和不在展的商品
+        //查询所有商品
+    public List<Goods> queryGoodsALl(){
+        return goodsDao.selectAllGoods();
+    }
+    //根据展品Id查询该展品的图片
+    public List<GoodsPic> queryGoodsPic(int goodsId){
+        return goodsDao.selectGoodsPicByGoodsId(goodsId);
+    }
+
+    //根据公司ID和状态查询在展和不在展的商品
     public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW);
@@ -59,9 +70,9 @@ public class GoodsService implements Constants {
             return -1;//商品为空
     }
     //添加展品图片
-    public int addGoodsPic(int goodsId,String pic){
-        if(pic != null)
-            return goodsDao.insertGoodsPic(goodsId, pic);
+    public int addGoodsPic(GoodsPic goodsPic){
+        if(goodsPic != null)
+            return goodsDao.insertGoodsPic(goodsPic);
         else
             return -1;//商品图片为空
     }
@@ -76,6 +87,10 @@ public class GoodsService implements Constants {
     //删除展品
     public int deleteGoods(int goodsId){
         return goodsDao.deleteGoods(goodsId);
+    }
+    //删除展品图片
+    public int deleteGoodsPic(int picId){
+        return goodsDao.deleteGoodsPic(picId);
     }
 
 }

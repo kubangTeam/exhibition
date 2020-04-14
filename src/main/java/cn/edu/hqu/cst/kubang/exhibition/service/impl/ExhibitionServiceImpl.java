@@ -39,6 +39,11 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 
     //查询所有展会 不包括删除
     @Override
+    public List<Exhibition> queryAll() {
+        List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
+        return exhibitionList;
+    }
+    @Override
     @NullDisable
     public PageInfo<Exhibition> queryAllExhibitions(int pageNum) {
         PageHelper.startPage(pageNum, pageSize1);

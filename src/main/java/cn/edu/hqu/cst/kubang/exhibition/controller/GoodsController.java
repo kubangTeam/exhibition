@@ -2,15 +2,16 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
-import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
-import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsService;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,9 @@ public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private ElasticsearchService elasticsearchService;
+
     //从start到end随机取nums个不重复的整数
     public List getRandomNumList(int nums, int start, int end) {
         List list = new ArrayList();
@@ -39,9 +43,11 @@ public class GoodsController implements Constants {
         while (list.size() != nums) {
             int num = r.nextInt(end - start) + start;
             //id不重复且该展品的状态为在展
-            if (!list.contains(num) && goodsService.queryGoodsStatus(num) == 1) {
-                list.add(num);
-            }
+            Goods goods = goodsService.queryGoodsById(num);
+            if (goods != null)
+                if (!list.contains(num) && goodsService.queryGoodsStatus(num) == 1) {
+                    list.add(num);
+                }
         }
         return list;
     }
@@ -54,7 +60,7 @@ public class GoodsController implements Constants {
         List<Map<String, Object>> list = new ArrayList<>();
         int recNum = COUNT_RECOMMEND;
         List recId = getRandomNumList(recNum, 0, goodsService.queryGoodsCount());
-        for (Object object:recId) {
+        for (Object object : recId) {
             int id = Integer.parseInt(object.toString());
             if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
                 Goods goods = goodsService.queryGoodsById(id);
@@ -70,7 +76,7 @@ public class GoodsController implements Constants {
                 map.put("currentPrice", goods.getCurrentPrice());
                 map.put("goodIntroduce", goods.getGoodsIntroduce());
                 map.put("goodsStatus", goods.getGoodsStatus());
-               // map.put("identifyStatus", goods.getIdentifyStatus());
+                // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
                 list.add(map);
                 //System.out.println(map.get("goodsId"));
@@ -78,15 +84,17 @@ public class GoodsController implements Constants {
         }
         return list;
     }
+
     //热门展品  个数：recNum  goodsStatus为0的不推荐
     @ApiOperation(value = "热门展品", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String, Object>> getHotGoods() {
-        List<Map<String, Object>> list =  this.getRecommendGoods();
+        List<Map<String, Object>> list = this.getRecommendGoods();
         return list;
     }
-    //根据展品Id查询所有在展的商品；
+
+    //根据展品Id查询在展的商品；
     //请求参数：展品ID；
     @ApiOperation(value = "根据展品Id查询商品")
     @ApiImplicitParams({
@@ -95,9 +103,21 @@ public class GoodsController implements Constants {
     @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
     @ResponseBody
     public Goods queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
-        Goods goods  = goodsService.queryGoodsById(goodsId);
+        Goods goods = goodsService.queryGoodsById(goodsId);
         return goods;
     }
+
+    @ApiOperation(value = "根据展品Id查询该展品的图片")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(path = "/query/goodsPic", method = RequestMethod.GET)
+    @ResponseBody
+    public List<GoodsPic> queryGoodsPic(int goodsId) {
+        List<GoodsPic> list = goodsService.queryGoodsPic(goodsId);
+        return list;
+    }
+
     //根据类别Id查询所有在展的商品；
     // 请求参数：类别ID；
     //默认查询在展商品
@@ -112,9 +132,10 @@ public class GoodsController implements Constants {
     public PageInfo<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,
                                                      @RequestParam(value = "pageNum") int pageNum,
                                                      @RequestParam(value = "pageSize") int pageSize) {
-        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCategoryId(categoryId,pageNum,pageSize);
+        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCategoryId(categoryId, pageNum, pageSize);
         return pageInfo;
     }
+
     //根据公司Id查询所有在展的商品;
     //参数：公司Id8
     //默认查询在展商品
@@ -129,7 +150,7 @@ public class GoodsController implements Constants {
     public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
                                                     @RequestParam(value = "pageNum") int pageNum,
                                                     @RequestParam(value = "pageSize") int pageSize) {
-        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCompanyId(companyId,pageNum,pageSize);
+        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCompanyId(companyId, pageNum, pageSize);
         return pageInfo;
     }
 
@@ -164,13 +185,19 @@ public class GoodsController implements Constants {
         String picValue = "";
         String code;
         String path = request.getServletContext().getRealPath("/GoodsPictures");
-        if (goodsService.addGoods(goods) > 0 ) {
-            for(MultipartFile file:files){
-                if(file.isEmpty())
+        if (goodsService.addGoods(goods) > 0) {
+            for (MultipartFile file : files) {
+                if (file.isEmpty())
                     picValue = "未选择文件";
-                else
-                    goodsService.addGoodsPic(goods.getGoodsId(),uploadFile(path,file));
+                else {
+                    GoodsPic goodsPic = new GoodsPic();
+                    goodsPic.setPic(uploadFile(path, file));
+                    goodsPic.setGoodsId(goods.getGoodsId());
+                    goodsService.addGoodsPic(goodsPic);
+                }
+
             }
+            elasticsearchService.saveGoods(goodsService.queryGoodsById(goods.getGoodsId()));
             infoValue = "添加成功";
             code = "005";
         } else {
@@ -182,25 +209,28 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
+
     //上传展品图片
     @ApiOperation(value = "单张上传展品图片（已知展品Id）", notes = "错误状态码：-008")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "展品图片", required = true, dataType = "MultipartFile", paramType = "query")
+            @ApiImplicitParam(name = "file", value = "展品图片", required = true, dataType = "MultipartFile", paramType = "query"),
             @ApiImplicitParam(name = "goodId", value = "展品Id", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
-    public Map<String,String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
-                                            @RequestParam(value = "goodsId")int goodsId,
-                                            HttpServletRequest httpServletRequest) throws IOException {
+    public Map<String, String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
+                                             @RequestParam(value = "goodsId") int goodsId,
+                                             HttpServletRequest httpServletRequest) throws IOException {
         String value;
         String code;
         String path = httpServletRequest.getServletContext().getRealPath("/GoodsPictures");
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             value = "未选择文件";
             code = "021";
-        }
-        else{
-            goodsService.addGoodsPic(goodsId,uploadFile(path,file));
+        } else {
+            GoodsPic goodsPic = new GoodsPic();
+            goodsPic.setPic(uploadFile(path, file));
+            goodsPic.setGoodsId(goodsId);
+            goodsService.addGoodsPic(goodsPic);
             value = "上传成功";
             code = "005";
 
@@ -210,6 +240,7 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
+
     /*
     修改展品状态
     参数1：展品ID
@@ -277,11 +308,11 @@ public class GoodsController implements Constants {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
     })
-    @DeleteMapping(value = "/delete")
+    @DeleteMapping(value = "/delete/goods")
     public Map<String, String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
         String value = "";
         String code = "";
-        if (goodsService.modifyGoodsStatus(goodsId,STATE_IS_DELETED) > 0) {
+        if (goodsService.modifyGoodsStatus(goodsId, STATE_IS_DELETED) > 0) {
             value = "删除成功";
             code = "005";
         } else {
@@ -293,6 +324,28 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
+
+    @ApiOperation(value = "删除展品图片", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "picId", value = "图片ID", required = true, dataType = "int", paramType = "query")
+    })
+    @DeleteMapping(value = "/delete/goodsPic")
+    public Map<String, String> deleteGoodsPic(@RequestParam(value = "picId") int picId) {
+        String value = "";
+        String code = "";
+        if (goodsService.deleteGoodsPic(picId) > 0) {
+            value = "删除成功";
+            code = "005";
+        } else {
+            value = "删除失败";
+            code = "-008";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
     public static String uploadFile(String path, MultipartFile file) throws IOException {
 
         String fileName = file.getOriginalFilename();  // 文件名

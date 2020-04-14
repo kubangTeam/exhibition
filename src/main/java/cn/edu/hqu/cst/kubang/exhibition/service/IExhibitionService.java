@@ -3,6 +3,8 @@ package cn.edu.hqu.cst.kubang.exhibition.service;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  *  @author: 邢佳成
  *  @Date: 2020.02.17 22:24
@@ -11,6 +13,7 @@ import com.github.pagehelper.PageInfo;
 
 public interface IExhibitionService {
     //查询所有
+    List<Exhibition> queryAll();
     PageInfo<Exhibition> queryAllExhibitions(int pageNum);
     //根据 id查询
     Exhibition queryExhibitionByID(Integer id);
