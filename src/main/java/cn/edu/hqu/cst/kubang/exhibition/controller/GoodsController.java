@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -166,8 +167,12 @@ public class GoodsController implements Constants {
             for(MultipartFile file:files){
                 if(file.isEmpty())
                     picValue = "未选择文件";
-                else
-                    goodsService.addGoodsPic(goods.getGoodsId(),uploadFile(path,file));
+                else {
+                    GoodsPic goodsPic = new GoodsPic();
+                    goodsPic.setPic(uploadFile(path, file));
+                    goodsPic.setGoodsId(goods.getGoodsId());
+                    goodsService.addGoodsPic(goodsPic);
+                }
             }
             infoValue = "添加成功";
             code = "005";
@@ -198,7 +203,10 @@ public class GoodsController implements Constants {
             code = "021";
         }
         else{
-            goodsService.addGoodsPic(goodsId,uploadFile(path,file));
+            GoodsPic goodsPic = new GoodsPic();
+            goodsPic.setPic(uploadFile(path,file));
+            goodsPic.setGoodsId(goodsId);
+            goodsService.addGoodsPic(goodsPic);
             value = "上传成功";
             code = "005";
 
