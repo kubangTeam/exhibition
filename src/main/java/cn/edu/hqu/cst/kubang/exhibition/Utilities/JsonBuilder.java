@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class JsonBuilder {
     private Map<String, Object> map = new HashMap<>();
-
     public ModelAndView getJsonResult(){
         return new ModelAndView(new MappingJackson2JsonView(), map);
     }
