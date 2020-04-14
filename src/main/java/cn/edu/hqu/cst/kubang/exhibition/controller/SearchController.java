@@ -5,6 +5,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/search")
+@Api(tags = "展会和展品搜索")
 public class SearchController {
     @Autowired
     private ElasticsearchService elasticsearchService;
@@ -34,7 +36,7 @@ public class SearchController {
 
     @Autowired
     private GoodsService goodsService;
-
+    @ApiOperation(value = "同步搜索服务器数据用的，不要点")
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public void initSearchData(){
         List<Goods> listGoods = goodsService.queryGoodsALl();
