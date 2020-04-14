@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.AdvertisementDao">
+
+    <sql id="selectFields">
+        id,companyId,organizerId,startTime,endTime,priority,picture,status
+    </sql>
+
+    <sql id="insertFields">
+        companyId,organizerId,startTime,endTime,priority,picture,status
+    </sql>
+
+    <insert id="insertAds" parameterType="Advertisement" keyProperty="id">
+        insert into advertisement (<include refid="insertFields"></include>)
+        values
+        (#{companyId},#{organizerId},#{startTime},#{endTime},#{priority},#{picture},#{status})
+    </insert>
+
+    <select id="selectAllAds" resultType="Advertisement">
+        select <include refid="selectFields"></include>
+        from advertisement
+    </select>
+
+    <select id="selectByAdsStatus" resultType="Advertisement">
+        select <include refid="selectFields"></include>
+        from advertisement
+        where status = #{status}
+    </select>
+
+    <select id="selectByAdsPriority" resultType="Advertisement">
+        select <include refid="selectFields"></include>
+        from advertisement
+        where priority = #{priority}
+    </select>
+
+    <select id="selectByCompanyId" resultType="Advertisement">
+        select <include refid="selectFields"></include>
+        from advertisement
+        where companyId = #{companyId}
+    </select>
+
+    <select id="selectByOrganizerId" resultType="Advertisement">
+        select <include refid="selectFields"></include>
+        from advertisement
+        where organizerId = #{organizerId}
+    </select>
+
+    <update id="updateAds">
+        update advertisement
+        set startTime = #{startTime},endTime = #{endTime},picture = #{picture},priority = #{priority}
+        where id = #{id}
+    </update>
+
+    <update id="updateAdsStatus">
+        update advertisement
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAllAds">
+        delete from advertisement
+    </delete>
+
+</mapper>
