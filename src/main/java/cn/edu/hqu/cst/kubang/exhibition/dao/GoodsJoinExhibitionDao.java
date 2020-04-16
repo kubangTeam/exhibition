@@ -1,0 +1,11 @@
+package cn.edu.hqu.cst.kubang.exhibition.dao;
+
+import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+@Mapper
+public interface GoodsJoinExhibition {
+    int checkGoodsJoinOrNot(int exhibitionId,int goodsId);//根据商品id和展会id，查询该商品是否参加了该展会
+}
