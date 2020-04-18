@@ -10,11 +10,15 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -30,6 +34,12 @@ import java.util.*;
 public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
+    @Value("${exhibition.path.domain}")
+    private String domain;
+    @Value("${exhibition.path.upload}")
+    private String uploadPath;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     //从start到end随机取nums个不重复的整数
     public List getRandomNumList(int nums, int start, int end) {
@@ -69,7 +79,7 @@ public class GoodsController implements Constants {
                 map.put("currentPrice", goods.getCurrentPrice());
                 map.put("goodIntroduce", goods.getGoodsIntroduce());
                 map.put("goodsStatus", goods.getGoodsStatus());
-               // map.put("identifyStatus", goods.getIdentifyStatus());
+                // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
                 list.add(map);
                 //System.out.println(map.get("goodsId"));
@@ -162,14 +172,14 @@ public class GoodsController implements Constants {
         String infoValue;
         String picValue = "";
         String code;
-        String path = request.getServletContext().getRealPath("/GoodsPictures");
+        //String path = request.getServletContext().getRealPath("/GoodsPictures");
         if (goodsService.addGoods(goods) > 0 ) {
             for(MultipartFile file:files){
                 if(file.isEmpty())
                     picValue = "未选择文件";
                 else {
                     GoodsPic goodsPic = new GoodsPic();
-                    goodsPic.setPic(uploadFile(path, file));
+                    goodsPic.setPic(this.uploadFile(file));
                     goodsPic.setGoodsId(goods.getGoodsId());
                     goodsService.addGoodsPic(goodsPic);
                 }
@@ -197,14 +207,14 @@ public class GoodsController implements Constants {
                                             HttpServletRequest httpServletRequest) throws IOException {
         String value;
         String code;
-        String path = httpServletRequest.getServletContext().getRealPath("/GoodsPictures");
+        //String path = httpServletRequest.getServletContext().getRealPath("/GoodsPictures");
         if(file.isEmpty()){
             value = "未选择文件";
             code = "021";
         }
         else{
             GoodsPic goodsPic = new GoodsPic();
-            goodsPic.setPic(uploadFile(path,file));
+            goodsPic.setPic(this.uploadFile(file));
             goodsPic.setGoodsId(goodsId);
             goodsService.addGoodsPic(goodsPic);
             value = "上传成功";
@@ -215,6 +225,28 @@ public class GoodsController implements Constants {
         map.put("response", value);
         map.put("code", code);
         return map;
+    }
+    @ApiOperation(value = "通过url获取展品图片")
+    @RequestMapping(value = "/goodsPic/{fileName}" , method = RequestMethod.GET)
+    public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
+        //服务器存放的路径
+        fileName = uploadPath + "/" +fileName;
+        //获取fileName的后缀名
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
+        //响应图片
+        response.setContentType("image/"+suffix);
+        try (
+                ServletOutputStream os = response.getOutputStream();
+                FileInputStream fis = new FileInputStream(fileName);
+        ){
+            byte[] buffer = new byte[1024];//建立缓冲区，每次直接写出1024个字节
+            int b ;
+            while ((b = fis.read(buffer)) != -1){
+                os.write(buffer,0,b);
+            }
+        } catch (IOException e) {
+            System.out.println("读取图片失败："+e.getMessage());
+        }
     }
     /*
     修改展品状态
@@ -299,21 +331,24 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
-    public static String uploadFile(String path, MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
 
-        String fileName = file.getOriginalFilename();  // 文件名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 后缀名
-        fileName = UUID.randomUUID() + suffixName; // 新文件名
+        String fileName = file.getOriginalFilename();  // 获取上传图像的原始文件名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 获取后缀名
+        //为了避免用户传递的图像文件名称相同，需要重新给上传的图像文件命名
+        fileName = UUID.randomUUID() + suffixName;
         // 创建文件实例
-        File filePath = new File(path, fileName);
+        File dest = new File(uploadPath + "/" + fileName);
         // 如果文件目录不存在，创建目录
-        if (!filePath.getParentFile().exists()) {
-            filePath.getParentFile().mkdirs();
-            System.out.println("创建目录" + filePath);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();
+            System.out.println("创建目录" + dest);
         }
-        // 写入文件
-        file.transferTo(filePath);
-        return filePath.toString();
+        // 存储文件
+        file.transferTo(dest);
+        //展品图片Web访问路径
+        String url = domain + contextPath + "/goods/goodsPic/" + fileName;
+        return url;
     }
 
 }
