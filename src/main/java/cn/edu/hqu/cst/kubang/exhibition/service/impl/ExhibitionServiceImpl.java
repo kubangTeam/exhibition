@@ -52,12 +52,6 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         return pageInfo;
     }
 
-    //根据 id查询 不包括删除
-    @Override
-    @NullDisable
-    public Exhibition queryExhibitionByID(Integer id) {
-        return exhibitionDao.queryExhibitionByID(id);
-    }
 
     //根据 状态查询所有 不包括删除
     @Override
@@ -143,4 +137,9 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
+
+
+
+
+
 }

@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
  * 用户服务 暂无
  * 用户注册
  */
-public interface IUserInfromationService {
+public interface IUserInformationService {
 
     //用户手机号注册
     int registerByPhoneNumber();
+
+    int isCompanyOrNot(int userId);
 
 
 }

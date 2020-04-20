@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.Date;
 @AllArgsConstructor //满参构造
 @Accessors(chain = true)
 @Document(indexName = "exhibition", type = "_doc", shards = 6, replicas = 3 )//索引，类型，分片，副本
+@Component
 public class Exhibition implements Serializable {
     @Id
     private Integer id;
@@ -73,4 +75,154 @@ public class Exhibition implements Serializable {
 
     @Field(type = FieldType.Text)
     private String picture;//展会图标url地址
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getExhibitionHallId() {
+        return exhibitionHallId;
+    }
+
+    public void setExhibitionHallId(Integer exhibitionHallId) {
+        this.exhibitionHallId = exhibitionHallId;
+    }
+
+    public String getShowRoom() {
+        return showRoom;
+    }
+
+    public void setShowRoom(String showRoom) {
+        this.showRoom = showRoom;
+    }
+
+    public String getAcreage() {
+        return acreage;
+    }
+
+    public void setAcreage(String acreage) {
+        this.acreage = acreage;
+    }
+
+    public String getTrade() {
+        return trade;
+    }
+
+    public void setTrade(String trade) {
+        this.trade = trade;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
+    public Integer getContractorId() {
+        return contractorId;
+    }
+
+    public void setContractorId(Integer contractorId) {
+        this.contractorId = contractorId;
+    }
+
+    public Integer getSession() {
+        return session;
+    }
+
+    public void setSession(Integer session) {
+        this.session = session;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getTel() {
+        return Tel;
+    }
+
+    public void setTel(String tel) {
+        Tel = tel;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    @Override
+    public String toString() {
+        return "Exhibition{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", exhibitionHallId=" + exhibitionHallId +
+                ", showRoom='" + showRoom + '\'' +
+                ", acreage='" + acreage + '\'' +
+                ", trade='" + trade + '\'' +
+                ", organizer='" + organizer + '\'' +
+                ", contractorId=" + contractorId +
+                ", session=" + session +
+                ", period='" + period + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", Tel='" + Tel + '\'' +
+                ", status=" + status +
+                ", picture='" + picture + '\'' +
+                '}';
+    }
 }

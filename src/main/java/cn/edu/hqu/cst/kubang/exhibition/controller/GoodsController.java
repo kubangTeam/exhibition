@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
@@ -12,9 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.upload;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -30,6 +31,10 @@ import java.util.*;
 public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private GoodsDao goodsDao;
+
 
     //从start到end随机取nums个不重复的整数
     public List getRandomNumList(int nums, int start, int end) {
@@ -56,7 +61,7 @@ public class GoodsController implements Constants {
         for (Object object:recId) {
             int id = Integer.parseInt(object.toString());
             if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
-                Goods goods = goodsService.queryGoodsById(id);
+                Goods goods = goodsDao.selectGoodsById(id);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
                 map.put("goodsName", goods.getGoodsName());
@@ -93,9 +98,17 @@ public class GoodsController implements Constants {
     })
     @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
     @ResponseBody
-    public Goods queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
-        Goods goods  = goodsService.queryGoodsById(goodsId);
-        return goods;
+    public Map<String,Object> queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
+        Map<String,Object> map = new HashMap<>();
+        Goods goods  = goodsDao.selectGoodsById(goodsId);
+        //获取商家名称
+        String companyName = goodsService.selectCompanyInformationByGoodsId(goodsId).getName();
+        //获取分类名称
+
+        map.put("goodsInformation",goods);
+        map.put("companyName",companyName);
+
+        return map;
     }
     //根据类别Id查询所有在展的商品；
     // 请求参数：类别ID；
@@ -169,7 +182,7 @@ public class GoodsController implements Constants {
                     picValue = "未选择文件";
                 else {
                     GoodsPic goodsPic = new GoodsPic();
-                    goodsPic.setPic(uploadFile(path, file));
+                    goodsPic.setPic(upload.uploadFile(path, file));
                     goodsPic.setGoodsId(goods.getGoodsId());
                     goodsService.addGoodsPic(goodsPic);
                 }
@@ -204,7 +217,7 @@ public class GoodsController implements Constants {
         }
         else{
             GoodsPic goodsPic = new GoodsPic();
-            goodsPic.setPic(uploadFile(path,file));
+            goodsPic.setPic(upload.uploadFile(path,file));
             goodsPic.setGoodsId(goodsId);
             goodsService.addGoodsPic(goodsPic);
             value = "上传成功";
@@ -299,21 +312,6 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
-    public static String uploadFile(String path, MultipartFile file) throws IOException {
 
-        String fileName = file.getOriginalFilename();  // 文件名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 后缀名
-        fileName = UUID.randomUUID() + suffixName; // 新文件名
-        // 创建文件实例
-        File filePath = new File(path, fileName);
-        // 如果文件目录不存在，创建目录
-        if (!filePath.getParentFile().exists()) {
-            filePath.getParentFile().mkdirs();
-            System.out.println("创建目录" + filePath);
-        }
-        // 写入文件
-        file.transferTo(filePath);
-        return filePath.toString();
-    }
 
 }

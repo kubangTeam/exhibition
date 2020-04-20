@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsJoinExhibitionDao">
+    <sql id="selectFields">
+        id,goodsId,exhibitionId,subareaId
+    </sql>
+
+    <select id="selectCompanyIdByExhibitionId" resultType="GoodsJoinExhibition">
+        select <include refid="selectFields"></include>
+        from goodsjoinexhibition
+        where exhibitionId = #{exhibitionId} and goodsId = #{goodsId}
+    </select>
+
+    <select id="checkGoodsSubarea" resultType="GoodsJoinExhibition">
+        select <include refid="selectFields"></include>
+        from goodsjoinexhibition
+        where exhibitionId = #{exhibitionId} and goodsId = #{goodsId} and subareaId = #{subareaId}
+    </select>
+</mapper>

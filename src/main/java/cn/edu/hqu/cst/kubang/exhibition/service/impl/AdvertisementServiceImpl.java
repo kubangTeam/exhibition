@@ -80,6 +80,7 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
         long value = data.getTime();
         data.setTime(value);
 
+        //去掉不符合时间的广告横幅
         Iterator<Advertisement> it = advertisementList.iterator();
         while (it.hasNext()) {
             Advertisement advertisement = it.next();
@@ -90,6 +91,7 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
             }
         }
         System.out.println(advertisementList);
+        //从符合时间条件的广告中分出不同的优先级
         for (int i = 0; i < advertisementList.size(); i++) {
             if (advertisementList.get(i).getPriority() == 2) {
                 priority2.add(advertisementList.get(i));
@@ -101,6 +103,7 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
                 System.out.println("优先级字段出错");
             }
         }
+        //从不同的优先级列表中随机选取n（3，3，2）个元素
         priority2 = getSubStringByRandom(priority2, 3);
         priority1 = getSubStringByRandom(priority1, 3);
         priority0 = getSubStringByRandom(priority0, 2);

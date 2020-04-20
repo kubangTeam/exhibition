@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao">
+    <sql id="selectFields">
+        id,companyId,exhibitionId
+    </sql>
+
+    <sql id="insertFields">
+        companyId,exhibitionId
+    </sql>
+
+    <select id="selectCompanyIdByExhibitionId" resultType="CompanyJoinExhibition">
+        select <include refid="selectFields"></include>
+        from companyjoinexhibition
+        where exhibitionId = #{exhibitionId}
+    </select>
+
+    <insert id="insertCompanyJoinExhibition" parameterType="CompanyJoinExhibition" keyProperty="id">
+        insert into companyjoinexhibition (<include refid="insertFields"></include>)
+        values
+        (#{companyId},#{exhibitionId})
+    </insert>
+
+    <delete id="delete">
+        delete from companyjoinexhibition
+        where
+        id =#{id}
+    </delete>
+
+</mapper>

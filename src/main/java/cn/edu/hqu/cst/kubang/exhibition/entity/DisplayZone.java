@@ -8,31 +8,6 @@ import org.springframework.stereotype.Component;
  *  @Description: 商品分类
  */
 @Component
-public class GoodsType {
-    private int id;
-    private String goodsType;
+public class DisplayZone {
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getGoodsType() {
-        return goodsType;
-    }
-
-    public void setGoodsType(String goodsType) {
-        this.goodsType = goodsType;
-    }
-
-    @Override
-    public String toString() {
-        return "GoodsType{" +
-                "id=" + id +
-                ", goodsType='" + goodsType + '\'' +
-                '}';
-    }
 }

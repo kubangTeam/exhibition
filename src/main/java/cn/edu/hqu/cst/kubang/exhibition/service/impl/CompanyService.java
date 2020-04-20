@@ -5,9 +5,12 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class ComapanyService  implements ICompanyService {
+@Service
+public class CompanyService implements ICompanyService {
     @Autowired
     Company company;
 
@@ -21,7 +24,7 @@ public class ComapanyService  implements ICompanyService {
     UserInformation userInformation;
 
     @Override
-    public void CompanyIdentify(int userId, String name, String address,
+    public int CompanyIdentify(int userId, String name, String address,
                                 String website, String type, String introduce,
                                 String HeadPicture) {
         company.setName(name);
@@ -38,11 +41,13 @@ public class ComapanyService  implements ICompanyService {
         company.setHeadPicture(headPicture);
 
         //公司认证状态 1：上传成功，等待审核
-        company.setIdentifyStatus("1");
+        company.setIdentifyStatus(1);
 
         //保存商家用户
-        companyDao.
-
+        //报错提醒
+        companyDao.addUnidentifiedCompanyInfo(company);
+        return(1);
     }
+
 
 }

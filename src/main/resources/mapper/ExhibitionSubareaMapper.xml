@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionSubareaDao">
+    <sql id="selectFields">
+        id,exhibitionId,subarea
+    </sql>
+
+    <select id="selectByExhibitionId" resultType="ExhibitionSubarea">
+        select <include refid="selectFields"></include>
+        from exhibitionsubarea
+        where exhibitionId = #{exhibitionId}
+    </select>
+</mapper>
