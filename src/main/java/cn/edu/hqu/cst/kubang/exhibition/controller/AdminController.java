@@ -28,7 +28,9 @@ import java.util.List;
  * 3、查询功能：关键字查询、状态查询
  * 4、管理功能：对商家、商品、展会信息、广告进行修改、删除
  *
- *
+ *  接口简介
+ *  1、/queryAllExhibition/{pageNum}  通过页数查询固定长度（pageSize1）的展会信息
+ *  2、/queryExhibition/{status}/{pageNum}  通过展会状态、页数查询固定长度（pageSize1）的展会信息
  */
 @RestController
 @RequestMapping("/Admin")

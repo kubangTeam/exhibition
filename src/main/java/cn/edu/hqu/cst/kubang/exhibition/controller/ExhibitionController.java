@@ -27,6 +27,10 @@ import java.util.*;
  * 根据人群划分划分路径和方法名
  * 买家buyer 卖家(商家)seller 管理员admin 买家与卖家(用户)user 卖家与管理员(服务者)server 买家卖家管理员(所有人)all
  * 此外还增加了超级管理员superAdmin 它唯一职责就是可以对已删除的展会进行操作,暂时还不写
+ *
+ *
+ * 接口简介
+ * 1、
  */
 @RestController
 @RequestMapping("/exhibition")
@@ -54,7 +58,6 @@ public class ExhibitionController {
     @Autowired
     private ExhibitionDao exhibitionDao;
 
-
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个
 
@@ -64,10 +67,16 @@ public class ExhibitionController {
      * @param exhibition
      * @return
      */
-    @PostMapping("/seller/add")
-    @ApiOperation(value = "商家添加一个展会")
+    @PostMapping("/holdExhibition")
+    @ApiOperation(value = "展会举办方举办一个展会",notes = "提交展会信息字段：")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "exhibition", value = "展会对象", required = true, dataType = "Exhibition", paramType = "body")
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "file", value = "企业营业执照", required = true, dataType = "MultipartFile", paramType = "query")
     })
     public Map<String, String> sellerAdd(@RequestBody Exhibition exhibition) {
         String value = "";

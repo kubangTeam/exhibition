@@ -26,6 +26,15 @@ public class UserInformation implements Serializable {
     private String userPicture;
     private String userChooseCity;
     private String userEmail;
+    private int userOrganizerId;
+
+    public int getUserOrganizerId() {
+        return userOrganizerId;
+    }
+
+    public void setUserOrganizerId(int userOrganizerId) {
+        this.userOrganizerId = userOrganizerId;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -138,6 +147,7 @@ public class UserInformation implements Serializable {
                 ", userPicture='" + userPicture + '\'' +
                 ", userChooseCity='" + userChooseCity + '\'' +
                 ", userEmail='" + userEmail + '\'' +
+                ", userOrganizerId=" + userOrganizerId +
                 '}';
     }
 }

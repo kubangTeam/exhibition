@@ -3,6 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao">
+
+    <sql id="selectFields">
+        userId,userAccount,userCompanyId,userName,userPassword,userSex,userPermission,userIntegral,userReccode,
+        userPicture,userChooseCity,userEmail,userOrganizerId
+    </sql>
+
+    <sql id="insertFields">
+        userAccount,userCompanyId,userName,userPassword,userSex,userPermission,userIntegral,userReccode,
+        userPicture,userChooseCity,userEmail,userOrganizerId
+    </sql>
+
     <select id="selectById" resultType="UserInformation">
         select * from userinformation where userId = #{id}
     </select>
@@ -40,5 +51,13 @@
     </update>
     <select id="IsUserEmailBind" parameterType="String" resultType="int">
         select count(userId) from userinformation where userEmail = #{email};
+    </select>
+
+
+
+    <select id="GetUserInfoFromOrganizerId" parameterType="int" resultType="UserInformation">
+        select <include refid="selectFields"></include>
+        from userinformation
+        where userOrganizerId = #{userOrganizerId}
     </select>
 </mapper>

@@ -4,6 +4,8 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * author sunquan
  * Description 用户表mapper类
@@ -25,4 +27,7 @@ public interface UserInformationDao {
     void UpdateUserInfo_UserPicture(String account,String picture);
     int saveUserEmail(Integer userId, String userEmail);
     int IsUserEmailBind(String email);
+    List<UserInformation> GetUserInfoFromOrganizerId(int OrganizerId);
+
+
 }
