@@ -9,6 +9,7 @@ public class CompanyJoinExhibition {
     private int companyId;
     private int exhibitionId;
 
+    //git test
     public int getId() {
         return id;
     }
