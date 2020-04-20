@@ -69,6 +69,10 @@ public class Goods implements Serializable{
     @Field(type = FieldType.Integer)
     private int priority;//优先级
 
+    @Field(type = FieldType.Text)
+    private  String image;
+
+
     public int getGoodsId() {
         return goodsId;
     }
@@ -181,6 +185,14 @@ public class Goods implements Serializable{
         this.priority = priority;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         return "Goods{" +
@@ -198,6 +210,7 @@ public class Goods implements Serializable{
                 ", endTime=" + endTime +
                 ", goodsStatus=" + goodsStatus +
                 ", priority=" + priority +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

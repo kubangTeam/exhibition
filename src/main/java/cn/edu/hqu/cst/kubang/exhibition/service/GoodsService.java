@@ -6,15 +6,13 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
-import cn.edu.hqu.cst.kubang.exhibition.entity.DisplayZone;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author SunChonggao
@@ -28,25 +26,27 @@ public class GoodsService implements Constants {
     private GoodsDao goodsDao;
 
     @Autowired
+    private Goods goods;
+
+    @Autowired
     private Company company;
 
     @Autowired
-    private CompanyDao companyDao;
+    private  CompanyDao companyDao;
 
-    @Autowired
-    private DisplayZone goodsType;
-
-    @Autowired
-    private GoodsPic goodsPic;
-
-
-
-
-   //查询所有商品
-    public List<Goods> queryGoodsALl(){
-        return goodsDao.selectAllGoods();
+    //查询展品
+        //根据ID和状态查询在展和不在展的商品
+    public Goods queryGoodsById(int goodsId){
+        Goods goods = goodsDao.selectGoodsById(goodsId);
+        GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+        String image = goodsPic.getPic();
+        goods.setImage(image);
+        return goods;
     }
-
+        //查询所有商品
+    public List<Goods> queryGoodsALl(){
+        return this.insertImageIntoGoods(goodsDao.selectAllGoods());
+    }
     //根据展品Id查询该展品的图片
     public List<GoodsPic> queryGoodsPic(int goodsId){
         return goodsDao.selectGoodsPicByGoodsId(goodsId);
@@ -55,7 +55,7 @@ public class GoodsService implements Constants {
     //根据公司ID和状态查询在展和不在展的商品
     public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW);
+        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW));
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
@@ -63,12 +63,13 @@ public class GoodsService implements Constants {
     public PageInfo<Goods> queryAllGoodsByCategoryId(int categoryId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, STATE_IS_ON_SHOW);
+
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {
-        return goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW);
+        return this.insertImageIntoGoods(goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW));
     }
     //查询商品总数
     public int queryGoodsCount(){
@@ -108,43 +109,19 @@ public class GoodsService implements Constants {
     public int deleteGoodsPic(int picId){
         return goodsDao.deleteGoodsPic(picId);
     }
-
-    /**
-     * 根据商品id查询商家信息
-     */
-    public Company selectCompanyInformationByGoodsId(int goodsId){
-        int companyId = goodsDao.selectGoodsById(goodsId).getCompanyId();
-        Company company = companyDao.selectCompanyInformationById(companyId);
-        return company;
+    private List<Goods> insertImageIntoGoods (List<Goods> list){
+        for(Goods goods : list) {
+            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+            String image = goodsPic.getPic();
+            goods.setImage(image);
+        }
+        return list;
     }
 
 
-    /**
-     * 根据商品id返回补充的商品详情
-     * 1、商品类别转换为中文
-     * 2、商品所属公司转为中文
-     * 3、添加一个商品照片作为前台显示使用
-     *
-     * 未完成
-     */
-    public Map<String,Object> selectGoodsInformation(int goodsId){
-        Map<String,Object> map = new HashMap<>();
-        Goods good  = goodsDao.selectGoodsById(goodsId);
-        //获取商家名称
-        String companyName =selectCompanyInformationByGoodsId(goodsId).getName();
-        //获取分类名称
-        int typeId = good.getCategoryId();
-        //String goodType = goodsTypeDao.selectGoodsTypeById(typeId).getGoodsType();
-        //获取商品封面
-
-        map.put("goodInformation",good);
-        //map.put("goodType",goodType);
-        map.put("companyName",companyName);
-        return map;
-
-
-
+    public Company selectCompanyInformationByGoodsId(int goodsId) {
+        goods = goodsDao.selectGoodsById(goodsId);
+        company =companyDao.selectCompanyInformationById(goods.getCompanyId());
+        return  company;
     }
-
-
 }

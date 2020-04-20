@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,33 +45,48 @@ public class SearchController {
 
     }
 
-    @RequestMapping(value = "/goods", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展品")
+    @RequestMapping(value = "/goods/{num}", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展品", notes = "num=1/2/3,分别对应综合、热度、时间")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     public Page<Goods> searchGoods(@RequestParam(value = "keyword") String keyword,
+                                   @PathVariable(value = "num") String num,
                                    @RequestParam(value = "pageNum") int pageNum,
                                    @RequestParam(value = "pageSize") int pageSize) {
-        Page<Goods> result= elasticsearchService.searchGoods(keyword, pageNum, pageSize);
+        String factor = numToFactor(Integer.valueOf(num));
+        Page<Goods> result= elasticsearchService.searchGoods(keyword, factor,  pageNum, pageSize);
         return result;
     }
-    @RequestMapping(value = "/exhibition", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展会")
+    @RequestMapping(value = "/exhibition/{num}", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展会", notes = "num=1/2/3,分别对应综合、热度、时间")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public Page<Exhibition> searchExhibition(@RequestParam(value = "keyword") String keyword,
+    public Page<Exhibition> searchExhibition(@PathVariable(value = "num") int num,
+                                             @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "pageNum") int pageNum,
                                              @RequestParam(value = "pageSize") int pageSize) {
-        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
+        String factor = numToFactor(num);
+        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, factor, pageNum, pageSize);
         return result;
     }
 
+    private static String numToFactor(int num) {
+        String factor = null;
+        switch (num){
+            case 1 : factor = "goodsId"; break;
+            case 2 : factor = "priority"; break;
+            case 3 : factor = "startTime"; break;
+        }
+        return factor;
+    }
 
 
 }
