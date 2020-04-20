@@ -19,4 +19,5 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "管理员功能")
 public class AdminController {
 
+
 }

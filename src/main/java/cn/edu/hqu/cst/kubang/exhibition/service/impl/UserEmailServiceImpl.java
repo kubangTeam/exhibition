@@ -22,7 +22,6 @@ public class UserEmailServiceImpl implements IUserEmailService {
 
     @Autowired
     private UserCodeDao userCodeDao;
-
     @Autowired
     private UserInformationDao userDao;
     @Autowired
@@ -61,7 +60,8 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Override
     @NullDisable
     public boolean isUserEmailSingle(String email) {
-        return userDao.IsUserEmailBind(email) == 0 ? true : false;
+        return
+                userDao.IsUserEmailBind(email) == 0 ? true : false;
     }
 
     @Override

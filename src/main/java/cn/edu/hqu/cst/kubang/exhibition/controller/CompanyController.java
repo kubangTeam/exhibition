@@ -32,6 +32,9 @@ import java.util.Map;
  * 4、管理功能：
  *      1、对商品、广告进行修改、删除、增加
  *      2、个人资料管理
+ *
+ *  1、/identify 公司认证
+ *  2、/getInformation 获取公司资料
  */
 @Controller
 @RequestMapping("/company")

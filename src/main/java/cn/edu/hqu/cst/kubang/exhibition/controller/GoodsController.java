@@ -104,7 +104,6 @@ public class GoodsController implements Constants {
         //获取商家名称
         String companyName = goodsService.selectCompanyInformationByGoodsId(goodsId).getName();
         //获取分类名称
-
         map.put("goodsInformation",goods);
         map.put("companyName",companyName);
 
