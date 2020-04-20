@@ -35,6 +35,7 @@ import java.util.Map;
  *
  *  1、/identify 公司认证
  *  2、/getInformation 获取公司资料
+ *  3、/updateInformation 修改商家资料
  */
 @Controller
 @RequestMapping("/company")

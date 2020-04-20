@@ -37,7 +37,7 @@ public class esTest {
     public void testInsert() {
         //goodsRepository.save(goodsDao.selectGoodsById(1));
        // goodsRepository.save(goodsDao.selectGoodsById(3));
-        System.out.println(elasticsearchService.searchExhibition("体育",0,1));
+        //System.out.println(elasticsearchService.searchExhibition("体育",0,1));
 
     }
 }
