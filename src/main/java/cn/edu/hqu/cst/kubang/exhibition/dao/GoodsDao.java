@@ -30,4 +30,7 @@ public interface GoodsDao {
     int updatePriority(@Param("goodsId")int goodsId, @Param("priority")int priority);//修改展品优先级
     int deleteGoods(int goodId);//根据展品ID删除
     int deleteGoodsPic(int picId);//删除展品图片
+    //根据商品类别id查询商品类型
+    String selectGoodsTypeById(int id);
+
 }

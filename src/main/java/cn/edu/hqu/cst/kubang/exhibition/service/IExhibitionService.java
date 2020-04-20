@@ -15,8 +15,7 @@ public interface IExhibitionService {
     //查询所有
     List<Exhibition> queryAll();
     PageInfo<Exhibition> queryAllExhibitions(int pageNum);
-    //根据 id查询
-    Exhibition queryExhibitionByID(Integer id);
+
     //根据 状态查询所有
     PageInfo<Exhibition> queryExhibitionsByStatus(Integer status,int pageNum);
     //根据 关键词查询所有
@@ -33,4 +32,7 @@ public interface IExhibitionService {
     int modifyExhibitionStatus(Integer id,Integer userId,Integer status);
     // 根据id修改status=4 不是真正的删除
     int deleteExhibition(Integer id,Integer userId);
+
+
+
 }

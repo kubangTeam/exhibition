@@ -75,4 +75,11 @@
         delete from goodsintroduce
         where picId = #{picId}
     </delete>
+
+
+    <select id="selectGoodsTypeById" resultType="String">
+        select goodsType
+        from goodsintroduce,goodstype
+        where goodsId = #{goodsId}
+    </select>
 </mapper>

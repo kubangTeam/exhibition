@@ -1,11 +1,19 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Mapper
+@Repository
 public interface CompanyDao {
-    void addUnidentifiedCompanyInfo(String companyName,String type,String address,String webSite,String telephone,String introduction,String codeCertificateType,String codeCertificateId,String codeCertificatePic,String responsiblePersonName,String responsiblePersonIdCard,String headPicture);
-    List<Company> getUnidentifiedCompanies();
-    void identifyCompany(String companyId);
+    int addUnidentifiedCompanyInfo(Company company);
+    //根据状态查询商家信息
+    List<Company> getCompaniesByIdentifyStatus(int identifyStatus);
+    int identifyCompany(int id);
+    Company selectCompanyInformationById(int id);//根据商家id查询商家资料
+    int updateCompanyInformation(Company company);//编辑商家的资料
+    int delete(int id);//删除数据，测试用
 }

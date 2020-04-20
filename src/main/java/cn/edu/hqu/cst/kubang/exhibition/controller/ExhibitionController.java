@@ -1,14 +1,17 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.dao.*;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -16,19 +19,51 @@ import java.util.*;
 /**
  * @author: 邢佳成
  * @Date: 2020.02.18 14:09
- * @Description: 根据人群划分划分路径和方法名
+ * @Description:
+ * 展会方相关功能
+ * 1、查看自己的展会信息。
+ * 2、申请广告
+ * 3、
+ * 根据人群划分划分路径和方法名
  * 买家buyer 卖家(商家)seller 管理员admin 买家与卖家(用户)user 卖家与管理员(服务者)server 买家卖家管理员(所有人)all
  * 此外还增加了超级管理员superAdmin 它唯一职责就是可以对已删除的展会进行操作,暂时还不写
  */
 @RestController
 @RequestMapping("/exhibition")
-@Api(tags = "展会增删改查等服务")
+@Api(tags = "展会方相关功能")
 public class ExhibitionController {
 
     @Autowired
     private IExhibitionService exhibitionService;
 
-    //商家添加一个展会，展会状态为0
+    @Autowired
+    private CompanyJoinExhibitionDao companyJoinExhibitionDao;
+
+    @Autowired
+    private CompanyJoinExhibition companyJoinExhibition;
+
+    @Autowired
+    private GoodsDao goodsDao;
+
+    @Autowired
+    private GoodsJoinExhibitionDao goodsJoinExhibitionDao;
+
+    @Autowired
+    private ExhibitionSubareaDao exhibitionSubareaDao;
+
+    @Autowired
+    private ExhibitionDao exhibitionDao;
+
+
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8个
+
+
+    /**
+     * 添加一个展会
+     * @param exhibition
+     * @return
+     */
     @PostMapping("/seller/add")
     @ApiOperation(value = "商家添加一个展会")
     @ApiImplicitParams({
@@ -58,14 +93,18 @@ public class ExhibitionController {
         return exhibitionService.queryAllExhibitionsByUserId(userId, pageNum);
     }
 
-    //管理员根据id查询展会,不会显示已删除（status=4）
-    @ApiOperation(value = "管理员根据id查询展会", notes = "不会显示已删除（status=4）")
+    /**
+     * 根据id查询展会详情
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "id查询展会")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "展会id", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/admin/query/id/{id}")
     public Exhibition adminQueryById(@PathVariable int id) {
-        return exhibitionService.queryExhibitionByID(id);
+        return exhibitionDao.queryExhibitionByID(id);
     }
 
     //管理员根据关键词查询所有的展会（除了删除的）
@@ -114,7 +153,7 @@ public class ExhibitionController {
     public Map<String, String> adminUpdateStatus(int id, int userId, int status) {
         String value;
         String code;
-        if (exhibitionService.queryExhibitionByID(id).getStatus() == 4) {
+        if (exhibitionDao.queryExhibitionByID(id).getStatus() == 4) {
             value = "找不到该展会";
             code = "016";
         } else {
@@ -212,4 +251,111 @@ public class ExhibitionController {
         PageInfo<Exhibition> pageInfo = exhibitionService.queryExhibitionsByStatusAndKeyWord(keyWord, pageNum, 2);
         return pageInfo;
     }
+    /**
+     * 根据展会id返回展会二级分类信息
+     */
+    @ApiOperation(value = "根据展会id查询展会分区信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/queryExhibitionSubareaById/{id}")
+    public List<ExhibitionSubarea> subareaInformation(@RequestParam(value = "exhibitionId")int exhibitionId) {
+        List<ExhibitionSubarea> subInformation = new ArrayList<ExhibitionSubarea>();
+        subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
+        return subInformation;
+    }
+
+    /**
+     * 根据展会id查询展会的所有商品
+     * @return
+     */
+    @ApiOperation(value = "展会一级商品推荐", notes = "据展会id查询展会的所有商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/queryGoodsByExhibitionId/{id}")
+    public PageInfo<Goods> allGoodByKeyWord(@RequestParam(value = "exhibitionId")int exhibitionId, int pageNum) {
+        //查询出展会id对应的的商家id列表
+        List companyIdList = new ArrayList<>();
+        List<CompanyJoinExhibition> companyJoinExhibitionList = new ArrayList<>();
+        companyJoinExhibitionList =  companyJoinExhibitionDao.selectCompanyIdByExhibitionId(exhibitionId);
+        for(int i =0;i<companyJoinExhibitionList.size();i++){
+            int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
+            companyIdList.add(i,companyId);
+        }
+        /**
+         * 1、根据商家列表id查询对应商家的商品id列表
+         * 2、在商品id列表中查找参加了该展会的商品
+         */
+        List<Goods> goodsList = new ArrayList<>();
+        List<Goods> temp = new ArrayList<>();
+        int index = 0;
+        for(int j =0;j<companyIdList.size();j++){
+            int companyId = (int) companyIdList.get(j);
+            temp = goodsDao.selectGoodsByCompanyId(companyId,2);
+            for(Goods goods:temp){
+                if(goodsJoinExhibitionDao.checkGoodsJoinOrNot(exhibitionId,goods.getGoodsId()) == 1){
+                    goodsList.add(index,goods);
+                    index++;
+                }
+            }
+        }
+        PageHelper.startPage(pageNum, pageSize2);
+        PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+        return pageInfo;
+
+    }
+
+    /**
+     * 根据展会id查询展会id和二级分类id查询商品
+     * @return
+     */
+    @ApiOperation(value = "展会一级商品推荐", notes = "据展会id查询展会的所有商品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/querySubareaGoodsByExhibitionId/{id}")
+    public PageInfo<Goods> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
+                                            @RequestParam(value = "subareaId")int subareaId,
+                                            int pageNum) {
+        //查询出展会id对应的的商家id列表
+        List companyIdList = new ArrayList<>();
+        List<CompanyJoinExhibition> companyJoinExhibitionList = new ArrayList<>();
+        companyJoinExhibitionList =  companyJoinExhibitionDao.selectCompanyIdByExhibitionId(exhibitionId);
+        for(int i =0;i<companyJoinExhibitionList.size();i++){
+            int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
+            companyIdList.add(i,companyId);
+        }
+        /**
+         * 1、根据商家列表id查询对应商家的商品id列表
+         * 2、在商品id列表中查找参加了该展会的商品 且符合传来的二级分区id
+         */
+        List<Goods> goodsList = new ArrayList<>();
+        List<Goods> temp = new ArrayList<>();
+        int index = 0;
+        for(int j =0;j<companyIdList.size();j++){
+            int companyId = (int) companyIdList.get(j);
+            temp = goodsDao.selectGoodsByCompanyId(companyId,2);
+            for(Goods goods:temp){
+                if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) == 1){
+                    goodsList.add(index,goods);
+                    index++;
+                }
+            }
+        }
+        PageHelper.startPage(pageNum, pageSize2);
+        PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+        return pageInfo;
+
+    }
+
+    /**
+     * 即将上线的展会
+     */
+
+
+
+
 }

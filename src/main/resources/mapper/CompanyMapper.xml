@@ -3,19 +3,64 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao">
-    <insert id="addUnidentifiedCompanyInfo" parameterType="String">
-        INSERT INTO `kubang`.`CompanyInformation`(name,type,address,website,telephone,introduction,identityStatus,codeCertificateType,codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicure)
-        VALUES(#{name},#{type},#{website},#{telephone},#{introduction},'未认证',#{codeCertificateType},#{codeCertificateId},#{codeCertificatePic},#{responsiblePersonName},#{responsiblePersonIdcard},#{headPicure})
+    <sql id="selectFields">
+        id,name,type,address,website,telephone,area,introduction,identifyStatus,codeCertificateType,
+        codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicture
+    </sql>
+
+    <sql id="insertFields">
+        name,type,address,website,telephone,area,introduction,identifyStatus,codeCertificateType,
+        codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicture
+    </sql>
+
+    <insert id="addUnidentifiedCompanyInfo" parameterType="Company" keyProperty="id">
+        insert into companyinformation (<include refid="insertFields"></include>)
+        values
+        (#{name},#{type},#{address},#{website},#{telephone},#{area},#{introduction},#{identifyStatus},#{codeCertificateType},
+        #{codeCertificateId},#{codeCertificatePic},#{responsiblePersonName},#{responsiblePersonIdcard},#{headPicture})
     </insert>
 
-    <update id="identifyCompany" parameterType="String">
-        UPDATE `kubang`.`CompanyInformation`
-        SET identifyStatus = '已认证'
-        WHERE id = #{companyId}
+    <update id="updateCompanyInformation" parameterType="Company">
+        update companyinformation
+        <set>
+            <if test = "name !=null">name =#{name},</if>
+            <if test = "type !=null">type =#{type},</if>
+            <if test = "website!=null">website =#{website},</if>
+            <if test = "telephone !=null">telephone =#{telephone},</if>
+            <if test = "introduction!=null">introduction =#{introduction},</if>
+            <if test = "identifyStatus !=null">identifyStatus =#{identifyStatus},</if>
+            <if test = "codeCertificateType!=null">codeCertificateType =#{codeCertificateType},</if>
+            <if test = "codeCertificateId !=null">codeCertificateId =#{codeCertificateId},</if>
+            <if test = "codeCertificatePic !=null">codeCertificatePic =#{codeCertificatePic},</if>
+            <if test = "responsiblePersonName !=null">responsiblePersonName =#{responsiblePersonName},</if>
+            <if test = "responsiblePersonIdcard !=null">responsiblePersonIdcard =#{responsiblePersonIdcard},</if>
+            <if test = "headPicture !=null">headPicure =#{headPicture}</if>
+        </set>
+        where id = #{id}
     </update>
 
-    <select id="getUnidentifiedCompanies">
-        SELECT * FROM `kubang`.`CompanyInformation`
-        WHERE identifyStatus = '未认证'
+    <update id="identifyCompany">
+        UPDATE `kubang`.`CompanyInformation`
+        SET identifyStatus = 2
+        WHERE id = #{id}
+    </update>
+
+    <select id="getCompaniesByIdentifyStatus" resultType="Company">
+        SELECT <include refid="selectFields"></include>
+        FROM companyinformation
+        WHERE identifyStatus = #{identifyStatus}
     </select>
+
+
+    <select id="selectCompanyInformationById" resultType="Company">
+        SELECT <include refid="selectFields"></include>
+        FROM companyinformation
+        WHERE id = #{id}
+    </select>
+
+    <delete id="delete">
+        delete from companyinformation
+        where
+        id =#{id}
+    </delete>
 </mapper>

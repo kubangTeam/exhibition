@@ -23,11 +23,6 @@ import java.util.List;
 @SpringBootTest
 @ContextConfiguration(classes = ExhibitionApplication.class)
 public class AdvertisementMapperTests {
-    //@Autowired
-    //private Advertisement companyAdvertisement;
-
-    //@Autowired
-    //private Advertisement organizerAdvertisement;
 
     @Autowired
     private AdvertisementDao advertisementDao;
@@ -140,10 +135,12 @@ public class AdvertisementMapperTests {
 //        System.out.println(row);
 //        System.out.println(row1);
 //    }
-    @Test
-    public void deleteAllAds(){
-        int row = advertisementDao.deleteAllAds();
-        System.out.println(row);
-    }
+
+
+//    @Test
+//    public void deleteAllAds(){
+//        int row = advertisementDao.deleteAllAds();
+//        System.out.println(row);
+//    }
 
 }

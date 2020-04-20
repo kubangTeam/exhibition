@@ -4,6 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao">
 
+
+    <sql id="selectFields">
+
+    </sql>
+
+    <sql id="insertFields">
+
+    </sql>
+
+    <select id="queryGoodsByExhibitionId" resultType="Goods">
+        select
+        from exhibitiondetail where `status` != 4
+    </select>
+
     <select id="queryAllExhibitions" resultType="Exhibition">
         select * from exhibitiondetail where `status` != 4
     </select>

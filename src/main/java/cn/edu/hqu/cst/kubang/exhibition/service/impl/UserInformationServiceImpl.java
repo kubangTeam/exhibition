@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserInformationImpl implements IUserInformationService {
+public class UserInformationServiceImpl implements IUserInformationService {
 
     @Autowired
     UserInformation userInformation;
@@ -23,13 +23,13 @@ public class UserInformationImpl implements IUserInformationService {
      * 判断该账号是否认证为商家
      */
     @Override
-    public boolean isCompanyOrNot(int userId) {
+    public int isCompanyOrNot(int userId) {
         userInformation = userInformationDao.GetUserInfoFromId(userId);
         int userCompanyId = userInformation.getUserCompanyId();
         if(userCompanyId !=0){
-            return true;
+            return userCompanyId;
         }else{
-            return false;
+            return 0;
         }
     }
 }
