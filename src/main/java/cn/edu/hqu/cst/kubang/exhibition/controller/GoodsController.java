@@ -228,7 +228,7 @@ public class GoodsController implements Constants {
     }
     @ApiOperation(value = "通过url获取展品图片")
     @RequestMapping(value = "/goodsPic/{fileName}" , method = RequestMethod.GET)
-    public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
+    public void getPic(@PathVariable("fileName") String fileName, HttpServletResponse response){
         //服务器存放的路径
         fileName = uploadPath + "/" +fileName;
         //获取fileName的后缀名

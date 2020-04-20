@@ -66,4 +66,7 @@ public class Goods implements Serializable{
 
     @Field(type = FieldType.Integer)
     private int priority;//优先级
+
+    @Field(type = FieldType.Text)
+    private  String image;
 }

@@ -25,11 +25,15 @@ public class GoodsService implements Constants {
     //查询展品
         //根据ID和状态查询在展和不在展的商品
     public Goods queryGoodsById(int goodsId){
-        return goodsDao.selectGoodsById(goodsId);
+        Goods goods = goodsDao.selectGoodsById(goodsId);
+        GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+        String image = goodsPic.getPic();
+        goods.setImage(image);
+        return goods;
     }
         //查询所有商品
     public List<Goods> queryGoodsALl(){
-        return goodsDao.selectAllGoods();
+        return this.insertImageIntoGoods(goodsDao.selectAllGoods());
     }
     //根据展品Id查询该展品的图片
     public List<GoodsPic> queryGoodsPic(int goodsId){
@@ -39,7 +43,7 @@ public class GoodsService implements Constants {
     //根据公司ID和状态查询在展和不在展的商品
     public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW);
+        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW));
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
@@ -47,12 +51,13 @@ public class GoodsService implements Constants {
     public PageInfo<Goods> queryAllGoodsByCategoryId(int categoryId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, STATE_IS_ON_SHOW);
+
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {
-        return goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW);
+        return this.insertImageIntoGoods(goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW));
     }
     //查询商品总数
     public int queryGoodsCount(){
@@ -91,6 +96,14 @@ public class GoodsService implements Constants {
     //删除展品图片
     public int deleteGoodsPic(int picId){
         return goodsDao.deleteGoodsPic(picId);
+    }
+    private List<Goods> insertImageIntoGoods (List<Goods> list){
+        for(Goods goods : list) {
+            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+            String image = goodsPic.getPic();
+            goods.setImage(image);
+        }
+        return list;
     }
 
 }
