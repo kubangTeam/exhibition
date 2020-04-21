@@ -6,4 +6,9 @@ package cn.edu.hqu.cst.kubang.exhibition.service;
 public interface IAccountService {
 
     int isOrganizerOrNot(int userId);
+
+    //用户手机号注册
+    int registerByPhoneNumber();
+
+    int isCompanyOrNot(int userId);
 }

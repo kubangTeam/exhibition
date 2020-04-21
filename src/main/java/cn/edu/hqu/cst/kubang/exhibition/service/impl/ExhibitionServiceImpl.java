@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Advertisement;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.OrganizerInformation;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -77,6 +79,34 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 //       }
 
 
+    }
+
+    /**
+     * 返回即将上线的展会信息
+     * @return
+     */
+    @Override
+    public List<Exhibition> queryReadyToStartExhibitionInfo() {
+        //查询审核通过的展会列表
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(2);
+
+        //获取当前时间
+        Date data = new Date();
+        long value = data.getTime();
+        data.setTime(value);
+
+        //去掉不符合时间的展会
+        Iterator<Exhibition> it = exhibitionList.iterator();
+        while (it.hasNext()) {
+            exhibition = it.next();
+            int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
+            int compareEnd = data.compareTo(exhibition.getEndTime());
+            if (!(compareStart == 1 && compareEnd == -1)) {
+                it.remove();
+            }
+        }
+        System.out.println(exhibitionList);
+        return exhibitionList;
     }
 
 

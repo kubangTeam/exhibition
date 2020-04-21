@@ -68,6 +68,4 @@ public class OrganizerController {
         return map;
     }
 
-
-
 }

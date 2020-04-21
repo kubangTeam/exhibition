@@ -22,6 +22,8 @@ public interface IExhibitionService {
     int holdExhibition(int userId, String name, Date startTime, Date endTime,
                        int exhibitionHallId,int session,String period,
                        String introduce, String picPath);
+
+    List<Exhibition> queryReadyToStartExhibitionInfo();
 //    //查询所有
 //    List<Exhibition> queryAll();
 //    PageInfo<Exhibition> queryAllExhibitions(int pageNum);

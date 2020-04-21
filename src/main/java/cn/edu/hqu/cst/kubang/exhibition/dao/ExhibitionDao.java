@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
+import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,7 +26,7 @@ public interface ExhibitionDao {
     List<Exhibition> queryExhibitionsByStatus(Integer status);
 
     //根据 关键词查询所有
-    List<Exhibition> queryExhibitionsByKeyWord(String[] keyWords);
+    List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
 
     // 新增 保存修改
     int saveExhibition(Exhibition exhibition);
@@ -37,4 +38,7 @@ public interface ExhibitionDao {
     int modifyExhibition(Exhibition exhibition);
 
     int deleteAll();//删除所有数据，测试用
+
+    //根据展会id查询所有参加该展会的商家id
+    List<CompanyJoinExhibition> selectCompanyIdByExhibitionId(int exhibitionId);
 }

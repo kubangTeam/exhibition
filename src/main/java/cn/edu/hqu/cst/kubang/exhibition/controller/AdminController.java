@@ -11,12 +11,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunquan
@@ -31,6 +30,9 @@ import java.util.List;
  *  接口简介
  *  1、/queryAllExhibition/{pageNum}  通过页数查询固定长度（pageSize1）的展会信息
  *  2、/queryExhibition/{status}/{pageNum}  通过展会状态、页数查询固定长度（pageSize1）的展会信息
+ *  3、/queryExhibitionByKeyWord/{keyword}/{pageNum} 通过关键字、页数查询固定长度（pageSize1）的展会信息
+ *  4、/updateExhibitionInfo 修改展会信息
+ *  5、/updateExhibitionStatus 修改展会状态
  */
 @RestController
 @RequestMapping("/Admin")
@@ -65,12 +67,89 @@ public class AdminController {
             @ApiImplicitParam(name = "status", value = "展会的状态", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
-    @GetMapping("/queryExhibition/{status}/{pageNum}")
+    @GetMapping("/queryExhibitionByStatus/{status}/{pageNum}")
     public PageInfo<Exhibition> adminQueryExhibitionByStatus(@PathVariable int status, @PathVariable int pageNum) {
         PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList  = exhibitionDao.queryExhibitionsByStatus(status);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
+
+    //管理员用过关键字查询所有展会
+    @ApiOperation(value = "管理员根据关键词查询所有的展会")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "keyWord", value = "关键词", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/queryExhibitionByKeyWord/{keyword}/{pageNum}")
+    public PageInfo<Exhibition> adminQueryExhibitionByKeyWords(String keyWord, int pageNum) {
+        PageHelper.startPage(pageNum, pageSize1);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        PageInfo<Exhibition> pageInfo =new PageInfo<>(exhibitionList);
+        return pageInfo;
+    }
+
+    //管理员修改展会信息（不可修改状态,修改状态有专门方法）
+    @ApiOperation(value = "管理员修改展会全部信息", notes = "不可修改状态,修改状态有专门方法")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exhibition", value = "展会对象", required = true, dataType = "Exhibition", paramType = "body")
+    })
+    @PutMapping("/updateExhibitionInfo")
+    public Map<String, String> serverUpdateAll(@RequestBody Exhibition exhibition) {
+        String value;
+        String code;
+        int i = exhibitionDao.modifyExhibition(exhibition);
+        if (i == -1) {
+            value = "存在空参数";
+            code = "024";
+        } else if (i == 1) {
+            value = "修改成功";
+            code = "005";
+        } else {
+            value = "系统异常";
+            code = "-001";
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+
+    //管理员修改展会状态，不可修改已删除的展会，因为他看不到
+    @ApiOperation(value = "管理员修改展会状态", notes = "不可修改已删除的展会")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "展会id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "展会的状态", required = true, dataType = "int", paramType = "query")
+    })
+    @PutMapping("/updateExhibitionStatus")
+    public Map<String, String> adminUpdateStatus(int id,int status) {
+        String value;
+        String code;
+        if (exhibitionDao.queryExhibitionByID(id).getStatus() == 4) {
+            value = "找不到该展会";
+            code = "016";
+        } else {
+            int i =exhibitionDao.modifyExhibitionStatus(id, status);
+            if (i == -1) {
+                value = "无权限";
+                code = "004";
+            } else if (i == 1) {
+                value = "修改成功";
+                code = "005";
+            } else {
+                value = "系统异常";
+                code = "-001";
+            }
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+
+
+
 
 }

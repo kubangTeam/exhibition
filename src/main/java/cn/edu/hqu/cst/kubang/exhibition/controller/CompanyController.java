@@ -2,23 +2,25 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.CompanyService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.UserInformationServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.upload;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +38,7 @@ import java.util.Map;
  *  1、/identify 公司认证
  *  2、/getInformation 获取公司资料
  *  3、/updateInformation 修改商家资料
+ *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
  */
 @Controller
 @RequestMapping("/company")
@@ -52,6 +55,9 @@ public class CompanyController {
 
     @Autowired
     UserInformationServiceImpl userInformationService;
+
+    @Value("${pagehelper.pageSize1}")
+    private int pageSize1;//一页显示8个
 
     @ApiOperation(value = "公司认证",notes = "前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、简介、营业执照（照片）")
     @ApiImplicitParams({
@@ -139,5 +145,22 @@ public class CompanyController {
         }
 
     }
+
+
+    //商家查询我的公司的的展会
+    @ApiOperation(value = "商家查询自己公司的参加过的展会")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/queryAttendedExhibition/{userId}/{pageNum}")
+    public PageInfo<Exhibition> sellerQueryCompanyExhibitions(@PathVariable int userId, @PathVariable int pageNum) {
+        PageHelper.startPage(pageNum, pageSize1);
+        List<Exhibition> exhibitionList  = companyService.queryCompanyAttendedExhibition(userId);
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
+
+    }
+
 
 }
