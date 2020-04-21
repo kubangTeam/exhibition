@@ -30,11 +30,10 @@ import java.util.*;
  *
  *
  * 接口简介
- * 1、/holdExhibition 展会举办方举办一个展会
- * 2、/queryExhibitionSubareaById/{id} 根据展会id查询展会分区信息
- * 3、/queryGoodsByExhibitionId/{id} 据展会id查询展会的所有商品
- * 4、/querySubareaGoodsByExhibitionId/{id} 根据展会id和分区id查询展会分区商品信息
- * 5、/queryReadyToStartExhibitionInfo 返回即将上线的展会信息
+ * 1、/queryExhibitionSubareaById/{id} 根据展会id查询展会分区信息
+ * 2、/queryGoodsByExhibitionId/{id} 据展会id查询展会的所有商品
+ * 3、/querySubareaGoodsByExhibitionId/{id} 根据展会id和分区id查询展会分区商品信息
+ * 4、/queryReadyToStartExhibitionInfo 返回即将上线的展会信息
  */
 @RestController
 @RequestMapping("/exhibition")
@@ -64,35 +63,6 @@ public class ExhibitionController {
 
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个
-
-    /**
-     * 添加一个展会
-     * @param exhibition
-     * @return
-     */
-    @PostMapping("/holdExhibition")
-    @ApiOperation(value = "展会举办方举办一个展会",notes = "提交展会信息字段：")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "file", value = "企业营业执照", required = true, dataType = "MultipartFile", paramType = "query")
-    })
-    public Map<String, String> sellerAdd(@RequestBody Exhibition exhibition) {
-        String value = "";
-        String code = "";
-        if (exhibitionDao.saveExhibition(exhibition) > 0) {
-            value = "添加成功";
-            code = "005";
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
-    }
 
     /**
      * 根据展会id返回展会二级分类信息
