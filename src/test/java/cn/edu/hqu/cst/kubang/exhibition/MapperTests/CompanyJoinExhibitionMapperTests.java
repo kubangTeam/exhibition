@@ -1,7 +1,9 @@
 package cn.edu.hqu.cst.kubang.exhibition.MapperTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -21,6 +23,12 @@ public class CompanyJoinExhibitionMapperTests {
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
+    @Autowired
+    private CompanyDao companyDao;
+
+    @Autowired
+    private ExhibitionDao exhibitionDao;
+
     @BeforeClass
     public static void beforeClass(){
 
@@ -39,20 +47,20 @@ public class CompanyJoinExhibitionMapperTests {
         //需要注意exhibitionId为外键，添加的测试数据的id需要在展会信息表中存在。
         companyJoinExhibition.setCompanyId(1);
         companyJoinExhibition.setExhibitionId(37);
-        if(companyJoinExhibitionDao.insertCompanyJoinExhibition(companyJoinExhibition) ==1)
+        if(companyDao.insertCompanyJoinExhibition(companyJoinExhibition) ==1)
             System.out.println("添加数据成功");
     }
 
     @After
     public void after(){
-        if(companyJoinExhibitionDao.delete(companyJoinExhibition.getId())==1)
+        if(companyDao.deleteAttend(companyJoinExhibition.getId())==1)
             System.out.println("删除成功");
     }
 
     @Test
     public void testSelectCompanyIdByExhibitionId(){
         //当外键不存在的时候，查询会出错。
-        List<CompanyJoinExhibition> rows =companyJoinExhibitionDao.selectCompanyIdByExhibitionId(37);
+        List<CompanyJoinExhibition> rows =exhibitionDao.selectCompanyIdByExhibitionId(37);
         System.out.println(rows);
     }
 }

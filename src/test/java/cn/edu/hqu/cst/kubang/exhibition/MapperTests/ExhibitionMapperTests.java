@@ -73,7 +73,7 @@ public class ExhibitionMapperTests {
 
     @Test
     public void testQueryExhibitionsByKeyWord(){
-        String[] test = {"测试","试一试"};
+        String test = "测试";
         System.out.println(exhibitionDao.queryExhibitionsByKeyWord(test));
     }
 

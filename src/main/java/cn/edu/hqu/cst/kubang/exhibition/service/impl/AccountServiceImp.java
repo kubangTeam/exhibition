@@ -6,7 +6,9 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.OrganizerInformation;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AccountServiceImp implements IAccountService {
     @Autowired
     private OrganizerInformation organizerInformation;
