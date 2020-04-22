@@ -75,11 +75,9 @@
         delete from goodsintroduce
         where picId = #{picId}
     </delete>
-
-
-    <select id="selectGoodsTypeById" resultType="String">
-        select goodsType
-        from goodsintroduce,goodstype
-        where goodsId = #{goodsId}
+    <select id="selectCompanyNameById" resultType="String">
+        select name
+        from companyinformation
+        where id = #{companyId}
     </select>
 </mapper>
