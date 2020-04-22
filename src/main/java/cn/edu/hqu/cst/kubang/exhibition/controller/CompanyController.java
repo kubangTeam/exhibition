@@ -92,11 +92,9 @@ public class CompanyController {
         }
         else{
             String pic = upload.uploadFile(path,file);
-            int status = companyService.CompanyIdentify(userId,name,address,website,type,introduce,pic);
-            if(status ==1){
-                value = "上传成功";
-                code = "005";
-            }
+            String status = companyService.CompanyIdentify(userId,name,address,website,type,introduce,pic);
+            value = status;
+            code = "005";
         }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);

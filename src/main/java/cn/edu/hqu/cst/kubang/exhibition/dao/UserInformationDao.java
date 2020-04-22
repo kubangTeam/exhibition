@@ -26,6 +26,7 @@ public interface UserInformationDao {
     List<UserInformation> GetUserInfoFromOrganizerId(int OrganizerId);
     //检验成功以后，需要在数据库清除对应记录，以避免验证码重复使用
     int deleteUserInformation(int userId);
+    int setCompanyId(int userId,int userCompanyId);
 //    void AddUserPoint(String recCode);
 //    boolean CheckPassword(String account, String password);
 //    void UpdatePassword(String account, String newPassword);

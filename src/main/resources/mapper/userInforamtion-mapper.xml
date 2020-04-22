@@ -68,6 +68,14 @@
         where userOrganizerId = #{userOrganizerId}
     </select>
 
+    <update id="setCompanyId">
+        update userinformation
+        set userCompanyId = #{userCompanyId}
+        where
+        userId = #{userId};
+    </update>
+
+
 
     <delete id="deleteUserInformation" parameterType="int">
         delete from userinformation
