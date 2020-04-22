@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
@@ -27,6 +28,18 @@ import java.util.*;
  * @Date 2020/2/19 13:56
  * @Version 1.0
  * @Description:处理与展品相关的请求
+ *
+ *
+ * 1、/recommend 展品推荐
+ * 2、/query/goodsId 根据ID查询展品
+ * 3、/query/category 根据类别查询展品
+ * 4、/query/company 根据公司Id查询在展展品
+ * 5、/query/keyword 关键字查询所有在展的商品
+ * 6、/add 添加展品信息
+ * 7、/upload/picture 上传单张展品图片
+ * 8、/goodsPic/{fileName} 通过url获取展品图片
+ * 9、/modify/priority 修改展品优先级
+ * 10、/delete 删除展品
  */
 @RestController
 @RequestMapping("/goods")
@@ -34,6 +47,8 @@ import java.util.*;
 public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private GoodsDao goodsDao;
     @Value("${exhibition.path.domain}")
     private String domain;
     @Value("${exhibition.path.upload}")
@@ -103,10 +118,17 @@ public class GoodsController implements Constants {
     })
     @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
     @ResponseBody
-    public Goods queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
-        Goods goods  = goodsService.queryGoodsById(goodsId);
-        return goods;
+    public Map<String,Object> queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
+        Map<String, Object> map = new HashMap<>();
+        Goods goods = goodsDao.selectGoodsById(goodsId);
+        //获取商家名称
+        String companyName = goodsService.selectCompanyInformationByGoodsId(goodsId).getName();
+        //获取分类名称
+        map.put("goodsInformation", goods);
+        map.put("companyName", companyName);
+        return map;
     }
+
     //根据类别Id查询所有在展的商品；
     // 请求参数：类别ID；
     //默认查询在展商品

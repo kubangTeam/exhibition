@@ -15,8 +15,6 @@ public interface IUserInformationService {
 
     //用户手机号注册
     int registerByPhoneNumber();
-
     int isCompanyOrNot(int userId);
-
 
 }

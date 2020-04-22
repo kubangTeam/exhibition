@@ -1,7 +1,9 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.github.pagehelper.PageHelper;
@@ -22,6 +24,16 @@ import java.util.List;
 public class GoodsService implements Constants {
     @Autowired
     private GoodsDao goodsDao;
+
+    @Autowired
+    private Goods goods;
+
+    @Autowired
+    private Company company;
+
+    @Autowired
+    private  CompanyDao companyDao;
+
     //查询展品
         //根据ID和状态查询在展和不在展的商品
     public Goods queryGoodsById(int goodsId){
@@ -106,4 +118,10 @@ public class GoodsService implements Constants {
         return list;
     }
 
+
+    public Company selectCompanyInformationByGoodsId(int goodsId) {
+        goods = goodsDao.selectGoodsById(goodsId);
+        company =companyDao.selectCompanyInformationById(goods.getCompanyId());
+        return  company;
+    }
 }

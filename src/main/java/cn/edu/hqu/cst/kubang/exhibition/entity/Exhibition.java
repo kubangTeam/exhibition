@@ -144,7 +144,7 @@ public class Exhibition implements Serializable {
         return organizer;
     }
 
-    public void setOrganizer(String organizer) {
+    public void setOrganizer(String  organizer) {
         this.organizer = organizer;
     }
 

@@ -8,8 +8,6 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
  * @Description:
  */
 public interface IUserEmailService {
-    //绑定邮箱到指定userId的用户
-    int bindUserEmail(Integer userId, String userEmail);
 
     //检查验证码
     Boolean checkCode(String email, String newCode);
@@ -22,10 +20,4 @@ public interface IUserEmailService {
 
     // 收件人 主题 内容
     int sendSimpleMail(String to, String subject, String content);
-
-    // 保存用户临时信息，包括邮箱、验证码、验证码发送的时间
-    Integer saveUserCode(UserCode userCode);
-
-    //根据邮箱查询对应的验证码和发送验证码的时间
-    UserCode queryUserCodeByEmail(String email);
 }

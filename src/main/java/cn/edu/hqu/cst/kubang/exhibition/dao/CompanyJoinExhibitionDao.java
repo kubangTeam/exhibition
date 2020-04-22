@@ -10,12 +10,6 @@ import java.util.List;
 
 @Mapper
 public interface CompanyJoinExhibitionDao {
-    List<CompanyJoinExhibition> selectCompanyIdByExhibitionId(int exhibitionId);//根据展会id查询所有参加该展会的商家id
 
-    //添加一个CompanyJoinExhibition类
-    int insertCompanyJoinExhibition(CompanyJoinExhibition companyJoinExhibition);//添加展品
-
-    //删除数据 测试用
-    int delete(int id);
 
 }

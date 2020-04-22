@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
+import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,23 +22,23 @@ public interface ExhibitionDao {
     //根据 id查询
     Exhibition queryExhibitionByID(Integer id);
 
-    //根据展会id查询其展品
-    List<Goods>queryGoodsByExhibitionId(Integer id);
-
-    //根据 状态查询所有
+    //根据状态查询所有
     List<Exhibition> queryExhibitionsByStatus(Integer status);
+
     //根据 关键词查询所有
-    List<Exhibition> queryExhibitionsByKeyWord(String[] keyWords);
-    // 新增 保存修改 都是status = 0
+    List<Exhibition> queryExhibitionsByKeyWord(String keyWord);
+
+    // 新增 保存修改
     int saveExhibition(Exhibition exhibition);
+
     // 修改展会状态 比如点击上传把status改为1
-    int modifyExhibitionStatus(@Param("id")Integer id, @Param("status")Integer status);
+    int modifyExhibitionStatus(Integer id,Integer status);
+
     // 修改
     int modifyExhibition(Exhibition exhibition);
-    // 根据id删除
-    int deleteExhibition(Integer id);
-    // 根据公司id查找它的展会id
-    List<Integer> queryExhibitionByCompanyId(Integer companyId);
-    // 根据用户id查找公司的展品
-    List<Exhibition> queryExhibitionsByUserId(Integer userId);
+
+    int deleteAll();//删除所有数据，测试用
+
+    //根据展会id查询所有参加该展会的商家id
+    List<CompanyJoinExhibition> selectCompanyIdByExhibitionId(int exhibitionId);
 }

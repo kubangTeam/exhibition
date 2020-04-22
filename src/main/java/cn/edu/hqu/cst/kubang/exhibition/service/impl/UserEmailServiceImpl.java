@@ -22,7 +22,6 @@ public class UserEmailServiceImpl implements IUserEmailService {
 
     @Autowired
     private UserCodeDao userCodeDao;
-
     @Autowired
     private UserInformationDao userDao;
     @Autowired
@@ -30,17 +29,17 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Override
-    @NullDisable
-    public int bindUserEmail(Integer userId, String userEmail) {
-        return userDao.saveUserEmail(userId, userEmail);
-    }
+
 
     @Override
     @NullDisable
+    /**
+     * 验证发送的验证码是否有效
+     * 验证码时效为30分钟
+     */
     public Boolean checkCode(String email, String newCode) {
         //数据库根据email获取对应的code和sendingTime
-        UserCode userCode = userCodeDao.queryUserCode(email);
+        UserCode userCode = userCodeDao.queryUserCodeByAccount(email);
         Long sendingTime = Long.valueOf(userCode.getSendingTime());
         String oldCode = userCode.getCode();
         //计算时间差
@@ -59,10 +58,10 @@ public class UserEmailServiceImpl implements IUserEmailService {
     }
 
     @Override
-    @NullDisable
     public boolean isUserEmailSingle(String email) {
-        return userDao.IsUserEmailBind(email) == 0 ? true : false;
+        return false;
     }
+
 
     @Override
     @NullDisable
@@ -101,15 +100,4 @@ public class UserEmailServiceImpl implements IUserEmailService {
         return 200;
     }
 
-    @Override
-    @NullDisable
-    public Integer saveUserCode(UserCode userCode) {
-        return userCodeDao.saveUserCode(userCode);
-    }
-
-    @Override
-    @NullDisable
-    public UserCode queryUserCodeByEmail(String email) {
-        return userCodeDao.queryUserCode(email);
-    }
 }

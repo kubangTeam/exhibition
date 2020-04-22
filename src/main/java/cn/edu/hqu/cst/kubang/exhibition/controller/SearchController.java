@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
@@ -20,6 +21,11 @@ import java.util.List;
  * @Date 2020/4/13 22:16
  * @Version 1.0
  * @Description:
+ *
+ *
+ * 接口简介
+ * 1、/init  同步搜索服务器数据用的，不要点
+ * 2、/goods/{num}  搜索展品, num=1/2/3,分别对应综合、热度、时间
  */
 @RestController
 @RequestMapping("/search")
@@ -32,6 +38,9 @@ public class SearchController {
     IExhibitionService exhibitionService;
 
     @Autowired
+    ExhibitionDao exhibitionDao;
+
+    @Autowired
     private GoodsService goodsService;
     @ApiOperation(value = "同步搜索服务器数据用的，不要点")
     @RequestMapping(value = "/init", method = RequestMethod.GET)
@@ -39,7 +48,7 @@ public class SearchController {
         List<Goods> listGoods = goodsService.queryGoodsALl();
         for(Goods goods : listGoods)
             elasticsearchService.saveGoods(goods);
-        List<Exhibition> listExhibition = exhibitionService.queryAll();
+        List<Exhibition> listExhibition = exhibitionDao.queryAllExhibitions();
         for(Exhibition exhibition : listExhibition)
             elasticsearchService.saveExhibition(exhibition);
 

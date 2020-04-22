@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
@@ -22,7 +23,10 @@ import java.util.UUID;
 /**
  * @author: 邢佳成
  * @Date: 2020.02.17 20:09
- * @Description:
+ * @Description: /email
+ * 1、/check/bind  绑定邮箱
+ * 2、/check/register 邮箱注册
+ * 3、/send/forgot 忘记密码
  */
 @RestController
 @RequestMapping("/email")
@@ -34,9 +38,79 @@ public class BindEmailController {
     private IUserEmailService userEmailService;
 
     @Autowired
+    private  UserInformationDao userInformationDao;
+
+    @Autowired
+    private UserCodeDao userCodeDao;
+
+    @Autowired
     private UserInformationDao userDao;
 
-    @ApiOperation(value = "绑定邮箱")
+    /**
+     * 根据用户的id和邮箱发送验证码
+     * @param userId
+     * @param to
+     * @return
+     */
+    @ApiOperation(value = "发送验证码",notes = "根据用户的id和邮箱发送验证码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "to", value = "用户填写的邮箱", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/send/bind")
+    public Map<String, String> bindSendEmail(@RequestParam("userId") Integer userId, @RequestParam("to") String to) {
+        //首先检查该用户是否已经绑定了邮箱
+        boolean isUserEmailBound = userEmailService.isUserEmailBound(userId);
+        String value;
+        String code = "";
+        System.out.println(isUserEmailBound);
+        if (isUserEmailBound) {
+            value = "您已绑定邮箱";
+        } else {
+            //定义发送内容
+            String subject = "酷邦助手验证码";
+            code = UUID.randomUUID().toString().substring(0, 8);
+            String content = "你好，您的验证码是: " + code;
+            //调用发送方法
+            int status = userEmailService.sendSimpleMail(to, subject, content);
+            if (status == 500) {
+                value = "发送失败，请稍后再试。";
+            } else if (status == 503) {
+                value = "发送失败，请核对邮件是否填写正确。";
+            } else {
+                System.out.println("邮件已发送,验证码是" + code);
+                //保存数据库
+                String sendingTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                UserCode userCode = new UserCode();
+                userCode.setSendingTime(sendingTime);
+                userCode.setCode(code);
+                userCode.setAccount(to);
+
+                //id表示受影响的行数 常用来判断是否成功执行
+                Integer id = userCodeDao.saveUserCode(userCode);
+                if (null != id && id > 0) {
+                    System.out.println("插入成功！" + userCode.toString());
+                    value = "已发送验证";
+                } else {
+                    logger.error("发送邮件错误");
+                    value = "出现错误";
+                }
+            }
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+
+    /**
+     * 根据用户的id、邮箱、发送验证码绑定用户账号
+     * @param userId
+     * @param to
+     * @return
+     */
+    @ApiOperation(value = "绑定邮箱",notes = "根据用户的id、邮箱、发送验证码绑定用户账号")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
@@ -55,7 +129,7 @@ public class BindEmailController {
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
                 //验证通过  将该邮箱存进数据库 与该用户绑定
-                int status = userEmailService.bindUserEmail(userId, email);
+                int status =userInformationDao.bindUserEmail(userId, email);
                 if (status > 0) {
                     value = "验证通过！";
                 } else {
@@ -72,7 +146,6 @@ public class BindEmailController {
         map.put("response", value);
         return map;
     }
-
     @ApiOperation(value = "邮箱注册")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
@@ -106,6 +179,14 @@ public class BindEmailController {
         return json.getJsonResult();
     }
 
+
+
+    /**
+     * 根据用户的id、邮箱、发送验证码帮用户找回密码
+     * @param userId
+     * @param to
+     * @return
+     */
     @ApiOperation(value = "忘记密码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query")
@@ -132,9 +213,12 @@ public class BindEmailController {
                 json.add("errMsg", "发送失败，请核对邮件是否填写正确。");
             } else {
                 String sendingTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
-                UserCode userCode = new UserCode(email, code, sendingTime);
+                UserCode userCode = new UserCode();
+                userCode.setSendingTime(sendingTime);
+                userCode.setCode(code);
+                userCode.setAccount(email);
                 //id表示受影响的行数 常用来判断是否成功执行
-                Integer id = userEmailService.saveUserCode(userCode);
+                Integer id =userCodeDao.saveUserCode(userCode);
                 if (null != id && id > 0) {
                     json.add("success", "true");
                 } else {
@@ -147,50 +231,4 @@ public class BindEmailController {
         return json.getJsonResult();
     }
 
-    @ApiOperation(value = "绑定邮箱")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "to", value = "用户填写的邮箱", required = true, dataType = "String", paramType = "query")
-    })
-    @PostMapping("/send/bind")
-    public Map<String, String> bindSendEmail(@RequestParam("userId") Integer userId, @RequestParam("to") String to) {
-        //首先检查该用户是否已经绑定了邮箱
-        boolean isUserEmailBound = userEmailService.isUserEmailBound(userId);
-        String value;
-        String code = "";
-        System.out.println(isUserEmailBound);
-        if (isUserEmailBound) {
-            value = "您已绑定邮箱";
-        } else {
-            //定义发送内容
-            String subject = "酷邦助手验证码";
-            code = UUID.randomUUID().toString().substring(0, 8);
-            String content = "你好，您的验证码是: " + code;
-            //调用发送方法
-            int status = userEmailService.sendSimpleMail(to, subject, content);
-            if (status == 500) {
-                value = "发送失败，请稍后再试。";
-            } else if (status == 503) {
-                value = "发送失败，请核对邮件是否填写正确。";
-            } else {
-                System.out.println("邮件已发送,验证码是" + code);
-                //保存数据库
-                String sendingTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
-                UserCode userCode = new UserCode(to, code, sendingTime);
-                //id表示受影响的行数 常用来判断是否成功执行
-                Integer id = userEmailService.saveUserCode(userCode);
-                if (null != id && id > 0) {
-                    System.out.println("插入成功！" + userCode.toString());
-                    value = "已发送验证";
-                } else {
-                    logger.error("发送邮件错误");
-                    value = "出现错误";
-                }
-            }
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
-    }
 }

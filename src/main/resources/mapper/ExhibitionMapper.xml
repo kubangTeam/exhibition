@@ -6,81 +6,95 @@
 
 
     <sql id="selectFields">
-
+        id,name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
+        period,introduction,Tel,picture
     </sql>
 
     <sql id="insertFields">
-
+        name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
+        period,introduction,Tel,picture
     </sql>
 
-    <select id="queryGoodsByExhibitionId" resultType="Goods">
-        select
-        from exhibitiondetail where `status` != 4
+    <sql id="selectAttendFields">
+        id,companyId,exhibitionId
+    </sql>
+
+    <select id="selectCompanyIBydExhibitionId" resultType="CompanyJoinExhibition">
+        select <include refid="selectAttendFields"></include>
+        from companyjoinexhibition
+        where exhibitionId = #{exhibitionId}
     </select>
 
     <select id="queryAllExhibitions" resultType="Exhibition">
-        select * from exhibitiondetail where `status` != 4
+        select <include refid="selectFields"></include>
+        from exhibitiondetail
     </select>
 
     <select id="queryExhibitionByID" parameterType="int" resultType="Exhibition">
-        select * from exhibitiondetail where id = #{id} and `status` != 4
+        select <include refid="selectFields"></include>
+        from exhibitiondetail
+        where id = #{id}
     </select>
 
     <select id="queryExhibitionsByStatus" parameterType="Integer" resultType="Exhibition">
-        select * from exhibitiondetail where status = #{status}
+        select <include refid="selectFields"></include>
+        from exhibitiondetail
+        where status = #{status}
     </select>
 
     <select id="queryExhibitionsByKeyWord" parameterType="String" resultType="Exhibition">
-        select * from exhibitiondetail where `status` != 4 and (
+        select <include refid="selectFields"></include>
+        from exhibitiondetail
+        where (
         <foreach collection="array" item="key" separator=" or " close=")">
             `name` like "%"#{key}"%"
         </foreach>
     </select>
 
-    <insert id="saveExhibition" parameterType="Exhibition">
-        insert into exhibitiondetail
-        (`name`,start_time,end_time,exhibition_hall_id,show_room,acreage,trade,organizer,
-        contractor_id,`session`,period,introduction,Tel,status,picture)
+    <insert id="saveExhibition" parameterType="Exhibition" keyProperty="id">
+        insert into exhibitiondetail(<include refid="insertFields"></include>)
         values
-        (#{name}, #{startTime},#{endTime},#{exhibitionHallId},#{showRoom},#{acreage},#{trade},#{organizer},
-        #{contractorId},#{session},#{period},#{introduction},#{Tel},#{status},#{picture})
+        (#{name}, #{status},#{startTime},#{endTime},#{exhibitionHallId},#{showRoom},#{acreage},#{trade},#{organizer},
+        #{contractorId},#{session},#{period},#{introduction},#{Tel},#{picture})
     </insert>
 
     <update id="modifyExhibition" parameterType="Exhibition">
         update exhibitiondetail set
         `name` = #{name},
-        start_time = #{startTime},
-        end_time = #{endTime},
-        exhibition_hall_id = #{exhibitionHallId},
-        show_room = #{showRoom},
+        status = #{status},
+        startTime = #{startTime},
+        endTime = #{endTime},
+        exhibitionHallId = #{exhibitionHallId},
+        showRoom = #{showRoom},
         acreage = #{acreage},
         trade = #{trade},
         organizer = #{organizer},
-        contractor_id = #{contractorId},
+        contractorId = #{contractorId},
         `session` = #{session},
         period = #{period},
         introduction = #{introduction},
         Tel = #{Tel},
         picture = #{picture}
-         where id = #{id}
+        where id = #{id}
     </update>
 
-    <update id="deleteExhibition" parameterType="int">
-        update exhibitiondetail set status = 4 where id = #{id}
+    <update id="modifyExhibitionStatus">
+        update exhibitiondetail
+        set
+        status = #{status}
+        where id = #{id}
     </update>
 
-    <update id="modifyExhibitionStatus" parameterType="map">
-        update exhibitiondetail set status = #{status} where id = #{id}
-    </update>
-
-    <select id="queryExhibitionByCompanyId" parameterType="int" resultType="int">
-        select exhibitionId from companyjoinexibition where companyId = #{companyId}
-    </select>
 
     <select id="queryExhibitionsByUserId" parameterType="int" resultType="Exhibition">
         select * from exhibitiondetail e where e.`status`!=4 and e.id in
          (select ce.exhibitionId from companyjoinexibition ce where ce.companyId =
          (select u.userCompanyId from userinformation u where u.userId = #{userId}))
     </select>
+
+
+    <delete id="deleteAll">
+        delete from exhibitiondetail
+    </delete>
 
 </mapper>
