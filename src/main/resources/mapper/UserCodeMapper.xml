@@ -19,7 +19,7 @@
         (#{account},#{code},#{sendingTime})
     </insert>
 
-    <select id="queryUserCode" parameterType="String" resultType="UserCode">
+    <select id="queryUserCodeByAccount" parameterType="String" resultType="UserCode">
         select <include refid="selectFields"></include>
         from usercode
         where account = #{account} order by sendingTime+0 desc limit 1

@@ -57,13 +57,13 @@ public class UserCodeMapperTests {
 
     @After
     public void after(){
-        if(userCodeDao.deleteUserCode(userCode.getAccount())==1)
-            System.out.println("删除数据成功");
+//        if(userCodeDao.deleteUserCode(userCode.getAccount())==1)
+//            System.out.println("删除数据成功");
     }
 
     @Test
     public void testQueryUserCode(){
-       userCode = userCodeDao.queryUserCode(userCode.getAccount());
+       userCode = userCodeDao.queryUserCodeByAccount(userCode.getAccount());
        System.out.println(userCode);
     }
 

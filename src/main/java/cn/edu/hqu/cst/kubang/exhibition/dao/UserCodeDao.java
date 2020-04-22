@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface UserCodeDao {
     //服务器发送验证码后把该验证码保存到数据库
     Integer saveUserCode(UserCode userCode);
-    //根据要绑定的账号 查询当时发送的 验证码、发送验证码的时间
-    UserCode queryUserCode(String account);
+    //根据要绑定的账号(电话号码或者邮箱) 查询当时发送的 验证码、发送验证码的时间
+    UserCode queryUserCodeByAccount(String account);
     //检验成功以后，需要在数据库清除对应记录，以避免验证码重复使用
     int deleteUserCode(String account);
 }

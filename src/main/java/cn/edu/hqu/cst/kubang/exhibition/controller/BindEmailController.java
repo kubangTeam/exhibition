@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
@@ -35,6 +36,12 @@ public class BindEmailController {
 
     @Autowired
     private IUserEmailService userEmailService;
+
+    @Autowired
+    private  UserInformationDao userInformationDao;
+
+    @Autowired
+    private UserCodeDao userCodeDao;
 
     @Autowired
     private UserInformationDao userDao;
@@ -80,7 +87,7 @@ public class BindEmailController {
                 userCode.setAccount(to);
 
                 //id表示受影响的行数 常用来判断是否成功执行
-                Integer id = userEmailService.saveUserCode(userCode);
+                Integer id = userCodeDao.saveUserCode(userCode);
                 if (null != id && id > 0) {
                     System.out.println("插入成功！" + userCode.toString());
                     value = "已发送验证";
@@ -122,7 +129,7 @@ public class BindEmailController {
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
                 //验证通过  将该邮箱存进数据库 与该用户绑定
-                int status = userEmailService.bindUserEmail(userId, email);
+                int status =userInformationDao.bindUserEmail(userId, email);
                 if (status > 0) {
                     value = "验证通过！";
                 } else {
@@ -211,7 +218,7 @@ public class BindEmailController {
                 userCode.setCode(code);
                 userCode.setAccount(email);
                 //id表示受影响的行数 常用来判断是否成功执行
-                Integer id = userEmailService.saveUserCode(userCode);
+                Integer id =userCodeDao.saveUserCode(userCode);
                 if (null != id && id > 0) {
                     json.add("success", "true");
                 } else {
