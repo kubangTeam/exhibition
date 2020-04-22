@@ -40,7 +40,7 @@ import java.util.Map;
  *  3、/updateInformation 修改商家资料
  *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
  */
-@Controller
+@RestController
 @RequestMapping("/company")
 @Api(tags = "商家功能")
 public class CompanyController {

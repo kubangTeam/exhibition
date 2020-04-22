@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.ControllerTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.controller.CompanyController;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,16 @@ public class companyControllerTests {
     public void testGetInformation() throws Exception{
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/company/getInformation")
                 .param("id","1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
-        System.out.println(status);
-        System.out.println(content);
-//      Assert.assertEquals(200,status);
-//      Assert.assertEquals("success",content);
+        //System.out.println(status);
+        //System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
-
 }
