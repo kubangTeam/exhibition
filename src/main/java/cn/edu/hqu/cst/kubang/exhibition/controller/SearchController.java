@@ -21,6 +21,11 @@ import java.util.List;
  * @Date 2020/4/13 22:16
  * @Version 1.0
  * @Description:
+ *
+ *
+ * 接口简介
+ * 1、/init  同步搜索服务器数据用的，不要点
+ * 2、/goods/{num}  搜索展品, num=1/2/3,分别对应综合、热度、时间
  */
 @RestController
 @RequestMapping("/search")

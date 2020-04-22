@@ -15,7 +15,6 @@ import java.util.Map;
 public interface UserSessionDao {
     String queryByUserID(int userID);
     int queryBySessionId(String sessionID);
-
     int containsSessionId(String sessionID);
     void add(int userID, String sessionID);
     void removeByUserId(int userID);

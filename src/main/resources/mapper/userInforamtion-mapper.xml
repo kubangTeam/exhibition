@@ -52,9 +52,6 @@
     <select id="IsUserEmailBind" parameterType="String" resultType="int">
         select count(userId) from userinformation where userEmail = #{email};
     </select>
-
-
-
     <select id="GetUserInfoFromOrganizerId" parameterType="int" resultType="UserInformation">
         select <include refid="selectFields"></include>
         from userinformation

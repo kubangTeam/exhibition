@@ -74,7 +74,11 @@ public class BindEmailController {
                 System.out.println("邮件已发送,验证码是" + code);
                 //保存数据库
                 String sendingTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
-                UserCode userCode = new UserCode(to, code, sendingTime);
+                UserCode userCode = new UserCode();
+                userCode.setSendingTime(sendingTime);
+                userCode.setCode(code);
+                userCode.setAccount(to);
+
                 //id表示受影响的行数 常用来判断是否成功执行
                 Integer id = userEmailService.saveUserCode(userCode);
                 if (null != id && id > 0) {
@@ -202,7 +206,10 @@ public class BindEmailController {
                 json.add("errMsg", "发送失败，请核对邮件是否填写正确。");
             } else {
                 String sendingTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
-                UserCode userCode = new UserCode(email, code, sendingTime);
+                UserCode userCode = new UserCode();
+                userCode.setSendingTime(sendingTime);
+                userCode.setCode(code);
+                userCode.setAccount(email);
                 //id表示受影响的行数 常用来判断是否成功执行
                 Integer id = userEmailService.saveUserCode(userCode);
                 if (null != id && id > 0) {
