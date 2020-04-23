@@ -82,4 +82,16 @@
         from goodsintroduce,goodstype
         where goodsId = #{goodsId}
     </select>
+
+    <select id="selectAllGoodsPicById" parameterType="int" resultType="String">
+        select pic from goodspicture where goodsId = #{id}
+    </select>
+
+    <select id="selectGoodsNewById" parameterType="int" resultType="GoodsNewPojo">
+        select * from goodsintroduce where goodsId = #{id}
+    </select>
+
+    <select id="selectCategoryNameByCategoryId" parameterType="int" resultType="String">
+        select category from dispalyzone where categoryId = #{id}
+    </select>
 </mapper>

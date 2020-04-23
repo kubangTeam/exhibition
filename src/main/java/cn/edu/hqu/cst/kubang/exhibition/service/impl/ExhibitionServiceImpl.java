@@ -1,29 +1,19 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
-import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Advertisement;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.OrganizerInformation;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author: 邢佳成
- * @Date: 2020.02.18 00:30
- * @Description:
- */
 @Service
 public class ExhibitionServiceImpl implements IExhibitionService {
 
@@ -40,7 +30,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     private UserInformation userInformation;
 
     @Autowired
-    private  AccountServiceImp accountServiceImp;
+    private AccountServiceImp accountServiceImp;
 
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10个
@@ -62,9 +52,9 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         //设置认证状态 1 提交成功，待审核
         exhibition.setStatus(1);
         exhibition.setTel(userInformationDao.GetUserInfoFromId(Id).getUserAccount());
-        if(exhibitionDao.saveExhibition(exhibition) ==1){
+        if (exhibitionDao.saveExhibition(exhibition) == 1) {
             return 1;
-        }else return 0;
+        } else return 0;
         //设置联系方式
         //1、查询该展会承办方是否存在
         //数据库索引好像是从0开始，那么这个判断会出现错误
@@ -83,6 +73,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 
     /**
      * 返回即将上线的展会信息
+     *
      * @return
      */
     @Override
@@ -107,6 +98,18 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         }
         System.out.println(exhibitionList);
         return exhibitionList;
+    }
+
+    /**
+     * 根据展会id返回展会具体信息
+     */
+    @Override
+    public ExhibitionNew queryExhibitionDetailById(int exhibitionId) {
+        ExhibitionNew exhibitionNew = exhibitionDao.queryExhibitionDetailsByID(exhibitionId);
+        List<String> exhibitionPic = exhibitionDao.queryExbitionPicById(exhibitionId);
+        exhibitionNew.setPicture(exhibitionPic);
+//        System.out.println(exhibitionNew.toString());
+        return exhibitionNew;
     }
 
 
@@ -204,23 +207,21 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 //    }
 
     /**
-    @Override
-    @NullDisable
-    public int deleteExhibition(Integer id, Integer userId) {
-        if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
-            return -1;//权限不足
-        return exhibitionDao.deleteExhibition(id);
-    }
+     @Override
+     @NullDisable public int deleteExhibition(Integer id, Integer userId) {
+     if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
+     return -1;//权限不足
+     return exhibitionDao.deleteExhibition(id);
+     }
 
-    //根据用户id查询他的公司的展品
-    @Override
-    @NullDisable
-    public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize1);
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
-    }
-    **/
+     //根据用户id查询他的公司的展品
+     @Override
+     @NullDisable public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
+     PageHelper.startPage(pageNum, pageSize1);
+     List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
+     PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+     return pageInfo;
+     }
+     **/
 
 }

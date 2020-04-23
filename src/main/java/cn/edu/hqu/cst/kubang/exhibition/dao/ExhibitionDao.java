@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +23,9 @@ public interface ExhibitionDao {
     //根据 id查询
     Exhibition queryExhibitionByID(Integer id);
 
+    //根据 id查询
+    ExhibitionNew queryExhibitionDetailsByID(Integer id);
+
     //根据状态查询所有
     List<Exhibition> queryExhibitionsByStatus(Integer status);
 
@@ -41,4 +45,7 @@ public interface ExhibitionDao {
 
     //根据展会id查询所有参加该展会的商家id
     List<CompanyJoinExhibition> selectCompanyIdByExhibitionId(int exhibitionId);
+
+    // 根据展会id查找它的轮播图
+    List<String> queryExbitionPicById(int exhibitionId);
 }

@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,8 @@ public interface IExhibitionService {
                        String introduce, String picPath);
 
     List<Exhibition> queryReadyToStartExhibitionInfo();
+
+    ExhibitionNew queryExhibitionDetailById(int exhibitionId);
 //    //查询所有
 //    List<Exhibition> queryAll();
 //    PageInfo<Exhibition> queryAllExhibitions(int pageNum);

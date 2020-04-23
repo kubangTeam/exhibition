@@ -180,4 +180,17 @@ public class ExhibitionController {
         return pageInfo;
     }
 
+    /**
+     *  根据展会的id查询展会的具体信息
+     */
+    @ApiOperation(value = "根据展会的id查询展会的具体信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "exhibitionId", value = "展会的id", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/ExhibitionDetails/id")
+    public ExhibitionNew queryExhibitionDetailById(int exhibitionId) {
+        return exhibitionService.queryExhibitionDetailById(exhibitionId);
+    }
+
+
 }

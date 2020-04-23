@@ -33,4 +33,7 @@ public interface CompanyDao {
     int insertCompanyJoinExhibition(CompanyJoinExhibition companyJoinExhibition);
     //删除数据 测试用
     int deleteAttend(int id);
+
+    // 根据categoryId查找对应的名字
+    String queryCompanyNameById(Integer id);
 }
