@@ -43,6 +43,6 @@ public class goodsMapperTest {
            System.out.println(list.get(i));
         }*/
         System.out.println(goodsDao.selectCategoryNameById(1));
-        System.out.println(goodsDao.selectCompanyNameById(1);
+        System.out.println(goodsDao.selectCompanyNameById(1));
     }
 }
