@@ -35,12 +35,18 @@ public class UserCollectServiceImpl implements IUserCollectService {
 
     @Override
     public Integer addCollectGoods(int userId, int goodsId) {
-        return null;
+        int i = userCollectDao.saveCollectGoods(userId, goodsId);
+        System.out.println("i: "+i);
+        if (i == 1)
+            return 200;
+        else
+            return 500;
     }
 
     @Override
     public Integer addCollectCompany(int userId, int companyId) {
-        return null;
+        int i = userCollectDao.saveCollectCompany(userId,companyId);
+        return i == 1 ? 200 : 500;
     }
 
     @Override
