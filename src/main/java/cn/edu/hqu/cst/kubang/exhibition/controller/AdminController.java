@@ -32,7 +32,11 @@ import java.util.Map;
  *  2、/queryExhibition/{status}/{pageNum}  通过展会状态、页数查询固定长度（pageSize1）的展会信息
  *  3、/queryExhibitionByKeyWord/{keyword}/{pageNum} 通过关键字、页数查询固定长度（pageSize1）的展会信息
  *  4、/updateExhibitionInfo 修改展会信息
- *  5、/updateExhibitionStatus 修改展会状态
+ *
+ *
+ *  审核模块
+ *  1、/updateExhibitionStatus 修改展会状态
+ *  2、/
  */
 @RestController
 @RequestMapping("/Admin")

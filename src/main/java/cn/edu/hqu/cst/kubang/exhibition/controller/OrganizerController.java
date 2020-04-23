@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.upload;
+import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
 import io.swagger.annotations.Api;
@@ -16,6 +17,18 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * @author: sunquan
+ * @Date: 2020.04.23
+ * @Description:举办方相关功能
+ * /提交模块
+ * 1、/holdExhibition 举办一个展会，提交展会信息
+ *
+ * /审核模块
+ * 1、/checkOrganizerHoldExhibition 查看承办方举办的展会列表展
+ * 2、/checkCompanyApplyByExhibitionId 审核参加自己举办的展会的商家申请
+ */
 @RestController
 @RequestMapping("/organizer")
 @Api(tags = "展会举办方相关功能")
@@ -23,9 +36,15 @@ public class OrganizerController {
 
     @Autowired
     private ExhibitionServiceImpl exhibitionService;
+
+    @Autowired
+    private ExhibitionDao exhibitionDao;
+
+
+
     @ApiOperation(value = "展会举办方举办一个展会",notes = "提交展会信息字段：")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "id", value = "举办方账号ID", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "Date", paramType = "query"),
             @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "query"),
@@ -67,5 +86,23 @@ public class OrganizerController {
         map.put("code", code);
         return map;
     }
+
+    @ApiOperation(value = "查看承办方举办的展会列表展",notes = "传入的参数为承办方id")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query")
+
+    })
+    @PostMapping("/checkOrganizerHoldExhibition")
+    public Map<String,String> checkOrganizerHoldExhibition(@RequestParam(value = "id") int userId) throws IOException {
+        String value = null;
+        String code = null;
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
+    }
+
+
+
 
 }

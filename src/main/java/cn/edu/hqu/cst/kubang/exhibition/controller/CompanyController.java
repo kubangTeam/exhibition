@@ -127,9 +127,15 @@ public class CompanyController {
         return map;
     }
 
+    /**
+     * 修改商家资料，需要固定能够修改的字段
+     * @param company
+     * @return
+     */
     @ApiOperation(value = "修改商家资料",notes = "前端需要传送的参数：商家类")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query"),
+
     })
     @PostMapping("/updateInformation")
     /**
@@ -141,7 +147,6 @@ public class CompanyController {
         }else{
             return "修改失败";
         }
-
     }
 
 
