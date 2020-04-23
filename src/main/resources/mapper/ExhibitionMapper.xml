@@ -36,6 +36,16 @@
         where id = #{id}
     </select>
 
+    <select id="queryExhibitionDetailsByID" parameterType="int" resultType="ExhibitionNew">
+        select exhibitiondetail.id id,`name`,startTime,endTime,exhibitionName address,
+        introduction from exhibitiondetail inner join exhibitionhall on exhibitiondetail.exhibitionHallId = exhibitionhall.id
+         where exhibitiondetail.id = #{id}
+    </select>
+
+    <select id="queryExbitionPicById" parameterType="int" resultType="String">
+        select picture from exhibitionpicture where exhibition_id = #{exhibitionId}
+    </select>
+
     <select id="queryExhibitionsByStatus" parameterType="Integer" resultType="Exhibition">
         select <include refid="selectFields"></include>
         from exhibitiondetail

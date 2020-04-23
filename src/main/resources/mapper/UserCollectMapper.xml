@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.UserCollectDao">
+    <!--根据用户id查询收藏的展品-->
+    <select id="queryCollectGoods" parameterType="int" resultType="GoodsNewPojo">
+        select * from goodsintroduce where goodsId in (select goodsId from goodscollect where userId = #{userId})
+    </select>
+
+    <!--根据用户id查询收藏的公司，返回不是具体的信息，只是列表信息-->
+    <select id="queryCollectCompany" parameterType="int" resultType="Company">
+        select id,`name`,`type`,headPicture
+        from companyinformation where id in
+        (select companyId from companycollect where userId = #{userId})
+    </select>
+</mapper>

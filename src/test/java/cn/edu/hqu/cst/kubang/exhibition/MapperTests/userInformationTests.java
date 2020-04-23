@@ -40,7 +40,7 @@ public class userInformationTests  {
         //生成测试数据
 
         userInformation.setUserAccount("11111111111");
-        userInformation.setUserCompanyId(1);
+        //userInformation.setUserCompanyId(1);
         userInformation.setUserName("测试数据");
         userInformation.setUserPassword("测试数据密码");
         //用户权限 0 普通用户 1 管理员
@@ -88,6 +88,13 @@ public class userInformationTests  {
     @Test
     public  void testGetUserInfoFromOrganizerId(){
         List<UserInformation> row = userInformationDao.GetUserInfoFromOrganizerId(userInformation.getUserOrganizerId());
+        System.out.println(row);
+    }
+
+    @Test
+    public void testSetCompanyId(){
+        int row  = userInformationDao.setCompanyId(userInformation.getUserId(),1000);
+        System.out.println(userInformationDao.GetUserInfoFromId(userInformation.getUserId()));
         System.out.println(row);
     }
 

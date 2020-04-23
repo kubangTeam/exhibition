@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewPojo;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -33,4 +34,8 @@ public interface GoodsDao {
     String selectCategoryNameById(int categoryId);//根据分类Id查询分类名
     String selectCompanyNameById(int companyId);//根据公司Id查询公司名
 
+    List<String> selectAllGoodsPicById(int id);
+    GoodsNewPojo selectGoodsNewById(int id);
+    // 通过分类id查找对应的名字
+    String selectCategoryNameByCategoryId(int id);
 }

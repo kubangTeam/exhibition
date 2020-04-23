@@ -5,6 +5,7 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
