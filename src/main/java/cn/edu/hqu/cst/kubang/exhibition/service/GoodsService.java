@@ -109,7 +109,7 @@ public class GoodsService implements Constants {
     public int deleteGoodsPic(int picId){
         return goodsDao.deleteGoodsPic(picId);
     }
-    private List<Goods> insertImageIntoGoods (List<Goods> list){
+    private List<Goods> insertImageIntoGoods(List<Goods> list){
         for(Goods goods : list) {
             GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
             String image = goodsPic.getPic();
@@ -117,7 +117,6 @@ public class GoodsService implements Constants {
         }
         return list;
     }
-
 
     public Company selectCompanyInformationByGoodsId(int goodsId) {
         goods = goodsDao.selectGoodsById(goodsId);

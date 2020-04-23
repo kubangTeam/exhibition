@@ -57,15 +57,16 @@ public class GoodsController implements Constants {
     private String contextPath;
 
     //从start到end随机取nums个不重复的整数
-    public List getRandomNumList(int nums, int start, int end) {
+    private List getRandomNumList(int nums, int start, int end) {
         List list = new ArrayList();
         Random r = new Random();
         while (list.size() != nums) {
             int num = r.nextInt(end - start) + start;
             //id不重复且该展品的状态为在展
-            if (!list.contains(num) && goodsService.queryGoodsStatus(num) == 1) {
-                list.add(num);
-            }
+            Goods goods = goodsService.queryGoodsById(num);
+            if (!list.contains(num) && goods != null)
+                if(goods.getGoodsStatus() == 1)
+                    list.add(num);
         }
         return list;
     }
@@ -82,6 +83,7 @@ public class GoodsController implements Constants {
             int id = Integer.parseInt(object.toString());
             if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
                 Goods goods = goodsService.queryGoodsById(id);
+                GoodsPic goodsPic = goodsService.queryGoodsPic(id).get(0);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
                 map.put("goodsName", goods.getGoodsName());
@@ -96,6 +98,7 @@ public class GoodsController implements Constants {
                 map.put("goodsStatus", goods.getGoodsStatus());
                 // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
+                map.put("image",goodsPic.getPic());
                 list.add(map);
                 //System.out.println(map.get("goodsId"));
             }

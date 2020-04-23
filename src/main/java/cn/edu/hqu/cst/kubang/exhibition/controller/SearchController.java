@@ -45,6 +45,8 @@ public class SearchController {
     @ApiOperation(value = "同步搜索服务器数据用的，不要点")
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public void initSearchData(){
+        elasticsearchService.deleteAllExhibition();
+        elasticsearchService.deleteAllGoods();
         List<Goods> listGoods = goodsService.queryGoodsALl();
         for(Goods goods : listGoods)
             elasticsearchService.saveGoods(goods);
