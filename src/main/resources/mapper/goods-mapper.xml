@@ -5,7 +5,7 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao">
 
     <sql id="selectFields">
-        goodsintroduce.goodsId,goodsName,categoryId,goodsAreaNumber,companyId,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority
+        goodsId,goodsName,goodsAreaNumber,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority
     </sql>
     <select id="selectAllGoods" resultType="Goods">
         select <include refid="selectFields"></include>
@@ -75,11 +75,26 @@
         delete from goodsintroduce
         where picId = #{picId}
     </delete>
+    <select id="selectCategoryNameById" resultType="String">
+        select category
+        from dispalyzone
+        where categoryId = #{categoryId}
+    </select>
+    <select id="selectCompanyNameById" resultType="String">
+        select name
+        from companyinformation
+        where id = #{companyId}
+    </select>
 
+    <select id="selectAllGoodsPicById" parameterType="int" resultType="String">
+        select pic from goodspicture where goodsId = #{id}
+    </select>
 
-    <select id="selectGoodsTypeById" resultType="String">
-        select goodsType
-        from goodsintroduce,goodstype
-        where goodsId = #{goodsId}
+    <select id="selectGoodsNewById" parameterType="int" resultType="GoodsNewPojo">
+        select * from goodsintroduce where goodsId = #{id}
+    </select>
+
+    <select id="selectCategoryNameByCategoryId" parameterType="int" resultType="String">
+        select category from dispalyzone where categoryId = #{id}
     </select>
 </mapper>

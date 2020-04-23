@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewPojo;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -30,7 +31,11 @@ public interface GoodsDao {
     int updatePriority(@Param("goodsId")int goodsId, @Param("priority")int priority);//修改展品优先级
     int deleteGoods(int goodId);//根据展品ID删除
     int deleteGoodsPic(int picId);//删除展品图片
-    //根据商品类别id查询商品类型
-    String selectGoodsTypeById(int id);
+    String selectCategoryNameById(int categoryId);//根据分类Id查询分类名
+    String selectCompanyNameById(int companyId);//根据公司Id查询公司名
 
+    List<String> selectAllGoodsPicById(int id);
+    GoodsNewPojo selectGoodsNewById(int id);
+    // 通过分类id查找对应的名字
+    String selectCategoryNameByCategoryId(int id);
 }

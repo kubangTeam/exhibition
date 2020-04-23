@@ -89,4 +89,8 @@
         where
         id =#{id}
     </delete>
+
+    <select id="queryCompanyNameById" parameterType="int" resultType="String">
+        select `name` from companyinformation where `id` = #{id}
+    </select>
 </mapper>

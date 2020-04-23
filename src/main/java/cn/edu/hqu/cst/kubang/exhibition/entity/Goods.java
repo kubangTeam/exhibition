@@ -19,10 +19,6 @@ import java.util.Date;
  * @Version 1.0
  * @Description:展品实体类
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
 @Document(indexName = "goods", type = "_doc", shards = 6, replicas = 3 )//索引，类型，分片，副本
 @Component
 public class Goods implements Serializable{
@@ -33,7 +29,7 @@ public class Goods implements Serializable{
     //存储用ik_max_word分词器，搜索用ik_smart分词器
     private String goodsName;//展品名
 
-    @Field(type = FieldType.Integer)
+    @Field(type = FieldType.Text)
     private int categoryId;//类别ID
 
     @Field(type = FieldType.Text)

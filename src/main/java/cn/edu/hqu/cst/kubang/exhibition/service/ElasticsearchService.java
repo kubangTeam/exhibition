@@ -47,6 +47,9 @@ public class ElasticsearchService {
     public void deleteGoods(int goodsId){
         goodsRepository.deleteById(goodsId);
     }
+    public void deleteAllGoods(){
+        goodsRepository.deleteAll();
+    }
     public Page<Goods> searchGoods(String keyword, String factor, int current, int limit) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.multiMatchQuery(keyword, "goodsName", "goodsIntroduce"))    //构造搜索条件
@@ -72,9 +75,11 @@ public class ElasticsearchService {
                     String goodsAreaNumber = hit.getSourceAsMap().get("goodsAreaNumber").toString();
                     goods.setGoodsAreaNumber(goodsAreaNumber);
                     String companyId = hit.getSourceAsMap().get("companyId").toString();
-                    goods.setCompanyId(Integer.valueOf(categoryId));
+                    goods.setCompanyId(Integer.valueOf(companyId));
                     String goodsIntroduce = hit.getSourceAsMap().get("goodsIntroduce").toString();
                     goods.setGoodsIntroduce(goodsIntroduce);
+                    String image = hit.getSourceAsMap().get("image").toString();
+                    goods.setImage(image);
                     list.add(goods);
                 }
                 return new AggregatedPageImpl(list, pageable,
@@ -92,6 +97,9 @@ public class ElasticsearchService {
     }
     public void deleteExhibition(int id){
         exhibitionRepository.deleteById(id);
+    }
+    public void deleteAllExhibition(){
+        exhibitionRepository.deleteAll();
     }
     public Page<Exhibition> searchExhibition(String keyword, String factor, int current, int limit) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()

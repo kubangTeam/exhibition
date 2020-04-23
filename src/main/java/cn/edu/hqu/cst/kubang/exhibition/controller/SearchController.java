@@ -45,6 +45,8 @@ public class SearchController {
     @ApiOperation(value = "同步搜索服务器数据用的，不要点")
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public void initSearchData(){
+        elasticsearchService.deleteAllExhibition();
+        elasticsearchService.deleteAllGoods();
         List<Goods> listGoods = goodsService.queryGoodsALl();
         for(Goods goods : listGoods)
             elasticsearchService.saveGoods(goods);
@@ -66,7 +68,7 @@ public class SearchController {
                                    @PathVariable(value = "num") String num,
                                    @RequestParam(value = "pageNum") int pageNum,
                                    @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(Integer.valueOf(num));
+        String factor = numToFactor(Integer.valueOf(num),1);
         Page<Goods> result= elasticsearchService.searchGoods(keyword, factor,  pageNum, pageSize);
         return result;
     }
@@ -82,16 +84,16 @@ public class SearchController {
                                              @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "pageNum") int pageNum,
                                              @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(num);
+        String factor = numToFactor(Integer.valueOf(num),0);
         Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, factor, pageNum, pageSize);
         return result;
     }
 
-    private static String numToFactor(int num) {
+    private static String numToFactor(int num, int flag) {
         String factor = null;
         switch (num){
-            case 1 : factor = "goodsId"; break;
-            case 2 : factor = "priority"; break;
+            case 1 : factor = flag == 0 ? "id" : "goodsId"; break;
+            case 2 : factor = flag == 0 ? "exhibitionHallId" :"priority"; break;
             case 3 : factor = "startTime"; break;
         }
         return factor;

@@ -3,8 +3,11 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
+import cn.edu.hqu.cst.kubang.exhibition.service.IGoodsMobileService;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsMobileServiceImpl;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -48,6 +51,8 @@ public class GoodsController implements Constants {
     @Autowired
     private GoodsService goodsService;
     @Autowired
+    private IGoodsMobileService goodsMobileService;
+    @Autowired
     private GoodsDao goodsDao;
     @Value("${exhibition.path.domain}")
     private String domain;
@@ -57,15 +62,16 @@ public class GoodsController implements Constants {
     private String contextPath;
 
     //从start到end随机取nums个不重复的整数
-    public List getRandomNumList(int nums, int start, int end) {
+    private List getRandomNumList(int nums, int start, int end) {
         List list = new ArrayList();
         Random r = new Random();
         while (list.size() != nums) {
             int num = r.nextInt(end - start) + start;
             //id不重复且该展品的状态为在展
-            if (!list.contains(num) && goodsService.queryGoodsStatus(num) == 1) {
-                list.add(num);
-            }
+            Goods goods = goodsService.queryGoodsById(num);
+            if (!list.contains(num) && goods != null)
+                if(goods.getGoodsStatus() == 1)
+                    list.add(num);
         }
         return list;
     }
@@ -82,6 +88,7 @@ public class GoodsController implements Constants {
             int id = Integer.parseInt(object.toString());
             if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
                 Goods goods = goodsService.queryGoodsById(id);
+                GoodsPic goodsPic = goodsService.queryGoodsPic(id).get(0);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
                 map.put("goodsName", goods.getGoodsName());
@@ -96,6 +103,7 @@ public class GoodsController implements Constants {
                 map.put("goodsStatus", goods.getGoodsStatus());
                 // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
+                map.put("image",goodsPic.getPic());
                 list.add(map);
                 //System.out.println(map.get("goodsId"));
             }
@@ -105,28 +113,36 @@ public class GoodsController implements Constants {
     //热门展品  个数：recNum  goodsStatus为0的不推荐
     @ApiOperation(value = "热门展品", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
-    @ResponseBody
     public List<Map<String, Object>> getHotGoods() {
         List<Map<String, Object>> list =  this.getRecommendGoods();
         return list;
     }
     //根据展品Id查询所有在展的商品；
     //请求参数：展品ID；
+//    @ApiOperation(value = "根据展品Id查询商品")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
+//    })
+//    @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Map<String,Object> queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
+//        Map<String, Object> map = new HashMap<>();
+//        Goods goods = goodsDao.selectGoodsById(goodsId);
+//        //获取商家名称
+//        String companyName = goodsService.selectCompanyInformationByGoodsId(goodsId).getName();
+//        //获取分类名称
+//        map.put("goodsInformation", goods);
+//        map.put("companyName", companyName);
+//        return map;
+//    }
+
     @ApiOperation(value = "根据展品Id查询商品")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
     })
-    @RequestMapping(value = "/query/goodsId", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String,Object> queryGoodsById(@RequestParam(value = "goodsId") int goodsId) {
-        Map<String, Object> map = new HashMap<>();
-        Goods goods = goodsDao.selectGoodsById(goodsId);
-        //获取商家名称
-        String companyName = goodsService.selectCompanyInformationByGoodsId(goodsId).getName();
-        //获取分类名称
-        map.put("goodsInformation", goods);
-        map.put("companyName", companyName);
-        return map;
+    @GetMapping("/query/goodsId")
+    public GoodsNewDto queryGoodsByIdMobile(int goodsId) {
+        return goodsMobileService.queryGoodsById(goodsId);
     }
 
     //根据类别Id查询所有在展的商品；
@@ -139,7 +155,6 @@ public class GoodsController implements Constants {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/category", method = RequestMethod.GET)
-    @ResponseBody
     public PageInfo<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,
                                                      @RequestParam(value = "pageNum") int pageNum,
                                                      @RequestParam(value = "pageSize") int pageSize) {
@@ -156,7 +171,6 @@ public class GoodsController implements Constants {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/company", method = RequestMethod.GET)
-    @ResponseBody
     public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
                                                     @RequestParam(value = "pageNum") int pageNum,
                                                     @RequestParam(value = "pageSize") int pageSize) {
@@ -172,7 +186,6 @@ public class GoodsController implements Constants {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query")
     })
-    @ResponseBody
     public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword) {
         List<Goods> list = new ArrayList<>();
         list = goodsService.queryAllGoodsByName(keyword);
