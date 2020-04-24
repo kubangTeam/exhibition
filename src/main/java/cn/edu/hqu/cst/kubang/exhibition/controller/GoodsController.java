@@ -52,8 +52,6 @@ public class GoodsController implements Constants {
     private GoodsService goodsService;
     @Autowired
     private IGoodsMobileService goodsMobileService;
-    @Autowired
-    private GoodsDao goodsDao;
     @Value("${exhibition.path.domain}")
     private String domain;
     @Value("${exhibition.path.upload}")
@@ -261,7 +259,7 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
-    @ApiOperation(value = "通过url获取展品图片")
+    @ApiOperation(value = "通过url下载展品图片", notes = "这个接口是下载")
     @RequestMapping(value = "/goodsPic/{fileName}" , method = RequestMethod.GET)
     public void getPic(@PathVariable("fileName") String fileName, HttpServletResponse response){
         //服务器存放的路径
@@ -382,7 +380,7 @@ public class GoodsController implements Constants {
         // 存储文件
         file.transferTo(dest);
         //展品图片Web访问路径
-        String url = domain + contextPath + "/goods/goodsPic/" + fileName;
+        String url = domain + contextPath + "/images/goods/" + fileName;
         return url;
     }
 
