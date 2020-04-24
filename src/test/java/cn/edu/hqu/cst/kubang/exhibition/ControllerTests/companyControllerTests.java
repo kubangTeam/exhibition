@@ -29,19 +29,20 @@ import java.io.FileInputStream;
 @WebAppConfiguration
 @AutoConfigureMockMvc
 public class companyControllerTests {
+    // /company
+// *  1、/identify 公司认证
+// *  2、/getInformation 获取公司资料
+// *  3、/updateInformation 修改商家资料
+// *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
     @Autowired
     CompanyController companyController;
 
     @Autowired
     private MockMvc mockMvc;
-// /company
-// *  1、/identify 公司认证
-// *  2、/getInformation 获取公司资料
-// *  3、/updateInformation 修改商家资料
-// *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
+
     @Test
     public void testGetInformation() throws Exception{
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/company/getInformation")
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformation")
                 .param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();

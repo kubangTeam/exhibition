@@ -55,7 +55,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         exhibition.setTel(userInformationDao.GetUserInfoFromId(Id).getUserAccount());
         if (exhibitionDao.saveExhibition(exhibition) == 1) {
             return 1;
-<<<<<<< HEAD
+
         }else return 0;
     }
 
@@ -64,21 +64,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         return null;
     }
 
-=======
-        } else return 0;
-        //设置联系方式
-        //1、查询该展会承办方是否存在
-        //数据库索引好像是从0开始，那么这个判断会出现错误
-//       if(accountServiceImp.isOrganizerOrNot(Id)!=0){
-//           int organizerId = accountServiceImp.isOrganizerOrNot(Id);
-//           //查询账号表里面与该公司对于的账号的所有电话号码
-//            List<UserInformation> list = userInformationDao.GetUserInfoFromOrganizerId(organizerId);
-//            for(UserInformation temp:list){
-//
-//            }
-//
-//       }
->>>>>>> 3cdd8a5d2dc1e1543d91830972499acf2ef1a937
+
 
     @Override
     public List<Exhibition> queryExhibitionInfoByUserId(int userId) {
@@ -93,14 +79,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         return null;
     }
 
-<<<<<<< HEAD
-=======
-    /**
-     * 返回即将上线的展会信息
-     *
-     * @return
-     */
->>>>>>> 3cdd8a5d2dc1e1543d91830972499acf2ef1a937
+
     @Override
     public List<Exhibition> queryReadyToStartExhibitionInfo() {
         //查询审核通过的展会列表

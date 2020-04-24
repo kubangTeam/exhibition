@@ -8,7 +8,7 @@
     </sql>
 
     <select id="checkAdminByAccount" resultType="Manager">
-        select <include refid="selectAttendFields"></include>
+        select <include refid="selectFields"></include>
         from manager
         where account = #{account}
     </select>

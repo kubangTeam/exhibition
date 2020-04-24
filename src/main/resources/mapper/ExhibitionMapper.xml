@@ -104,8 +104,10 @@
     </select>
 
 
-    <delete id="deleteAll">
+    <delete id="deleteById">
         delete from exhibitiondetail
+        where
+        id = #{id}
     </delete>
 
 </mapper>

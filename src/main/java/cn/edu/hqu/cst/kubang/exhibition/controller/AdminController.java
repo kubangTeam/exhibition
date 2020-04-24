@@ -36,7 +36,6 @@ import java.util.Map;
  *
  *  审核模块
  *  1、/updateExhibitionStatus 修改展会状态
- *  2、/
  */
 @RestController
 @RequestMapping("/Admin")
@@ -49,18 +48,17 @@ public class AdminController {
     private ExhibitionDao exhibitionDao;
 
     @Value("${pagehelper.pageSize1}")
-    private int pageSize1;//一页显示8个
+    private int pageSize1;//一页显示10
 
     //管理员根据状态查询所有的展会
-    @ApiOperation(value = "返回所有状态的展会",notes = "通过页数查询固定长度（pageSize1）的展会信息")
+    @ApiOperation(value = "返回所有状态的展会",notes = "通过页数查询固定长度（pageSize1=10）的展会信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "status", value = "展会的状态", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryAllExhibition/{pageNum}")
     public PageInfo<Exhibition> adminQueryAllExhibition(@PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList  = exhibitionDao.queryAllExhibitions();
+        PageHelper.startPage(pageNum, pageSize1);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -73,8 +71,8 @@ public class AdminController {
     })
     @GetMapping("/queryExhibitionByStatus/{status}/{pageNum}")
     public PageInfo<Exhibition> adminQueryExhibitionByStatus(@PathVariable int status, @PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize1);
         List<Exhibition> exhibitionList  = exhibitionDao.queryExhibitionsByStatus(status);
+        PageHelper.startPage(pageNum, pageSize1);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -82,13 +80,13 @@ public class AdminController {
     //管理员用过关键字查询所有展会
     @ApiOperation(value = "管理员根据关键词查询所有的展会")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyWord", value = "关键词", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "keyWord", value = "关键词(支持关键词数组查询)", required = true, dataType = "String[]", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
     })
-    @GetMapping("/queryExhibitionByKeyWord/{keyword}/{pageNum}")
-    public PageInfo<Exhibition> adminQueryExhibitionByKeyWords(String keyWord, int pageNum) {
-        PageHelper.startPage(pageNum, pageSize1);
+    @GetMapping("/queryExhibitionByKeyWord")
+    public PageInfo<Exhibition> adminQueryExhibitionByKeyWords(@RequestParam("keyWord") String[] keyWord, @RequestParam("pageNum")int pageNum) {
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
+        PageHelper.startPage(pageNum, pageSize1);
         PageInfo<Exhibition> pageInfo =new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -102,16 +100,21 @@ public class AdminController {
     public Map<String, String> serverUpdateAll(@RequestBody Exhibition exhibition) {
         String value;
         String code;
-        int i = exhibitionDao.modifyExhibition(exhibition);
-        if (i == -1) {
-            value = "存在空参数";
-            code = "024";
-        } else if (i == 1) {
-            value = "修改成功";
-            code = "005";
-        } else {
-            value = "系统异常";
-            code = "-001";
+        if (exhibitionDao.queryExhibitionByID(exhibition.getId()) == null) {
+            value = "找不到该展会";
+            code = "016";
+        }else{
+            int i = exhibitionDao.modifyExhibition(exhibition);
+            if (i == -1) {
+                value = "存在空参数";
+                code = "024";
+            } else if (i == 1) {
+                value = "修改成功";
+                code = "005";
+            } else {
+                value = "系统异常";
+                code = "-001";
+            }
         }
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
@@ -130,20 +133,26 @@ public class AdminController {
     public Map<String, String> adminUpdateStatus(int id,int status) {
         String value;
         String code;
-        if (exhibitionDao.queryExhibitionByID(id).getStatus() == 4) {
+
+        if (exhibitionDao.queryExhibitionByID(id) == null) {
             value = "找不到该展会";
             code = "016";
         } else {
-            int i =exhibitionDao.modifyExhibitionStatus(id, status);
-            if (i == -1) {
-                value = "无权限";
-                code = "004";
-            } else if (i == 1) {
-                value = "修改成功";
-                code = "005";
-            } else {
-                value = "系统异常";
-                code = "-001";
+            if(exhibitionDao.queryExhibitionByID(id).getStatus() == 4){
+                value = "展会处于删除状态";
+                code = "016";
+            }else {
+                int i = exhibitionDao.modifyExhibitionStatus(id, status);
+                if (i == -1) {
+                    value = "无权限";
+                    code = "004";
+                } else if (i == 1) {
+                    value = "修改成功";
+                    code = "005";
+                } else {
+                    value = "系统异常";
+                    code = "-001";
+                }
             }
         }
         Map<String, String> map = new HashMap<>();
