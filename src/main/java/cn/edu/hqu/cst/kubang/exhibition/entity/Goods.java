@@ -19,6 +19,10 @@ import java.util.Date;
  * @Version 1.0
  * @Description:展品实体类
  */
+@Data
+@NoArgsConstructor //无参构造
+@AllArgsConstructor //满参构造
+@Accessors(chain = true)
 @Document(indexName = "goods", type = "_doc", shards = 6, replicas = 3 )//索引，类型，分片，副本
 @Component
 public class Goods implements Serializable{
