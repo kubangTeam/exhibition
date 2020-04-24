@@ -7,12 +7,12 @@
 
     <sql id="selectFields">
         id,name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
-        period,introduction,Tel,picture
+        period,introduction,Tel,picture,subareaId
     </sql>
 
     <sql id="insertFields">
         name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
-        period,introduction,Tel,picture
+        period,introduction,Tel,picture,subareaId
     </sql>
 
     <sql id="selectAttendFields">
@@ -65,7 +65,7 @@
         insert into exhibitiondetail(<include refid="insertFields"></include>)
         values
         (#{name}, #{status},#{startTime},#{endTime},#{exhibitionHallId},#{showRoom},#{acreage},#{trade},#{organizer},
-        #{contractorId},#{session},#{period},#{introduction},#{Tel},#{picture})
+        #{contractorId},#{session},#{period},#{introduction},#{Tel},#{picture},#{subareaId})
     </insert>
 
     <update id="modifyExhibition" parameterType="Exhibition">
@@ -84,7 +84,8 @@
         period = #{period},
         introduction = #{introduction},
         Tel = #{Tel},
-        picture = #{picture}
+        picture = #{picture},
+        subareaId = #{subareaId}
         where id = #{id}
     </update>
 
