@@ -14,4 +14,14 @@
         from companyinformation where id in
         (select companyId from companycollect where userId = #{userId})
     </select>
+
+    <!--用户增加收藏展品-->
+    <insert id="saveCollectGoods" parameterType="map">
+        insert into goodscollect (userId,goodsId) values (#{userId},#{goodsId})
+    </insert>
+
+    <!--用户增加收藏公司-->
+    <insert id="saveCollectCompany" parameterType="map">
+        insert into companycollect (userId,companyId) values (#{userId},#{companyId})
+    </insert>
 </mapper>

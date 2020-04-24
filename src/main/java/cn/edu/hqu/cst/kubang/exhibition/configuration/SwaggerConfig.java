@@ -32,7 +32,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("酷邦线上展会接口文档（内测版）")
-                .version("v0.1")
+                .version("v0.2 2020.04.23")
                 .build();
     }
 }
