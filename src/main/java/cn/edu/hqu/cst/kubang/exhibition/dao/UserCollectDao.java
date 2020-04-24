@@ -22,4 +22,10 @@ public interface UserCollectDao {
 
     // 增加收藏公司
     int saveCollectCompany(@Param("userId") Integer userId,@Param("companyId")Integer companyId);
+
+    // 根据userId和goodsId 查找有没有对应的记录 0表示没有
+    Integer queryNumForCollectGoods(@Param("userId") Integer userId,@Param("goodsId")Integer goodsId);
+
+    // 根据userId和companyId查找有没有对应的记录 0表示没有
+    Integer queryNumForCollectCompany(@Param("userId") Integer userId,@Param("companyId")Integer companyId);
 }
