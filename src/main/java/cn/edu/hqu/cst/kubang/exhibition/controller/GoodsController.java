@@ -198,7 +198,7 @@ public class GoodsController implements Constants {
     @ApiOperation(value = "添加展品信息，支持图片批量上传", notes = "错误状态码：-008")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goods", value = "展品对象", required = true, dataType = "Goods", paramType = "body"),
-            @ApiImplicitParam(name = "files", value = "文件数组", required = true, dataType = "MultipartFile[]", paramType = "query")
+            @ApiImplicitParam(name = "files", value = "文件数组", required = true, dataType = "MultipartFile", paramType = "query")
     })
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map<String, String> addGoods(@RequestBody Goods goods,
