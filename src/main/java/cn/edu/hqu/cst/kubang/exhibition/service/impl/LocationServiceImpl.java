@@ -7,7 +7,8 @@ import cn.edu.hqu.cst.kubang.exhibition.service.ILocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.text.Collator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -24,10 +25,14 @@ public class LocationServiceImpl implements ILocationService {
 
     @Override
     public List<Province> getAllProvince() {
-        return locationDao.getAllProvince().stream().filter(p->!p.getProvince().contains("澳门")
+        List<Province> provinceList = locationDao.getAllProvince()
+                .stream()
+                .filter(p -> !p.getProvince().contains("澳门")
                 && !p.getProvince().contains("香港")
-                && !p.getProvince().contains("台湾")
-        ).collect(Collectors.toList());
+                && !p.getProvince().contains("台湾"))
+                .collect(Collectors.toList());
+        Collections.sort(provinceList,(p1,p2)-> Collator.getInstance(Locale.CHINESE).compare(p1.getProvince(),p2.getProvince()));
+        return provinceList;
     }
 
     @Override
