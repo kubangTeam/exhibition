@@ -23,8 +23,11 @@ public class ReponseJsonUnify implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public ResponseJson beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+    public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         //System.out.println("----"+o.toString()+"type = "+o.getClass().toString());
+        if (o.getClass().getName().equals("cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson"))
+            return o;
+//        System.out.println(o.getClass().getName());
         return new ResponseJson(true,null,null,o);
     }
 }
