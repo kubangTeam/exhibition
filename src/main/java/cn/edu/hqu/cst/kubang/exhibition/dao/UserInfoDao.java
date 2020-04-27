@@ -26,4 +26,6 @@ public interface UserInfoDao {
     Integer changeUserEmail(@Param("id") Integer id,@Param("email") String email);
 
     Integer changeUserPass(@Param("id") Integer id,@Param("password") String password);
+
+    Integer changeUserPhoto(@Param("userId") Integer userId,@Param("userPicture") String userPicture);
 }

@@ -33,7 +33,12 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Override
     public Object changePhoto(Integer id, String photo) {
-        return null;
+        if (id == null || photo == null || photo == "" || id < 0)
+            return new ResponseJson(false, "-002", "参数为空", null);
+        if(userInfoDao.changeUserPhoto(id,photo) > 0)
+            return new ResponseJson(true, "005", "头像设置成功",null);
+        else
+            return new ResponseJson(false, "-004", "数据库异常", null);
     }
 
     @Override

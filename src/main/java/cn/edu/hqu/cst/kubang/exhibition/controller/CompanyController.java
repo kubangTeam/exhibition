@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import cn.edu.hqu.cst.kubang.exhibition.Utilities.upload;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -59,6 +59,13 @@ public class CompanyController {
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示8个
 
+    @Value("${exhibition.path.domain}")
+    private String domain;
+    @Value("${exhibition.path.upload.company}")
+    private String uploadPath;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
     @ApiOperation(value = "公司认证", notes = "前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、简介、营业执照（照片）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query"),
@@ -90,7 +97,8 @@ public class CompanyController {
             value = "未选择文件";
             code = "021";
         } else {
-            String pic = upload.uploadFile(path, file);
+            String webPath = domain + contextPath + "/images/company/";
+            String pic = UploadFile.uploadFile(path, webPath, file);
             String status = companyService.CompanyIdentify(userId, name, address, website, type, introduce, pic);
             value = status;
             code = "005";

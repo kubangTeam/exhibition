@@ -1,5 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserInfoService;
 import io.swagger.annotations.Api;
@@ -7,10 +9,15 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: KongKongBaby
@@ -25,6 +32,13 @@ public class UserInfoController {
 
     @Autowired
     private IUserInfoService userInfoService;
+    @Value("${exhibition.path.domain}")
+    private String domain;
+    @Value("${exhibition.path.upload.user}")
+    private String uploadPath;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
 
     /**
      * @Date: 2020.04.27 14:36
@@ -81,5 +95,37 @@ public class UserInfoController {
     @PutMapping("/password")
     public Object changePass(Integer userId, String newPassword, String oldPassword) {
         return userInfoService.changePass(userId, newPassword, oldPassword);
+    }
+
+    /**
+     * @Date: 2020.04.27 22:04
+     * @Author：SunChonggao
+     * @Description: 上传用户头像
+     */
+    @ApiOperation(value = "上传用户头像", notes = "错误状态码：-008")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "头像图片", required = true, dataType = "MultipartFile", paramType = "query"),
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true, dataType = "int", paramType = "query")
+    })
+    @RequestMapping(value = "/profilePicture", method = RequestMethod.POST)
+    public Map<String, String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
+                                             @RequestParam(value = "userId") int userId) throws IOException {
+        String value;
+        String code;
+        if (file.isEmpty()) {
+            value = "未选择文件";
+            code = "021";
+        } else {
+            String webPath = domain + contextPath + "/images/user/";
+            String photo = UploadFile.uploadFile(uploadPath, webPath, file);
+            userInfoService.changePhoto(userId, photo);
+            value = "上传成功";
+            code = "005";
+
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("response", value);
+        map.put("code", code);
+        return map;
     }
 }

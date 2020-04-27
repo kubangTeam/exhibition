@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
@@ -52,12 +53,14 @@ public class GoodsController implements Constants {
     private GoodsService goodsService;
     @Autowired
     private IGoodsMobileService goodsMobileService;
+
     @Value("${exhibition.path.domain}")
     private String domain;
-    @Value("${exhibition.path.upload}")
+    @Value("${exhibition.path.upload.goods}")
     private String uploadPath;
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
 
     //从start到end随机取nums个不重复的整数
     private List getRandomNumList(int nums, int start, int end) {
@@ -231,7 +234,7 @@ public class GoodsController implements Constants {
     @ApiOperation(value = "单张上传展品图片（已知展品Id）", notes = "错误状态码：-008")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "展品图片", required = true, dataType = "MultipartFile", paramType = "query"),
-            @ApiImplicitParam(name = "goodId", value = "展品Id", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "goodsId", value = "展品Id", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
     public Map<String,String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
@@ -245,7 +248,8 @@ public class GoodsController implements Constants {
         }
         else{
             GoodsPic goodsPic = new GoodsPic();
-            goodsPic.setPic(this.uploadFile(file));
+            String webPath = domain + contextPath + "/images/goods/";
+            goodsPic.setPic(UploadFile.uploadFile(uploadPath,webPath,file));
             goodsPic.setGoodsId(goodsId);
             goodsService.addGoodsPic(goodsPic);
             value = "上传成功";
@@ -362,8 +366,7 @@ public class GoodsController implements Constants {
         map.put("code", code);
         return map;
     }
-    public String uploadFile(MultipartFile file) throws IOException {
-
+    /*public String uploadFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();  // 获取上传图像的原始文件名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 获取后缀名
         //为了避免用户传递的图像文件名称相同，需要重新给上传的图像文件命名
@@ -380,6 +383,6 @@ public class GoodsController implements Constants {
         //展品图片Web访问路径
         String url = domain + contextPath + "/images/goods/" + fileName;
         return url;
-    }
+    }*/
 
 }
