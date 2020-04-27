@@ -46,18 +46,30 @@ public class SearchController {
 
     @Autowired
     private GoodsService goodsService;
-    @ApiOperation(value = "同步搜索服务器数据用的，不要点")
-    @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public void initSearchData(){
-        elasticsearchService.deleteAllExhibition();
-        elasticsearchService.deleteAllGoods();
+    @ApiOperation(value = "添加所有展品数据到ES中",notes = "mysql to ES")
+    @RequestMapping(value = "/init/goods", method = RequestMethod.GET)
+    public void initGoodsSearchData(){
         List<Goods> listGoods = goodsService.queryGoodsALl();
         for(Goods goods : listGoods)
             elasticsearchService.saveGoods(goods);
+    }
+    @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
+    @RequestMapping(value = "/init/exhibition", method = RequestMethod.GET)
+    public void initExhibitionSearchData(){
         List<Exhibition> listExhibition = exhibitionDao.queryAllExhibitions();
+        System.out.println(listExhibition.get(0));
         for(Exhibition exhibition : listExhibition)
-            elasticsearchService.saveExhibition(exhibition);
-
+          elasticsearchService.saveExhibition(exhibition);
+    }
+    @ApiOperation(value = "删除ES中的展品数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
+    @RequestMapping(value = "/delete/goods", method = RequestMethod.GET)
+    public void deleteGoodsSearchData(){
+         elasticsearchService.deleteAllGoods();
+    }
+    @ApiOperation(value = "删除ES中的展会数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
+    @RequestMapping(value = "/delete/exhibition", method = RequestMethod.GET)
+    public void deleteExhibitionSearchData(){
+        elasticsearchService.deleteAllExhibition();
     }
 
     @RequestMapping(value = "/goods/{num}", method = RequestMethod.GET)
