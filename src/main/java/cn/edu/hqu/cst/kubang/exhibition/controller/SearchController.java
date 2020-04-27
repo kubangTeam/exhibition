@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
+import cn.edu.hqu.cst.kubang.exhibition.service.ISearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,9 @@ public class SearchController {
 
     @Autowired
     ExhibitionDao exhibitionDao;
+
+    @Autowired
+    private ISearchService searchService;
 
     @Autowired
     private GoodsService goodsService;
@@ -97,6 +101,15 @@ public class SearchController {
             case 3 : factor = "startTime"; break;
         }
         return factor;
+    }
+
+    /**
+     * 获取热门搜索
+     */
+    @ApiOperation(value = "获取热门搜索")
+    @GetMapping("/hot/key")
+    public List<String> getHotSearch() {
+        return searchService.getHotSearch();
     }
 
 
