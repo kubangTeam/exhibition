@@ -39,6 +39,8 @@ import java.util.Map;
  * 2、/getInformation 获取公司资料
  * 3、/updateInformation 修改商家资料
  * 4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
+ *
+ *
  */
 @RestController
 @RequestMapping("/company")
