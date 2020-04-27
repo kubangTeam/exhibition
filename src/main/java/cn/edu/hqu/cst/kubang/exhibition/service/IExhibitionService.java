@@ -18,15 +18,23 @@ import java.util.List;
 
 public interface IExhibitionService {
 
-
+    /**
+     *  承办方功能
+     */
     //添加一个展会
     int holdExhibition(int userId, String name, Date startTime, Date endTime,
                        int exhibitionHallId,int session,String period,
                        String introduce, String picPath);
+    //管理员查询所有展会
+    List<Exhibition>queryAllExhibitionInfo();
+    //若为承办方查询所有其举办的展会 若为个人用户查询自己参加过的展会
+    List<Exhibition>queryExhibitionInfoByUserId(int userId);
+    //根据账号id和展会状态查询展会信息 若为管理员则对所有展会按照状态查询 若为承办方 则按照承办方的所举办的展会的状态来查询
+    List<Exhibition>queryExhibitionInfoByUserIdAndStatus(int userId,int status);
 
-    List<Exhibition> queryReadyToStartExhibitionInfo();
-
+    List<Exhibition>queryReadyToStartExhibitionInfo();
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
+
 //    //查询所有
 //    List<Exhibition> queryAll();
 //    PageInfo<Exhibition> queryAllExhibitions(int pageNum);

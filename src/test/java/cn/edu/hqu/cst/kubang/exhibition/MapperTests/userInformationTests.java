@@ -51,6 +51,7 @@ public class userInformationTests  {
         userInformation.setUserReccode("测试推荐吗");
         //承办方id
         userInformation.setUserOrganizerId(1);
+
         if(userInformationDao.UserRegisterFromPhoneNumber(userInformation) !=0)
             System.out.println("添加数据成功");
     }
@@ -77,6 +78,7 @@ public class userInformationTests  {
     @Test
     public void testGetUserInfoFromId(){
         UserInformation row = userInformationDao.GetUserInfoFromId(userInformation.getUserId());
+        System.out.println(row.getUserCompanyId());
         System.out.println(row);
     }
     @Test

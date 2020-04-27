@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ManagerDao">
+    <sql id="selectFields">
+        account,password
+    </sql>
+
+    <select id="checkAdminByAccount" resultType="Manager">
+        select <include refid="selectFields"></include>
+        from manager
+        where account = #{account}
+    </select>
+
+</mapper>

@@ -29,19 +29,20 @@ import java.io.FileInputStream;
 @WebAppConfiguration
 @AutoConfigureMockMvc
 public class companyControllerTests {
+    // /company
+// *  1、/identify 公司认证
+// *  2、/getInformation 获取公司资料
+// *  3、/updateInformation 修改商家资料
+// *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
     @Autowired
     CompanyController companyController;
 
     @Autowired
     private MockMvc mockMvc;
-// /company
-// *  1、/identify 公司认证
-// *  2、/getInformation 获取公司资料
-// *  3、/updateInformation 修改商家资料
-// *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
+
     @Test
     public void testGetInformation() throws Exception{
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/company/getInformation")
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformation")
                 .param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -50,19 +51,18 @@ public class companyControllerTests {
         //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
-        //System.out.println(status);
-        //System.out.println(content);
+        System.out.println(status);
+        System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
 
-
+    @Test
     public void testIdentify() throws Exception {
         //file为营业执照
         File file = new File("/Users/sunquan/Downloads/psb.jpeg");
         MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
                 MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
-
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/company/identify")
                 .file(firstFile)
                 .param("userId","1")
@@ -73,7 +73,22 @@ public class companyControllerTests {
                 .param("introduce","这是一条测试代码"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
+    @Test
+    public void testUpdateInformation(){
+
+    }
+
+
+
 
 
 }
