@@ -76,6 +76,17 @@ public class Exhibition implements Serializable {
     @Field(type = FieldType.Text)
     private String picture;//展会图标url地址
 
+    @Field(type = FieldType.Integer)
+    private Integer subareaId;
+
+    public Integer getSubareaId() {
+        return subareaId;
+    }
+
+    public void setSubareaId(Integer subareaId) {
+        this.subareaId = subareaId;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -223,6 +234,7 @@ public class Exhibition implements Serializable {
                 ", Tel='" + Tel + '\'' +
                 ", status=" + status +
                 ", picture='" + picture + '\'' +
+                ", subareaId=" + subareaId +
                 '}';
     }
 }

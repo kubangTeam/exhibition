@@ -71,6 +71,7 @@ public class CompanyMapperTests {
     public void testSelectCompanyInformationById(){
         Company test= companyDao.selectCompanyInformationById(company.getId());
         System.out.println(test);
+        System.out.println(test);
     }
 
     @Test

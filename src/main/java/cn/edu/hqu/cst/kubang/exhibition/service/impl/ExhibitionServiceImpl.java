@@ -40,6 +40,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     public int holdExhibition(int Id, String name, Date startTime,
                               Date endTime, int exhibitionHallId,
                               int session, String period, String introduce, String picPath) {
+        //设置承办方id为userId
         exhibition.setContractorId(Id);
         exhibition.setName(name);
         exhibition.setStartTime(startTime);
@@ -54,38 +55,39 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         exhibition.setTel(userInformationDao.GetUserInfoFromId(Id).getUserAccount());
         if (exhibitionDao.saveExhibition(exhibition) == 1) {
             return 1;
-        } else return 0;
-        //设置联系方式
-        //1、查询该展会承办方是否存在
-        //数据库索引好像是从0开始，那么这个判断会出现错误
-//       if(accountServiceImp.isOrganizerOrNot(Id)!=0){
-//           int organizerId = accountServiceImp.isOrganizerOrNot(Id);
-//           //查询账号表里面与该公司对于的账号的所有电话号码
-//            List<UserInformation> list = userInformationDao.GetUserInfoFromOrganizerId(organizerId);
-//            for(UserInformation temp:list){
-//
-//            }
-//
-//       }
 
-
+        }else return 0;
     }
 
-    /**
-     * 返回即将上线的展会信息
-     *
-     * @return
-     */
+    @Override
+    public List<Exhibition> queryAllExhibitionInfo() {
+        return null;
+    }
+
+
+
+    @Override
+    public List<Exhibition> queryExhibitionInfoByUserId(int userId) {
+        if(accountServiceImp.identifyUser(userId) == "商家"){
+
+        }
+        return null;
+    }
+
+    @Override
+    public List<Exhibition> queryExhibitionInfoByUserIdAndStatus(int userId, int status) {
+        return null;
+    }
+
+
     @Override
     public List<Exhibition> queryReadyToStartExhibitionInfo() {
         //查询审核通过的展会列表
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(2);
-
         //获取当前时间
         Date data = new Date();
         long value = data.getTime();
         data.setTime(value);
-
         //去掉不符合时间的展会
         Iterator<Exhibition> it = exhibitionList.iterator();
         while (it.hasNext()) {
@@ -113,12 +115,8 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     }
 
 
-//    //查询所有展会 不包括删除
-//    @Override
-//    public List<Exhibition> queryAll() {
-//        List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
-//        return exhibitionList;
-//    }
+
+
 //    @Override
 //    @NullDisable
 //    public PageInfo<Exhibition> queryAllExhibitions(int pageNum) {

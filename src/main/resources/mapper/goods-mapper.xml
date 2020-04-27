@@ -97,4 +97,9 @@
     <select id="selectCategoryNameByCategoryId" parameterType="int" resultType="String">
         select category from dispalyzone where categoryId = #{id}
     </select>
+
+
+    <select id="queryHotSearchKey" resultType="String">
+        select `key` from usersearchhot order by `time` desc limit 8
+    </select>
 </mapper>

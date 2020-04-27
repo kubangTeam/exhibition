@@ -18,7 +18,7 @@ public class OrganizerInformation {
     String responsiblePersonpic2;
     String responsiblePersonTel;
     String headPicture;
-    String identifyStatus;
+    int identifyStatus;
 
     public int getId() {
         return id;
@@ -108,11 +108,11 @@ public class OrganizerInformation {
         this.headPicture = headPicture;
     }
 
-    public String getIdentifyStatus() {
+    public int getIdentifyStatus() {
         return identifyStatus;
     }
 
-    public void setIdentifyStatus(String identifyStatus) {
+    public void setIdentifyStatus(int identifyStatus) {
         this.identifyStatus = identifyStatus;
     }
 

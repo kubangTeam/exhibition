@@ -34,6 +34,7 @@ import java.util.*;
  * 2、/queryGoodsByExhibitionId/{id} 据展会id查询展会的所有商品
  * 3、/querySubareaGoodsByExhibitionId/{id} 根据展会id和分区id查询展会分区商品信息
  * 4、/queryReadyToStartExhibitionInfo 返回即将上线的展会信息
+ *
  */
 @RestController
 @RequestMapping("/exhibition")

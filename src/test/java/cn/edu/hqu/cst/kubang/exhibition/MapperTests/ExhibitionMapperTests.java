@@ -50,14 +50,18 @@ public class ExhibitionMapperTests {
 
     @After
     public void after(){
-        //真删除
-        if(exhibitionDao.deleteAll()==1)
+        //真删除 删除全部
+//        if(exhibitionDao.deleteAll()==1)
+//            System.out.println("删除成功");
+        if(exhibitionDao.deleteById(exhibition.getId())==1)
             System.out.println("删除成功");
+
     }
 
     @Test
     public void testQueryAllExhibitions(){
-        System.out.println(exhibitionDao.queryAllExhibitions());
+        List<Exhibition> exhibitionList  =exhibitionDao.queryAllExhibitions();
+        System.out.println(exhibitionList);
     }
 
     @Test
@@ -73,7 +77,7 @@ public class ExhibitionMapperTests {
 
     @Test
     public void testQueryExhibitionsByKeyWord(){
-        String test = "测试";
+        String[] test = {"测试","1"};
         System.out.println(exhibitionDao.queryExhibitionsByKeyWord(test));
     }
 

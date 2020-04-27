@@ -38,4 +38,7 @@ public interface GoodsDao {
     GoodsNewPojo selectGoodsNewById(int id);
     // 通过分类id查找对应的名字
     String selectCategoryNameByCategoryId(int id);
+
+    // 获取热门搜索
+    List<String> queryHotSearchKey();
 }
