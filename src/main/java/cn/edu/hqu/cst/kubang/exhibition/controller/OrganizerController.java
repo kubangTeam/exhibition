@@ -1,6 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
-import cn.edu.hqu.cst.kubang.exhibition.Utilities.upload;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,13 @@ public class OrganizerController {
 
     @Autowired
     private ExhibitionDao exhibitionDao;
+
+    @Value("${exhibition.path.domain}")
+    private String domain;
+    @Value("${exhibition.path.upload.organizer}")
+    private String uploadPath;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
 
 
@@ -74,7 +82,8 @@ public class OrganizerController {
             code = "021";
         }
         else{
-            String pic = upload.uploadFile(path,file);
+            String webPath = domain + contextPath + "/images/organizer/";
+            String pic = UploadFile.uploadFile(path, webPath, file);
             int status =exhibitionService.holdExhibition(userId,name,startTime,endTime,exhibitionHallId,session,period,introduce,pic);
             if(status ==1){
                 value = "上传展会成功";

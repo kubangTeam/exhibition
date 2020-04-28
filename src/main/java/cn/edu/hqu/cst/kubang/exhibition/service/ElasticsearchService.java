@@ -50,10 +50,10 @@ public class ElasticsearchService {
     public void deleteAllGoods(){
         goodsRepository.deleteAll();
     }
-    public Page<Goods> searchGoods(String keyword, String factor, int current, int limit) {
+    public Page<Goods> searchGoods(String keyword, int current, int limit) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.multiMatchQuery(keyword, "goodsName", "goodsIntroduce"))    //构造搜索条件
-                .withSort(SortBuilders.fieldSort(factor).order(SortOrder.DESC))   //构造排序条件
+                .withSort(SortBuilders.fieldSort("startTime").order(SortOrder.DESC))   //构造排序条件
                 .withPageable(PageRequest.of(current, limit))     //构造分页条件
                 .build();
        return elasticTemplate.queryForPage(searchQuery, Goods.class, new SearchResultMapper() {
@@ -101,10 +101,10 @@ public class ElasticsearchService {
     public void deleteAllExhibition(){
         exhibitionRepository.deleteAll();
     }
-    public Page<Exhibition> searchExhibition(String keyword, String factor, int current, int limit) {
+    public Page<Exhibition> searchExhibition(String keyword, int current, int limit) {
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(QueryBuilders.multiMatchQuery(keyword, "name","introduction"))    //构造搜索条件
-                .withSort(SortBuilders.fieldSort(factor).order(SortOrder.DESC))   //构造排序条件,按开始时间降序
+                //.withSort(SortBuilders.fieldSort(factor).order(SortOrder.DESC))   //构造排序条件,按开始时间降序
                 .withPageable(PageRequest.of(current, limit))     //构造分页条件
                 .build();
         return elasticTemplate.queryForPage(searchQuery, Exhibition.class, new SearchResultMapper() {

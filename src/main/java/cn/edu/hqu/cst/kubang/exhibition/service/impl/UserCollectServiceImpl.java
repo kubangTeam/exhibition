@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  @author: 邢佳成
- *  @Date: 2020.04.23 12:24
- *  @Description:
+ * @author: 邢佳成
+ * @Date: 2020.04.23 12:24
+ * @Description:
  */
 @Service
 public class UserCollectServiceImpl implements IUserCollectService {
@@ -35,8 +35,10 @@ public class UserCollectServiceImpl implements IUserCollectService {
 
     @Override
     public Integer addCollectGoods(int userId, int goodsId) {
+        Integer n = userCollectDao.queryNumForCollectGoods(userId, goodsId);
+        if (n != 0) return 201;
         int i = userCollectDao.saveCollectGoods(userId, goodsId);
-        System.out.println("i: "+i);
+        System.out.println("i: " + i);
         if (i == 1)
             return 200;
         else
@@ -45,7 +47,9 @@ public class UserCollectServiceImpl implements IUserCollectService {
 
     @Override
     public Integer addCollectCompany(int userId, int companyId) {
-        int i = userCollectDao.saveCollectCompany(userId,companyId);
+        Integer n = userCollectDao.queryNumForCollectCompany(userId, companyId);
+        if (n != 0) return 201;
+        int i = userCollectDao.saveCollectCompany(userId, companyId);
         return i == 1 ? 200 : 500;
     }
 
@@ -53,29 +57,30 @@ public class UserCollectServiceImpl implements IUserCollectService {
     public List<GoodsNewDto> queryCollectGoods(int userId) {
         List<GoodsNewPojo> goodsNewPojos = userCollectDao.queryCollectGoods(userId);
         List<GoodsNewDto> goodsNewDtoList = new ArrayList<>();
-        goodsNewPojos.forEach(item->{
+        goodsNewPojos.forEach(item -> {
             // 根据categoryId查找对应的名字
-            String category = goodsDao.selectCategoryNameByCategoryId(item.getCategoryId());;
+            String category = goodsDao.selectCategoryNameByCategoryId(item.getCategoryId());
+            ;
             // 根据companyId查找对应的名字
             String companyName = companyDao.queryCompanyNameById(item.getCompanyId());
             // 根据展品id查找它的轮播图
             List<String> picture = goodsDao.selectAllGoodsPicById(item.getGoodsId());
-            goodsNewDtoList.add(ConvertBean.pojoToDto(item,category,companyName,picture));
+            goodsNewDtoList.add(ConvertBean.pojoToDto(item, category, companyName, picture));
         });
 //        goodsNewDtoList.forEach(System.out::println);
         return goodsNewDtoList;
     }
 
     @Override
-    public List<Map<String,Object>> queryCollectCompany(int userId) {
+    public List<Map<String, Object>> queryCollectCompany(int userId) {
         List<Company> companies = userCollectDao.queryCollectCompany(userId);
-        List<Map<String,Object>> res = new ArrayList<>();
-        companies.forEach(item->{
-            Map<String,Object> map = new HashMap<>();
-            map.put("id",item.getId());
-            map.put("name",item.getName());
-            map.put("type",item.getType());
-            map.put("headPicture",item.getHeadPicture());
+        List<Map<String, Object>> res = new ArrayList<>();
+        companies.forEach(item -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", item.getId());
+            map.put("name", item.getName());
+            map.put("type", item.getType());
+            map.put("headPicture", item.getHeadPicture());
             res.add(map);
         });
         return res;

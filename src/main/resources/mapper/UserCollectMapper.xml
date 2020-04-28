@@ -24,4 +24,14 @@
     <insert id="saveCollectCompany" parameterType="map">
         insert into companycollect (userId,companyId) values (#{userId},#{companyId})
     </insert>
+
+    <!--根据用户id和goodsId查找表中是否存在记录-->
+    <select id="queryNumForCollectGoods" parameterType="map" resultType="int">
+        select count(id) from goodscollect where userId = #{userId} and goodsId = #{goodsId}
+    </select>
+
+    <!--根据用户id和companyId查找表中是否存在记录-->
+    <select id="queryNumForCollectCompany" parameterType="map" resultType="int">
+        select count(id) from companycollect where userId = #{userId} and companyId = #{companyId}
+    </select>
 </mapper>

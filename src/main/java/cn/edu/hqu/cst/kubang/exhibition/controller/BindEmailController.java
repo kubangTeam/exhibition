@@ -106,9 +106,6 @@ public class BindEmailController {
 
     /**
      * 根据用户的id、邮箱、发送验证码绑定用户账号
-     * @param userId
-     * @param to
-     * @return
      */
     @ApiOperation(value = "绑定邮箱",notes = "根据用户的id、邮箱、发送验证码绑定用户账号")
     @ApiImplicitParams({
@@ -118,10 +115,10 @@ public class BindEmailController {
     })
     @PostMapping("/check/bind")
     public Map<String, String> bindcheckCode(@RequestParam Integer userId, @RequestParam String email, @RequestParam String newCode) {
-        System.out.println("checkCode: ");
-        System.out.println("userId: " + userId);
-        System.out.println("email: " + email);
-        System.out.println("newCode: " + newCode);
+//        System.out.println("checkCode: ");
+//        System.out.println("userId: " + userId);
+//        System.out.println("email: " + email);
+//        System.out.println("newCode: " + newCode);
         Boolean res = userEmailService.checkCode(email, newCode);
         String value;
         if (res) {
@@ -183,9 +180,6 @@ public class BindEmailController {
 
     /**
      * 根据用户的id、邮箱、发送验证码帮用户找回密码
-     * @param userId
-     * @param to
-     * @return
      */
     @ApiOperation(value = "忘记密码")
     @ApiImplicitParams({

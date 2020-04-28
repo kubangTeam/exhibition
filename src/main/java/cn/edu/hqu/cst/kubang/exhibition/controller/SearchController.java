@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
+import cn.edu.hqu.cst.kubang.exhibition.service.ISearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,55 +44,70 @@ public class SearchController {
     ExhibitionDao exhibitionDao;
 
     @Autowired
+    private ISearchService searchService;
+
+    @Autowired
     private GoodsService goodsService;
-    @ApiOperation(value = "同步搜索服务器数据用的，不要点")
-    @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public void initSearchData(){
-        elasticsearchService.deleteAllExhibition();
-        elasticsearchService.deleteAllGoods();
+    @ApiOperation(value = "添加所有展品数据到ES中",notes = "mysql to ES")
+    @RequestMapping(value = "/init/goods", method = RequestMethod.GET)
+    public void initGoodsSearchData(){
         List<Goods> listGoods = goodsService.queryGoodsALl();
         for(Goods goods : listGoods)
             elasticsearchService.saveGoods(goods);
+    }
+    @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
+    @RequestMapping(value = "/init/exhibition", method = RequestMethod.GET)
+    public void initExhibitionSearchData(){
         List<Exhibition> listExhibition = exhibitionDao.queryAllExhibitions();
+        System.out.println(listExhibition.get(0));
         for(Exhibition exhibition : listExhibition)
-            elasticsearchService.saveExhibition(exhibition);
-
+          elasticsearchService.saveExhibition(exhibition);
+    }
+    @ApiOperation(value = "删除ES中的展品数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
+    @RequestMapping(value = "/delete/goods", method = RequestMethod.GET)
+    public void deleteGoodsSearchData(){
+         elasticsearchService.deleteAllGoods();
+    }
+    @ApiOperation(value = "删除ES中的展会数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
+    @RequestMapping(value = "/delete/exhibition", method = RequestMethod.GET)
+    public void deleteExhibitionSearchData(){
+        elasticsearchService.deleteAllExhibition();
     }
 
-    @RequestMapping(value = "/goods/{num}", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展品", notes = "num=1/2/3,分别对应综合、热度、时间")
+    @RequestMapping(value = "/goods", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展品", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     public Page<Goods> searchGoods(@RequestParam(value = "keyword") String keyword,
-                                   @PathVariable(value = "num") String num,
+                                   //@PathVariable(value = "num") String num,
                                    @RequestParam(value = "pageNum") int pageNum,
                                    @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(Integer.valueOf(num),1);
-        Page<Goods> result= elasticsearchService.searchGoods(keyword, factor,  pageNum, pageSize);
+       // String factor = numToFactor(Integer.valueOf(num),1);
+        Page<Goods> result= elasticsearchService.searchGoods(keyword,  pageNum, pageSize);
         return result;
     }
-    @RequestMapping(value = "/exhibition/{num}", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展会", notes = "num=1/2/3,分别对应综合、热度、时间")
+    @RequestMapping(value = "/exhibition", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展会", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public Page<Exhibition> searchExhibition(@PathVariable(value = "num") int num,
+    public Page<Exhibition> searchExhibition(//@PathVariable(value = "num") int num,
                                              @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "pageNum") int pageNum,
                                              @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(Integer.valueOf(num),0);
-        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, factor, pageNum, pageSize);
+       // String factor = numToFactor(Integer.valueOf(num),0);
+        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
         return result;
     }
 
-    private static String numToFactor(int num, int flag) {
+    /*private static String numToFactor(int num, int flag) {
         String factor = null;
         switch (num){
             case 1 : factor = flag == 0 ? "id" : "goodsId"; break;
@@ -99,6 +115,15 @@ public class SearchController {
             case 3 : factor = "startTime"; break;
         }
         return factor;
+    }*/
+
+    /**
+     * 获取热门搜索
+     */
+    @ApiOperation(value = "获取热门搜索")
+    @GetMapping("/hot/key")
+    public List<String> getHotSearch() {
+        return searchService.getHotSearch();
     }
 
 

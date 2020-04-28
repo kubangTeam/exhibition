@@ -1,7 +1,5 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
-
 /**
  * @author: 邢佳成
  * @Date: 2020.02.15 16:16
