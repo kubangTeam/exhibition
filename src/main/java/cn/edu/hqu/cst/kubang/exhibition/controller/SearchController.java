@@ -72,40 +72,40 @@ public class SearchController {
         elasticsearchService.deleteAllExhibition();
     }
 
-    @RequestMapping(value = "/goods/{num}", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展品", notes = "num=1/2/3,分别对应综合、热度、时间")
+    @RequestMapping(value = "/goods", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展品", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     public Page<Goods> searchGoods(@RequestParam(value = "keyword") String keyword,
-                                   @PathVariable(value = "num") String num,
+                                   //@PathVariable(value = "num") String num,
                                    @RequestParam(value = "pageNum") int pageNum,
                                    @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(Integer.valueOf(num),1);
-        Page<Goods> result= elasticsearchService.searchGoods(keyword, factor,  pageNum, pageSize);
+       // String factor = numToFactor(Integer.valueOf(num),1);
+        Page<Goods> result= elasticsearchService.searchGoods(keyword,  pageNum, pageSize);
         return result;
     }
-    @RequestMapping(value = "/exhibition/{num}", method = RequestMethod.GET)
-    @ApiOperation(value = "搜索展会", notes = "num=1/2/3,分别对应综合、热度、时间")
+    @RequestMapping(value = "/exhibition", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索展会", notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public Page<Exhibition> searchExhibition(@PathVariable(value = "num") int num,
+    public Page<Exhibition> searchExhibition(//@PathVariable(value = "num") int num,
                                              @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "pageNum") int pageNum,
                                              @RequestParam(value = "pageSize") int pageSize) {
-        String factor = numToFactor(Integer.valueOf(num),0);
-        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, factor, pageNum, pageSize);
+       // String factor = numToFactor(Integer.valueOf(num),0);
+        Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
         return result;
     }
 
-    private static String numToFactor(int num, int flag) {
+    /*private static String numToFactor(int num, int flag) {
         String factor = null;
         switch (num){
             case 1 : factor = flag == 0 ? "id" : "goodsId"; break;
@@ -113,7 +113,7 @@ public class SearchController {
             case 3 : factor = "startTime"; break;
         }
         return factor;
-    }
+    }*/
 
     /**
      * 获取热门搜索
