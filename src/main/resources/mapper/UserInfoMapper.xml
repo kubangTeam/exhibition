@@ -12,6 +12,10 @@
         select * from userinformation where userAccount = #{userAccount}
     </select>
 
+    <select id="queryUserInfoByEmail" parameterType="String" resultType="User">
+        select * from userinformation where userEmail = #{email}
+    </select>
+
     <select id="queryUserInfoByCompany" parameterType="int" resultType="User">
         select * from userinformation where userCompanyId = #{userCompanyId}
     </select>

@@ -39,6 +39,8 @@ public class LocationServiceImpl implements ILocationService {
     public List<City> getAllCities(Integer provinceCode) {
         if (null == provinceCode || provinceCode < 1)
             return null;
-        return locationDao.getAllCities(provinceCode);
+        List<City> allCities = locationDao.getAllCities(provinceCode);
+        Collections.sort(allCities,(c1,c2)-> Collator.getInstance(Locale.CHINESE).compare(c1.getCity(),c2.getCity()));
+        return allCities;
     }
 }

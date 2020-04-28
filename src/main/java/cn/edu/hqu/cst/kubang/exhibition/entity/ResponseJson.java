@@ -19,8 +19,8 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public final class ResponseJson<T> implements Serializable {
     private Boolean success;
-    private String errCode;
-    private String errMsg;
+    private String code;
+    private String msg;
     private T data;
 
     public ResponseJson(Boolean success, T data) {
@@ -30,20 +30,20 @@ public final class ResponseJson<T> implements Serializable {
 
     public ResponseJson(Boolean success, String errCode, String errMsg) {
         this.success = success;
-        this.errCode = errCode;
-        this.errMsg = errMsg;
+        this.code = errCode;
+        this.msg = errMsg;
     }
 
     public ResponseJson(Boolean success, ResponseCodeEnums enums) {
         this.success = success;
-        this.errCode = enums.getCode();
-        this.errMsg = enums.getMsg();
+        this.code = enums.getCode();
+        this.msg = enums.getMsg();
     }
 
     public ResponseJson(Boolean success, T data, ResponseCodeEnums enums) {
         this.success = success;
         this.data = data;
-        this.errCode = enums.getCode();
-        this.errMsg = enums.getMsg();
+        this.code = enums.getCode();
+        this.msg = enums.getMsg();
     }
 }

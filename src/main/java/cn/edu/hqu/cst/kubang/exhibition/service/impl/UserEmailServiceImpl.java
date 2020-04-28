@@ -3,7 +3,9 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserInfoDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class UserEmailServiceImpl implements IUserEmailService {
@@ -24,6 +27,8 @@ public class UserEmailServiceImpl implements IUserEmailService {
     private UserCodeDao userCodeDao;
     @Autowired
     private UserInformationDao userDao;
+    @Autowired
+    private UserInfoDao userInfoDao;
     @Autowired
     private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
@@ -47,19 +52,23 @@ public class UserEmailServiceImpl implements IUserEmailService {
         Long minute = (checkingTime - sendingTime) / (1000 * 60);
         //30分钟内且验证码正确
         if (minute <= 30 && newCode.equals(oldCode)) {
-            System.out.println("验证通过");
-            System.out.println("时间差 = " + minute + " 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
+//            System.out.println("验证通过");
+//            System.out.println("时间差 = " + minute + " 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
             return true;
         } else {
-            System.out.println("验证不通过");
-            System.out.println("时间差 = " + minute + "分钟, 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
+//            System.out.println("验证不通过");
+//            System.out.println("时间差 = " + minute + "分钟, 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
             return false;
         }
     }
 
     @Override
     public boolean isUserEmailSingle(String email) {
-        return false;
+        List<User> users = userInfoDao.queryUserInfoByEmail(email);
+        if (users.size() == 0)
+            return true;
+        else
+            return false;
     }
 
 

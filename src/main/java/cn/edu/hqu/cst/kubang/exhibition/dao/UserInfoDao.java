@@ -16,6 +16,8 @@ public interface UserInfoDao {
 
     User queryUserInfoByAccount(String userAccount);
 
+    List<User> queryUserInfoByEmail(String email);
+
     List<User> queryUserInfoByCompany(Integer userCompanyId);
 
     User queryUserInfoByReccode(String userReccode);
