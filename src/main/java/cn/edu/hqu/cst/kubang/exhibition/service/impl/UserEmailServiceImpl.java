@@ -51,24 +51,13 @@ public class UserEmailServiceImpl implements IUserEmailService {
         Long checkingTime = Calendar.getInstance().getTimeInMillis();
         Long minute = (checkingTime - sendingTime) / (1000 * 60);
         //30分钟内且验证码正确
-        if (minute <= 30 && newCode.equals(oldCode)) {
-//            System.out.println("验证通过");
-//            System.out.println("时间差 = " + minute + " 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
-            return true;
-        } else {
-//            System.out.println("验证不通过");
-//            System.out.println("时间差 = " + minute + "分钟, 正确的验证码 = " + oldCode + " 用户提供的验证码 = " + newCode);
-            return false;
-        }
+        return minute <= 30 && newCode.equals(oldCode);
     }
 
     @Override
     public boolean isUserEmailSingle(String email) {
         List<User> users = userInfoDao.queryUserInfoByEmail(email);
-        if (users.size() == 0)
-            return true;
-        else
-            return false;
+        return  users.size() == 0;
     }
 
 
