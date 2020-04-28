@@ -1,7 +1,9 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
+import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.CompanyRepository;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.GoodsRepository;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import org.elasticsearch.action.search.SearchResponse;
@@ -37,6 +39,9 @@ public class ElasticsearchService {
 
     @Autowired
     private ExhibitionRepository exhibitionRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @Autowired
     private ElasticsearchTemplate elasticTemplate;
@@ -130,6 +135,56 @@ public class ElasticsearchService {
                     String picture = hit.getSourceAsMap().get("picture").toString();
                     exhibition.setPicture(picture);
                     list.add(exhibition);
+                }
+                return new AggregatedPageImpl(list, pageable,
+                        hits.getTotalHits(), searchResponse.getAggregations(), searchResponse.getScrollId(), hits.getMaxScore());
+            }
+
+            @Override
+            public <T> T mapSearchHit(SearchHit searchHit, Class<T> aClass) {
+                return null;
+            }
+        });
+    }
+    public void saveCompany(Company company) {companyRepository.save(company);
+    }
+    public void deleteCompany(int id){
+        companyRepository.deleteById(id);
+    }
+    public void deleteAllCompany(){
+        companyRepository.deleteAll();
+    }
+    public Page<Company> searchCompany(String keyword, int current, int limit) {
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(QueryBuilders.multiMatchQuery(keyword, "name"))    //构造搜索条件
+                .withPageable(PageRequest.of(current, limit))     //构造分页条件
+                .build();
+        return elasticTemplate.queryForPage(searchQuery, Company.class, new SearchResultMapper() {
+            @Override
+            public <T> AggregatedPage<T> mapResults(SearchResponse searchResponse, Class<T> aClass, Pageable pageable) {
+                SearchHits hits = searchResponse.getHits();
+                if (hits.getTotalHits() <= 0) {
+                    return null;
+                }
+                ArrayList<Company> list = new ArrayList<>();
+                for (SearchHit hit : hits) {
+                    Company company = new Company();
+                    String id = hit.getSourceAsMap().get("id").toString();
+                    company.setId(Integer.valueOf(id));
+                    String name = hit.getSourceAsMap().get("name").toString();
+                    company.setName(name);
+                    String type = hit.getSourceAsMap().get("type").toString();
+                    company.setType(type);
+                    String website = hit.getSourceAsMap().get("website").toString();
+                    company.setWebsite(website);
+                    String telephone = hit.getSourceAsMap().get("telephone").toString();
+                    company.setTelephone(telephone);
+                    String introduction = hit.getSourceAsMap().get("introduction").toString();
+                    company.setIntroduction(introduction);
+                    String headPicture = hit.getSourceAsMap().get("headPicture").toString();
+                    company.setHeadPicture(headPicture);
+                    list.add(company);
+
                 }
                 return new AggregatedPageImpl(list, pageable,
                         hits.getTotalHits(), searchResponse.getAggregations(), searchResponse.getScrollId(), hits.getMaxScore());

@@ -88,5 +88,10 @@ public class CompanyMapperTests {
         int row = companyDao.updateCompanyInformation(test);
         System.out.println(row);
     }
+    @Test
+    public void testQueryAll(){
+        System.out.println(companyDao.selectAll());
+    }
+
 
 }

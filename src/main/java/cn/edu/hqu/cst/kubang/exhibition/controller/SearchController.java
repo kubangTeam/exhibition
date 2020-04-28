@@ -1,12 +1,10 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
-import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
-import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
-import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
-import cn.edu.hqu.cst.kubang.exhibition.service.ISearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,7 +30,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/search")
-@Api(tags = "展会和展品搜索")
+@Api(tags = "展会、展品和商家搜索")
 public class SearchController {
     @Autowired
     private ElasticsearchService elasticsearchService;
@@ -48,6 +46,10 @@ public class SearchController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    ICompanyService companyService;
+
     @ApiOperation(value = "添加所有展品数据到ES中",notes = "mysql to ES")
     @RequestMapping(value = "/init/goods", method = RequestMethod.GET)
     public void initGoodsSearchData(){
@@ -58,10 +60,18 @@ public class SearchController {
     @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
     @RequestMapping(value = "/init/exhibition", method = RequestMethod.GET)
     public void initExhibitionSearchData(){
-        List<Exhibition> listExhibition = exhibitionDao.queryAllExhibitions();
+        List<Exhibition> listExhibition = exhibitionService.queryAll();
         System.out.println(listExhibition.get(0));
         for(Exhibition exhibition : listExhibition)
           elasticsearchService.saveExhibition(exhibition);
+    }
+    @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
+    @RequestMapping(value = "/init/company", method = RequestMethod.GET)
+    public void initCompanySearchData(){
+        List<Company> listCompany = companyService.queryAll();
+        System.out.println(listCompany.get(0));
+        for(Company company : listCompany)
+            elasticsearchService.saveCompany(company);
     }
     @ApiOperation(value = "删除ES中的展品数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
     @RequestMapping(value = "/delete/goods", method = RequestMethod.GET)
@@ -73,6 +83,12 @@ public class SearchController {
     public void deleteExhibitionSearchData(){
         elasticsearchService.deleteAllExhibition();
     }
+    @ApiOperation(value = "删除ES中的商家数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
+    @RequestMapping(value = "/delete/company", method = RequestMethod.GET)
+    public void deleteCompanySearchData(){
+        elasticsearchService.deleteAllCompany();
+    }
+
 
     @RequestMapping(value = "/goods", method = RequestMethod.GET)
     @ApiOperation(value = "搜索展品", notes = "")
@@ -104,6 +120,19 @@ public class SearchController {
                                              @RequestParam(value = "pageSize") int pageSize) {
        // String factor = numToFactor(Integer.valueOf(num),0);
         Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
+        return result;
+    }
+    @RequestMapping(value = "/company", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索商家", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
+    })
+    public Page<Company> searchCompany(@RequestParam(value = "keyword") String keyword,
+                                       @RequestParam(value = "pageNum") int pageNum,
+                                       @RequestParam(value = "pageSize") int pageSize) {
+        Page<Company> result= elasticsearchService.searchCompany(keyword, pageNum, pageSize);
         return result;
     }
 

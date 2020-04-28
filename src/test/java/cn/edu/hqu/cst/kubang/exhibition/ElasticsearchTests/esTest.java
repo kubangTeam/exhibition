@@ -40,4 +40,5 @@ public class esTest {
         //System.out.println(elasticsearchService.searchExhibition("体育",0,1));
 
     }
+
 }

@@ -21,6 +21,10 @@
         companyId,exhibitionId
     </sql>
 
+    <select id="selectAll" resultType="Company">
+        select <include refid="selectFields"></include>
+        from companyinformation
+    </select>
     <select id="selectExhibitionIdByCompanyId" resultType="CompanyJoinExhibition">
         select <include refid="selectAttendFields"></include>
         from companyjoinexhibition

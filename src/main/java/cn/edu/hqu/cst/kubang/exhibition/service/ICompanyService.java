@@ -11,4 +11,5 @@ public interface ICompanyService {
                          String website,String type, String introduce, String HeadPicture);
 
     List<Exhibition>queryCompanyAttendedExhibition(int userId);
+    List<Company> queryAll();
 }

@@ -34,6 +34,7 @@ public interface IExhibitionService {
 
     List<Exhibition>queryReadyToStartExhibitionInfo();
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
+    List<Exhibition> queryAll();
 
 //    //查询所有
 //    List<Exhibition> queryAll();
