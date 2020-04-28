@@ -23,17 +23,6 @@ public interface CompanyDao {
     int updateCompanyInformation(Company company);//编辑商家的资料
     int delete(int id);//删除数据，测试用
 
-    /**
-     * 公司参加展会表相关操作
-     * @param companyId
-     * @return
-     */
-    List<CompanyJoinExhibition> selectExhibitionIdByCompanyId(int companyId);//根据公司id查询该公司曾经参加过的展会
-    //添加一个CompanyJoinExhibition类
-    int insertCompanyJoinExhibition(CompanyJoinExhibition companyJoinExhibition);
-    //删除数据 测试用
-    int deleteAttend(int id);
-
     // 根据categoryId查找对应的名字
     String queryCompanyNameById(Integer id);
 }

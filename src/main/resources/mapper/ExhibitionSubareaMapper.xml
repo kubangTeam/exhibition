@@ -22,4 +22,17 @@
         value
         (#{exhibitionId},#{subarea})
     </insert>
+
+
+    <delete id="deleteExhibitionSubareaInfoByExhibitionId">
+        delete from exhibitionsubarea
+        where
+        exhibitionId =#{exhibitionId}
+    </delete>
+
+    <delete id="deleteExhibitionSubareaInfoById">
+        delete from exhibitionsubarea
+        where
+        id =#{id}
+    </delete>
 </mapper>

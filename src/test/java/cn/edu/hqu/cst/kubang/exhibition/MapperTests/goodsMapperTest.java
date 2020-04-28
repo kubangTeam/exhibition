@@ -5,6 +5,7 @@ import cn.edu.hqu.cst.kubang.exhibition.controller.GoodsController;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import org.apache.ibatis.annotations.Param;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,4 +46,26 @@ public class goodsMapperTest {
         System.out.println(goodsDao.selectCategoryNameById(1));
         System.out.println(goodsDao.selectCompanyNameById(1));
     }
+    @Test
+    public void testSelectGoodsByCompanyId(){
+        List<Goods> list = goodsDao.selectGoodsByCompanyId(1,0);
+        System.out.println(list.size());
+        System.out.println(list);
+
+        list = goodsDao.selectGoodsByCompanyId(1,1);
+        System.out.println(list.size());
+        System.out.println(list);
+
+        list = goodsDao.selectGoodsByCompanyId(1,2);
+        System.out.println(list.size());
+        System.out.println(list);
+    }
+
+
+    @Test
+    public void testUpdateStatus(){
+        int row = goodsDao.updateStatus(52,2);
+        System.out.println(row);
+    }
+
 }

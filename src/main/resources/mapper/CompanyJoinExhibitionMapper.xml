@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao">
+
+    <sql id="selectFields">
+        id,companyId,exhibitionId
+    </sql>
+
+    <sql id="insertFields">
+        companyId,exhibitionId
+    </sql>
+
+    <insert id="insertCompanyJoinExhibition" parameterType="CompanyJoinExhibition" useGeneratedKeys="true" keyProperty="id">
+        insert into companyjoinexhibition (<include refid="insertFields"></include>)
+        value
+        (#{companyId},#{exhibitionId})
+    </insert>
+
+    <delete id="deleteSingleCompanyAttend">
+        delete from companyjoinexhibition
+        where
+        companyId =#{companyId}
+    </delete>
+
+    <delete id="deleteAllAttend">
+        delete from companyjoinexhibition
+        where
+        exhibitionId=#{exhibitionId}
+    </delete>
+
+    <select id="selectCompanyByExhibitionId" resultType="CompanyJoinExhibition">
+        select <include refid="selectFields"></include>
+        from companyjoinexhibition
+        where exhibitionId = #{exhibitionId}
+    </select>
+
+
+    <select id="selectExhibitionByCompanyId" resultType="CompanyJoinExhibition">
+        select <include refid="selectFields"></include>
+        from companyjoinexhibition
+        where companyId =#{companyId}
+    </select>
+
+    <select id="selectAll" resultType="CompanyJoinExhibition">
+        select <include refid="selectFields"></include>
+        from companyjoinexhibition
+    </select>
+
+
+
+</mapper>

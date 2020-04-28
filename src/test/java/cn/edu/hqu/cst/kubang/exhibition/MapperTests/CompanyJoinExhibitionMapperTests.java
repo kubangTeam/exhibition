@@ -23,12 +23,6 @@ public class CompanyJoinExhibitionMapperTests {
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
-    @Autowired
-    private CompanyDao companyDao;
-
-    @Autowired
-    private ExhibitionDao exhibitionDao;
-
     @BeforeClass
     public static void beforeClass(){
 
@@ -45,22 +39,58 @@ public class CompanyJoinExhibitionMapperTests {
     public void before(){
         //生成测试数据
         //需要注意exhibitionId为外键，添加的测试数据的id需要在展会信息表中存在。
-        companyJoinExhibition.setCompanyId(1);
-        companyJoinExhibition.setExhibitionId(37);
-        if(companyDao.insertCompanyJoinExhibition(companyJoinExhibition) ==1)
-            System.out.println("添加数据成功");
+
+//        companyJoinExhibition.setCompanyId(1);
+//        companyJoinExhibition.setExhibitionId(1298);
+//        if(companyJoinExhibitionDao.insertCompanyJoinExhibition(companyJoinExhibition) ==1)
+//            System.out.println("添加数据成功");
     }
 
     @After
     public void after(){
-        if(companyDao.deleteAttend(companyJoinExhibition.getId())==1)
-            System.out.println("删除成功");
+//        if(companyJoinExhibitionDao.deleteAttend(companyJoinExhibition.getId())==1)
+//            System.out.println("删除成功");
     }
 
     @Test
     public void testSelectCompanyIdByExhibitionId(){
         //当外键不存在的时候，查询会出错。
-        List<CompanyJoinExhibition> rows =exhibitionDao.selectCompanyIdByExhibitionId(37);
+        List<CompanyJoinExhibition> rows =companyJoinExhibitionDao.selectCompanyByExhibitionId(1298);
         System.out.println(rows);
     }
+
+    @Test
+    public void testSelectExhibitionByCompanyId(){
+        //当外键不存在的时候，查询会出错。
+        List<CompanyJoinExhibition> rows =companyJoinExhibitionDao.selectExhibitionByCompanyId(1);
+        System.out.println(rows);
+    }
+
+    @Test
+    public void testSelectAll(){
+        //当外键不存在的时候，查询会出错。
+        List<CompanyJoinExhibition> rows =companyJoinExhibitionDao.selectAll();
+        System.out.println(rows.size());
+        System.out.println(rows);
+    }
+
+
+    @Test
+    public void testDeleteAllAttend(){
+        int row = companyJoinExhibitionDao.deleteAllAttend(companyJoinExhibition.getExhibitionId());
+        if(row != 0){
+            System.out.println(row);
+            System.out.println("删除成功");
+        }else System.out.println("删除失败");
+    }
+
+    @Test
+    public void testDeleteSingleCompanyAttend(){
+        int row = companyJoinExhibitionDao.deleteSingleCompanyAttend(312);
+        if(row != 0){
+            System.out.println(row);
+            System.out.println("删除成功");
+        }else System.out.println("删除失败");
+    }
+
 }

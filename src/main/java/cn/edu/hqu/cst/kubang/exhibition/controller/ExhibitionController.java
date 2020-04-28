@@ -66,17 +66,24 @@ public class ExhibitionController {
     private int pageSize2;//一页显示8个
 
     /**
-     * 根据展会id返回展会二级分类信息
+     * 根据展会id返回展会分区信息
      */
     @ApiOperation(value = "根据展会id查询展会分区信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
     })
-    @GetMapping("/queryExhibitionSubareaById/{id}")
-    public List<ExhibitionSubarea> subareaInformation(@RequestParam(value = "exhibitionId")int exhibitionId) {
-        List<ExhibitionSubarea> subInformation = new ArrayList<ExhibitionSubarea>();
-        subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
-        return subInformation;
+    @GetMapping("/queryExhibitionSubareaById")
+    public Map<String, Object> subareaInformation(@RequestParam(value = "exhibitionId")int exhibitionId) {
+        //List<ExhibitionSubarea> subInformation = new ArrayList<ExhibitionSubarea>();
+        Map<String, Object> map = new HashMap<>();
+        List<ExhibitionSubarea> subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
+        if(subInformation!=null){
+            map.put("subInformation",subInformation);
+        }else {
+            String value = "该商家分区信息不存在";
+            map.put("response", value);
+        }
+        return map;
     }
 
     /**
@@ -88,16 +95,16 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
     })
-    @GetMapping("/queryGoodsByExhibitionId/{id}/{pageNum}")
+    @GetMapping("/queryGoodsByExhibitionId")
     public PageInfo<Goods> allGoodByKeyWord(@RequestParam(value = "exhibitionId")int exhibitionId,@RequestParam(value = "pageNum") int pageNum) {
         //查询出展会id对应的的商家id列表
         List companyIdList = new ArrayList<>();
-        List<CompanyJoinExhibition> companyJoinExhibitionList = new ArrayList<>();
-        companyJoinExhibitionList = exhibitionDao.selectCompanyIdByExhibitionId(exhibitionId);
+        List<CompanyJoinExhibition> companyJoinExhibitionList = companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
         for(int i =0;i<companyJoinExhibitionList.size();i++){
             int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
             companyIdList.add(i,companyId);
         }
+        System.out.println(companyIdList);
         /**
          * 1、根据商家列表id查询对应商家的商品id列表
          * 2、在商品id列表中查找参加了该展会的商品
@@ -138,7 +145,7 @@ public class ExhibitionController {
         //查询出展会id对应的的商家id列表
         List companyIdList = new ArrayList<>();
         List<CompanyJoinExhibition> companyJoinExhibitionList = new ArrayList<>();
-        companyJoinExhibitionList =  exhibitionDao.selectCompanyIdByExhibitionId(exhibitionId);
+        companyJoinExhibitionList =  companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
         for(int i =0;i<companyJoinExhibitionList.size();i++){
             int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
             companyIdList.add(i,companyId);

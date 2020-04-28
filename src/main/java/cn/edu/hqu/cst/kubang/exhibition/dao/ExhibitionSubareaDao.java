@@ -15,6 +15,8 @@ public interface ExhibitionSubareaDao {
 
     int insertExhibitionSubareaInfo(ExhibitionSubarea exhibitionSubarea);
 
-    int deleteExhibitionSubareaInfoByExhibitionId(int exhibitionId);//删除测试数据，测试用
+    int deleteExhibitionSubareaInfoByExhibitionId(int exhibitionId);
+    int deleteExhibitionSubareaInfoById(int id);//删除测试数据，测试用
+
 
 }

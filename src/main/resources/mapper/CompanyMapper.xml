@@ -13,31 +13,6 @@
         codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicture
     </sql>
 
-    <sql id="selectAttendFields">
-        id,companyId,exhibitionId
-    </sql>
-
-    <sql id="insertAttendFields">
-        companyId,exhibitionId
-    </sql>
-
-    <select id="selectExhibitionIdByCompanyId" resultType="CompanyJoinExhibition">
-        select <include refid="selectAttendFields"></include>
-        from companyjoinexhibition
-        where companyId = #{companyId}
-    </select>
-
-    <insert id="insertCompanyJoinExhibition" parameterType="CompanyJoinExhibition" keyProperty="id">
-        insert into companyjoinexhibition (<include refid="insertAttendFields"></include>)
-        values
-        (#{companyId},#{exhibitionId})
-    </insert>
-
-    <delete id="deleteAttend">
-        delete from companyjoinexhibition
-        where
-        id =#{id}
-    </delete>
 
     <insert id="addUnidentifiedCompanyInfo" parameterType="Company" keyProperty="id">
         insert into companyinformation (<include refid="insertFields"></include>)

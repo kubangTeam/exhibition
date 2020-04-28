@@ -13,5 +13,10 @@ import java.util.List;
 @Repository
 public interface CompanyJoinExhibitionDao {
 
-
+    int insertCompanyJoinExhibition(CompanyJoinExhibition companyJoinExhibition);
+    int deleteSingleCompanyAttend(int id);
+    int deleteAllAttend(int exhibitionId);
+    List<CompanyJoinExhibition>selectCompanyByExhibitionId(int exhibitionId);
+    List<CompanyJoinExhibition>selectExhibitionByCompanyId(int companyId);
+    List<CompanyJoinExhibition>selectAll();
 }
