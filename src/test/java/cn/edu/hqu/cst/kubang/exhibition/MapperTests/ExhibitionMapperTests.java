@@ -34,10 +34,11 @@ public class ExhibitionMapperTests {
         Date data1 = new Date();
         long value = data.getTime();
         long value1 = value + 10000;
-        data.setTime(value);
-        data1.setTime(value1);
+        long value2 = value + 1000000;
+        data.setTime(value1);
+        data1.setTime(value2);
         exhibition.setName("测试展会");
-        exhibition.setStatus(1);
+        exhibition.setStatus(2);
         exhibition.setStartTime(data);
         exhibition.setEndTime(data1);
         exhibition.setExhibitionHallId(1);
@@ -56,6 +57,11 @@ public class ExhibitionMapperTests {
         if(exhibitionDao.deleteById(exhibition.getId())==1)
             System.out.println("删除成功");
 
+    }
+    @Test
+    public void testDeleteById(){
+        int row  =exhibitionDao.deleteById(1305);
+        System.out.println(row);
     }
 
     @Test
