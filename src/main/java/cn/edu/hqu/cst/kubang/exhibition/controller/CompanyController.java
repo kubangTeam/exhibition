@@ -39,6 +39,8 @@ import java.util.Map;
  * 2、/getInformation 获取公司资料
  * 3、/updateInformation 修改商家资料
  * 4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
+ *
+ *
  */
 @RestController
 @RequestMapping("/company")
@@ -129,6 +131,27 @@ public class CompanyController {
             map.put("companyInformation", company);
         } else {
             String value = "该用户未通过商家认证";
+            map.put("response", value);
+        }
+        return map;
+    }
+
+    @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：商家ID")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/getInformationByCompanyId")
+    /**
+     * 获取公司资料：前端根据商家Id查询商家资料
+     */
+    public Map<String, Object> getCompanyInformationById(@RequestParam(value = "id") int id) {
+        Map<String, Object> map = new HashMap<>();
+        //判断该账号是否认证为商家账号
+        company = companyDao.selectCompanyInformationById(id);
+        if(company !=null){
+            map.put("companyInformation", company);
+        }else{
+            String value = "该商家id不存在";
             map.put("response", value);
         }
         return map;

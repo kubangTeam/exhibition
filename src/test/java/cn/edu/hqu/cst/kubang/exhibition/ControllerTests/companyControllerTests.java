@@ -58,6 +58,39 @@ public class companyControllerTests {
     }
 
     @Test
+    public void testGetComapnyInformationById() throws Exception{
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformationByCompanyId")
+                .param("id","1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        MvcResult mvcResult1=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformationByCompanyId")
+                .param("id","100000"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult1.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        status=mvcResult1.getResponse().getStatus();
+        content =mvcResult1.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+    }
+
+
+
+    @Test
     public void testIdentify() throws Exception {
         //file为营业执照
         File file = new File("/Users/sunquan/Downloads/psb.jpeg");

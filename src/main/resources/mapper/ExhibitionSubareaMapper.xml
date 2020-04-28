@@ -7,9 +7,19 @@
         id,exhibitionId,subarea
     </sql>
 
+    <sql id="insertFields">
+        exhibitionId,subarea
+    </sql>
     <select id="selectByExhibitionId" resultType="ExhibitionSubarea">
         select <include refid="selectFields"></include>
         from exhibitionsubarea
         where exhibitionId = #{exhibitionId}
     </select>
+
+
+    <insert id="insertExhibitionSubareaInfo" parameterType="ExhibitionSubarea" useGeneratedKeys="true" keyProperty="id">
+        insert into exhibitionsubarea (<include refid="insertFields"></include>)
+        value
+        (#{exhibitionId},#{subarea})
+    </insert>
 </mapper>
