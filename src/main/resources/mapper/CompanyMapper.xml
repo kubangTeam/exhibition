@@ -13,7 +13,6 @@
         codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicture
     </sql>
 
-
     <insert id="addUnidentifiedCompanyInfo" parameterType="Company" keyProperty="id">
         insert into companyinformation (<include refid="insertFields"></include>)
         values

@@ -15,6 +15,7 @@ public interface CompanyDao {
      * @param company
      * @return
      */
+    List<Company> selectAll();//查询所有展会，用于搜索
     int addUnidentifiedCompanyInfo(Company company);
     //根据状态查询商家信息
     List<Company> getCompaniesByIdentifyStatus(int identifyStatus);

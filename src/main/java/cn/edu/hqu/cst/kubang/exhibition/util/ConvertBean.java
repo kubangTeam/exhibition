@@ -2,6 +2,8 @@ package cn.edu.hqu.cst.kubang.exhibition.util;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewPojo;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegral;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegralDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -28,5 +30,12 @@ public class ConvertBean {
                 ,website,companyId,companyName
                 ,picture,originalPrice,currentPrice
                 ,originPlace,categoryName,startTime,endTime);
+    }
+    public static UserIntegralDTO pojoToDto(UserIntegral userIntegral){
+        UserIntegralDTO userIntegralDTO = new UserIntegralDTO();
+        userIntegralDTO.setIntegral(userIntegral.getIntegral())
+                .setStatus(userIntegral.getStatus())
+                .setTime(userIntegral.getTime());
+        return userIntegralDTO;
     }
 }

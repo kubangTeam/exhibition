@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Data// setter/getter、equals、canEqual、hashCode、toString
+@AllArgsConstructor
 @NoArgsConstructor//无参构造
 @Accessors(chain = true)
 @Component

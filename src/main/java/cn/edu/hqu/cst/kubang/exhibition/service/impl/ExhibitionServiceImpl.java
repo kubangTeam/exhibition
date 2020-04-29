@@ -114,6 +114,11 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         return exhibitionNew;
     }
 
+    @Override
+    public List<Exhibition> queryAll(){
+        return exhibitionDao.queryAllExhibitions();
+    }
+
 
 
 
