@@ -107,6 +107,11 @@ public class CompanyService implements ICompanyService {
         return exbitionList;
 
     }
+    @Override
+    //查询所有公司,用于搜索
+    public List<Company> queryAll(){
+        return companyDao.selectAll();
+    }
 
 
 }
