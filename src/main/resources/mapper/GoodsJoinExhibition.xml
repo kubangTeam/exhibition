@@ -7,6 +7,22 @@
         id,goodsId,exhibitionId,subareaId
     </sql>
 
+    <sql id="insertFields">
+        goodsId,exhibitionId,subareaId
+    </sql>
+
+    <insert id="insertGoodsJoinExhibition" useGeneratedKeys="true" keyProperty="id">
+        insert into goodsjoinexhibition (<include refid="insertFields"></include>)
+        value
+        (#{goodsId},#{exhibitionId},#{subareaId})
+    </insert>
+
+    <delete id="deleteGoodsJoinExhibition">
+        delete from goodsjoinexhibition
+        where
+        id = #{id}
+    </delete>
+
     <select id="selectCompanyIdByExhibitionId" resultType="GoodsJoinExhibition">
         select <include refid="selectFields"></include>
         from goodsjoinexhibition

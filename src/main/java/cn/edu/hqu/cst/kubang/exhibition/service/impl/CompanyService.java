@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
@@ -34,6 +35,9 @@ public class CompanyService implements ICompanyService {
 
     @Autowired
     CompanyJoinExhibition companyJoinExhibition;
+
+    @Autowired
+    CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
     @Autowired
     ExhibitionDao exhibitionDao;
@@ -91,7 +95,7 @@ public class CompanyService implements ICompanyService {
     @Override
     public List<Exhibition> queryCompanyAttendedExhibition(int userId) {
         int companyId = accountServiceImp.isCompanyOrNot(userId);
-        List<CompanyJoinExhibition> companyJoinExhibitionList = companyDao.selectExhibitionIdByCompanyId(companyId);
+        List<CompanyJoinExhibition> companyJoinExhibitionList =companyJoinExhibitionDao.selectExhibitionByCompanyId(companyId);
         List exhibitionId = new ArrayList();
         List exbitionList = new ArrayList<Exhibition>();
 

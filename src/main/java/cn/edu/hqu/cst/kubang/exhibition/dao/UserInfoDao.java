@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegral;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,10 @@ public interface UserInfoDao {
     Integer changeUserPass(@Param("id") Integer id,@Param("password") String password);
 
     Integer changeUserPhoto(@Param("userId") Integer userId,@Param("userPicture") String userPicture);
+
+    // 查询用户积分历史
+    List<UserIntegral> queryUserIntegral(Integer id);
+
+    // 重置密码
+    Integer resetUserPassword(@Param("id") Integer id, @Param("newPassword") String newPassword);
 }

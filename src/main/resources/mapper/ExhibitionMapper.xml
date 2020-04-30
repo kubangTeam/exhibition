@@ -15,15 +15,7 @@
         period,introduction,Tel,picture,subareaId
     </sql>
 
-    <sql id="selectAttendFields">
-        id,companyId,exhibitionId
-    </sql>
 
-    <select id="selectCompanyIBydExhibitionId" resultType="CompanyJoinExhibition">
-        select <include refid="selectAttendFields"></include>
-        from companyjoinexhibition
-        where exhibitionId = #{exhibitionId}
-    </select>
 
     <select id="queryAllExhibitions" resultType="Exhibition">
         select <include refid="selectFields"></include>
@@ -35,6 +27,10 @@
         from exhibitiondetail
         where id = #{id}
     </select>
+
+
+
+
 
     <select id="queryExhibitionDetailsByID" parameterType="int" resultType="ExhibitionNew">
         select exhibitiondetail.id id,`name`,startTime,endTime,exhibitionName address,

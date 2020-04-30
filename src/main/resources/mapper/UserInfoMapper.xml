@@ -38,4 +38,12 @@
     <update id="changeUserPhoto" parameterType="map">
         update userinformation set userPicture = #{userPicture} where userId = #{userId}
     </update>
-</mapper>
+
+    <select id="queryUserIntegral" parameterType="int" resultType="UserIntegral">
+        select * from userintegral where user_id = #{id}
+    </select>
+
+    <update id="resetUserPassword" parameterType="map">
+        update userinformation set userPassword = #{newPassword} where userId = #{id}
+    </update>
+ </mapper>

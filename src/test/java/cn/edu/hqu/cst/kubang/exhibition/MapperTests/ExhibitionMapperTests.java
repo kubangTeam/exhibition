@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.MapperTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,10 @@ public class ExhibitionMapperTests {
 
     @Autowired
     private ExhibitionDao exhibitionDao;
+
+    @Autowired
+    private CompanyJoinExhibition companyJoinExhibition;
+
 
     @Before
     public void before(){
@@ -67,6 +73,7 @@ public class ExhibitionMapperTests {
     @Test
     public void testQueryAllExhibitions(){
         List<Exhibition> exhibitionList  =exhibitionDao.queryAllExhibitions();
+        System.out.println(exhibitionList.size());
         System.out.println(exhibitionList);
     }
 
@@ -97,5 +104,6 @@ public class ExhibitionMapperTests {
         exhibition.setName("测试001");
         System.out.println(exhibitionDao.modifyExhibition(exhibition));
     }
+
 
 }

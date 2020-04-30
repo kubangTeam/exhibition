@@ -1,8 +1,10 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
-import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegral;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegralDTO;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,11 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author: KongKongBaby
@@ -50,7 +52,7 @@ public class UserInfoController {
             @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/login/in")
-    public Object LoginIn(String account, String password) {
+    public ResponseJson<User> LoginIn(String account, String password) {
         return userInfoService.getUserInfo(account, password);
     }
 
@@ -64,7 +66,7 @@ public class UserInfoController {
             @ApiImplicitParam(name = "userName", value = "待修改的名字", required = true, dataType = "String", paramType = "query")
     })
     @PutMapping("/name")
-    public Object changeName(Integer userId, String userName) {
+    public ResponseJson changeName(Integer userId, String userName) {
         return userInfoService.changeName(userId, userName);
     }
 
@@ -78,7 +80,7 @@ public class UserInfoController {
             @ApiImplicitParam(name = "email", value = "待绑定邮箱", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/email")
-    public Object changeEmail(Integer userId,String email) {
+    public ResponseJson changeEmail(Integer userId,String email) {
         return userInfoService.changeEmail(userId,email);
     }*/
 
@@ -93,7 +95,7 @@ public class UserInfoController {
             @ApiImplicitParam(name = "oldPassword", value = "输入的旧的密码", required = true, dataType = "String", paramType = "query")
     })
     @PutMapping("/password")
-    public Object changePass(Integer userId, String newPassword, String oldPassword) {
+    public ResponseJson changePass(Integer userId, String newPassword, String oldPassword) {
         return userInfoService.changePass(userId, newPassword, oldPassword);
     }
 
@@ -127,5 +129,34 @@ public class UserInfoController {
         map.put("response", value);
         map.put("code", code);
         return map;
+    }
+
+    /**
+     * @Date: 2020.04.29 13:07
+     * @Description: 查询用户积分历史
+     */
+    @ApiOperation(value = "查询用户积分历史", notes = "返回005（成功）024（参数不合法）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户的id", required = true, dataType = "int", paramType = "query")
+    })
+    @GetMapping("/integral/history")
+    public ResponseJson<List<UserIntegralDTO>> queryUserIntegralHistory(Integer id) {
+        return userInfoService.queryUserIntegral(id);
+    }
+
+    /**
+     * @Date: 2020.04.30 17:29
+     * @Description:
+     *   忘记密码
+     */
+    @ApiOperation(value = "忘记密码", notes = "返回005（成功）,024（参数不合法）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户的id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "code", value = "短信验证码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "newPassword", value = "新密码", required = true, dataType = "String", paramType = "query")
+    })
+    @PutMapping("/password/reset")
+    public ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request) {
+        return userInfoService.resetPassword(id,code,newPassword,request);
     }
 }

@@ -38,6 +38,7 @@ import java.util.Map;
  * <p>
  * 1、/identify 公司认证
  * 2、/getInformation 获取公司资料
+ *   /getInformationByCompanyId 根据商家id查询公司资料
  * 3、/updateInformation 修改商家资料
  * 4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
  *
