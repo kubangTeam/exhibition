@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.CompanyService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.UserInformationServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -56,6 +57,9 @@ public class CompanyController {
     CompanyDao companyDao;
 
     @Autowired
+    ElasticsearchService elasticsearchService;
+
+    @Autowired
     UserInformationServiceImpl userInformationService;
 
     @Value("${pagehelper.pageSize1}")
@@ -94,17 +98,20 @@ public class CompanyController {
 
         String value = null;
         String code = null;
-        String path = request.getServletContext().getRealPath("/codeCertificatePic");
+        //String path = request.getServletContext().getRealPath("/codeCertificatePic");
         if (file.isEmpty()) {
             value = "未选择文件";
             code = "021";
         } else {
             String webPath = domain + contextPath + "/images/company/";
-            String pic = UploadFile.uploadFile(path, webPath, file);
+            String pic = UploadFile.uploadFile(uploadPath, webPath, file);
             String status = companyService.CompanyIdentify(userId, name, address, website, type, introduce, pic);
             value = status;
             code = "005";
         }
+        Company company = companyDao.selectCompanyInformationById(userId);
+        elasticsearchService.saveCompany(company);
+
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);

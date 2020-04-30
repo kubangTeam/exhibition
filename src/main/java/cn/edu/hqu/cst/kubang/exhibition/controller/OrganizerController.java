@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -40,6 +41,9 @@ public class OrganizerController {
 
     @Autowired
     private ExhibitionDao exhibitionDao;
+
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
     @Value("${exhibition.path.domain}")
     private String domain;

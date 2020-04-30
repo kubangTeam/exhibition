@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
+import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 
 import com.github.pagehelper.PageHelper;
@@ -61,6 +62,8 @@ public class ExhibitionController {
 
     @Autowired
     private ExhibitionDao exhibitionDao;
+
+
 
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个

@@ -25,6 +25,8 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @Author SunChonggao
@@ -68,9 +70,21 @@ public class ElasticsearchService {
                 if (hits.getTotalHits() <= 0) {
                     return null;
                 }
-                ArrayList<Goods> list = new ArrayList<>();
+                ArrayList<Map<String, Object>> list = new ArrayList<>();
                 for (SearchHit hit : hits) {
-                    Goods goods = new Goods();
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    String goodsId = hit.getSourceAsMap().get("goodsId").toString();
+                    map.put("goodsId", Integer.valueOf(goodsId));
+                    String goodsName = hit.getSourceAsMap().get("goodsName").toString();
+                    map.put("goodsName", goodsName);
+                    String categoryId = hit.getSourceAsMap().get("categoryId").toString();
+                    map.put("categoryId", Integer.valueOf(categoryId));
+                    String currentPrice = hit.getSourceAsMap().get("currentPrice").toString();
+                    map.put("currentPrice", currentPrice);
+                    String image = hit.getSourceAsMap().get("image").toString();
+                    map.put("image", image);
+                    list.add(map);
+                    /*Goods goods = new Goods();
                     String goodsId = hit.getSourceAsMap().get("goodsId").toString();
                     goods.setGoodsId(Integer.valueOf(goodsId));
                     String goodsName = hit.getSourceAsMap().get("goodsName").toString();
@@ -84,8 +98,7 @@ public class ElasticsearchService {
                     String goodsIntroduce = hit.getSourceAsMap().get("goodsIntroduce").toString();
                     goods.setGoodsIntroduce(goodsIntroduce);
                     String image = hit.getSourceAsMap().get("image").toString();
-                    goods.setImage(image);
-                    list.add(goods);
+                    goods.setImage(image);*/
                 }
                 return new AggregatedPageImpl(list, pageable,
                         hits.getTotalHits(), searchResponse.getAggregations(), searchResponse.getScrollId(), hits.getMaxScore());
@@ -119,9 +132,21 @@ public class ElasticsearchService {
                 if (hits.getTotalHits() <= 0) {
                     return null;
                 }
-                ArrayList<Exhibition> list = new ArrayList<>();
+                ArrayList<Map<String, Object>> list = new ArrayList<>();
                 for (SearchHit hit : hits) {
-                    Exhibition exhibition = new Exhibition();
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    String exhibitionId = hit.getSourceAsMap().get("id").toString();
+                    map.put("exhibitionId", Integer.valueOf(exhibitionId));
+                    String exhibitionName = hit.getSourceAsMap().get("name").toString();
+                    map.put("exhibitionName", exhibitionName);
+                    String introduction = hit.getSourceAsMap().get("introduction").toString();
+                    map.put("introduction", introduction);
+                    String startTime = hit.getSourceAsMap().get("startTime").toString();
+                    map.put("startTime", startTime);
+                    String picture = hit.getSourceAsMap().get("picture").toString();
+                    map.put("picture", picture);
+                    list.add(map);
+                    /*Exhibition exhibition = new Exhibition();
                     String Id = hit.getSourceAsMap().get("id").toString();
                     exhibition.setId(Integer.valueOf(Id));
                     String name = hit.getSourceAsMap().get("name").toString();
@@ -134,7 +159,7 @@ public class ElasticsearchService {
                     exhibition.setIntroduction(introduction);
                     String picture = hit.getSourceAsMap().get("picture").toString();
                     exhibition.setPicture(picture);
-                    list.add(exhibition);
+                    list.add(exhibition);*/
                 }
                 return new AggregatedPageImpl(list, pageable,
                         hits.getTotalHits(), searchResponse.getAggregations(), searchResponse.getScrollId(), hits.getMaxScore());
@@ -166,9 +191,18 @@ public class ElasticsearchService {
                 if (hits.getTotalHits() <= 0) {
                     return null;
                 }
-                ArrayList<Company> list = new ArrayList<>();
+                ArrayList<Map<String, Object>> list = new ArrayList<>();
                 for (SearchHit hit : hits) {
-                    Company company = new Company();
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    String companyId = hit.getSourceAsMap().get("id").toString();
+                    map.put("companyId", Integer.valueOf(companyId));
+                    String companyName = hit.getSourceAsMap().get("name").toString();
+                    map.put("companyName", companyName);
+                    String introduction = hit.getSourceAsMap().get("introduction").toString();
+                    String headPicture = hit.getSourceAsMap().get("headPicture").toString();
+                    map.put("headPicture", headPicture);
+                    list.add(map);
+                    /*Company company = new Company();
                     String id = hit.getSourceAsMap().get("id").toString();
                     company.setId(Integer.valueOf(id));
                     String name = hit.getSourceAsMap().get("name").toString();
@@ -183,7 +217,7 @@ public class ElasticsearchService {
                     company.setIntroduction(introduction);
                     String headPicture = hit.getSourceAsMap().get("headPicture").toString();
                     company.setHeadPicture(headPicture);
-                    list.add(company);
+                    list.add(company);*/
 
                 }
                 return new AggregatedPageImpl(list, pageable,

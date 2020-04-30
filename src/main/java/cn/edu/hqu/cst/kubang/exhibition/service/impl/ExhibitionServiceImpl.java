@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
@@ -32,6 +33,9 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Autowired
     private AccountServiceImp accountServiceImp;
 
+    @Autowired
+    private ExhibitionRepository exhibitionRepository;
+
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10个
 
@@ -54,6 +58,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         exhibition.setStatus(1);
         exhibition.setTel(userInformationDao.GetUserInfoFromId(Id).getUserAccount());
         if (exhibitionDao.saveExhibition(exhibition) == 1) {
+            exhibitionRepository.save(exhibition);//将该展会添加到ES中
             return 1;
 
         }else return 0;

@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IGoodsMobileService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.GoodsMobileServiceImpl;
@@ -53,6 +54,8 @@ public class GoodsController implements Constants {
     private GoodsService goodsService;
     @Autowired
     private IGoodsMobileService goodsMobileService;
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
     @Value("${exhibition.path.domain}")
     private String domain;
@@ -256,6 +259,9 @@ public class GoodsController implements Constants {
             code = "005";
 
         }
+        //将新的展品信息添加到ES服务器里
+        if(goodsService.queryGoodsPic(goodsId).size() == 1)
+            elasticsearchService.saveGoods(goodsService.queryGoodsById(goodsId));
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);
