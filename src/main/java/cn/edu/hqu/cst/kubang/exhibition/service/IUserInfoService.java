@@ -3,6 +3,8 @@ package cn.edu.hqu.cst.kubang.exhibition.service;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface IUserInfoService {
 
     // 获取用户信息
@@ -22,4 +24,7 @@ public interface IUserInfoService {
 
     // 查询积分历史
     ResponseJson queryUserIntegral(Integer id);
+
+    // 重置密码
+    ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request);
 }

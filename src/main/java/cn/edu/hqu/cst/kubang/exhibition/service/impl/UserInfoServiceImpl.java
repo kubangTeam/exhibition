@@ -9,7 +9,10 @@ import cn.edu.hqu.cst.kubang.exhibition.service.IUserInfoService;
 import cn.edu.hqu.cst.kubang.exhibition.util.ConvertBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,5 +90,27 @@ public class UserInfoServiceImpl implements IUserInfoService {
         List<UserIntegralDTO> res = new ArrayList<>();
         userIntegralList.forEach(item->res.add(ConvertBean.pojoToDto(item)));
         return new ResponseJson(true, "005", "操作成功", res);
+    }
+
+    @Override
+    public ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request) {
+        if (id == null || StringUtils.isEmpty(code) || StringUtils.isEmpty(newPassword) || id < 0)
+            return new ResponseJson(false, "024", "参数不合法", null);
+        HttpSession session = request.getSession();
+        String key = "messageCodeUserID" + id;
+        // 因为session有过期时间，所以不进行时间差比较
+        String messageCode = (String) session.getAttribute(key);
+        if (!code.equals(messageCode)){
+            return new ResponseJson(false, "025", "验证码错误", null);
+        }
+        else {
+            Integer changeRow = userInfoDao.resetUserPassword(id,newPassword);
+            if (changeRow == 1){
+                return new ResponseJson(true, "005", "操作成功", null);
+            }
+            else {
+                return new ResponseJson(false, "-004", "数据库异常", null);
+            }
+        }
     }
 }

@@ -42,4 +42,8 @@
     <select id="queryUserIntegral" parameterType="int" resultType="UserIntegral">
         select * from userintegral where user_id = #{id}
     </select>
-</mapper>
+
+    <update id="resetUserPassword" parameterType="map">
+        update userinformation set userPassword = #{newPassword} where userId = #{id}
+    </update>
+ </mapper>

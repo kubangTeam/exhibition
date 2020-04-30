@@ -34,4 +34,7 @@ public interface UserInfoDao {
 
     // 查询用户积分历史
     List<UserIntegral> queryUserIntegral(Integer id);
+
+    // 重置密码
+    Integer resetUserPassword(@Param("id") Integer id, @Param("newPassword") String newPassword);
 }
