@@ -198,7 +198,6 @@ public class ElasticsearchService {
                     map.put("companyId", Integer.valueOf(companyId));
                     String companyName = hit.getSourceAsMap().get("name").toString();
                     map.put("companyName", companyName);
-                    String introduction = hit.getSourceAsMap().get("introduction").toString();
                     String headPicture = hit.getSourceAsMap().get("headPicture").toString();
                     map.put("headPicture", headPicture);
                     list.add(map);
