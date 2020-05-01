@@ -27,4 +27,7 @@ public interface IUserInfoService {
 
     // 重置密码
     ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request);
+
+    // 微信登录
+    ResponseJson wxLoginIn(String code);
 }

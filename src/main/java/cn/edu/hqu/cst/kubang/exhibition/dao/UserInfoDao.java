@@ -37,4 +37,7 @@ public interface UserInfoDao {
 
     // 重置密码
     Integer resetUserPassword(@Param("id") Integer id, @Param("newPassword") String newPassword);
+
+    // 新增微信用户
+    Integer saveUser(User user);
 }

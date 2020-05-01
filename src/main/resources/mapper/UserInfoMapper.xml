@@ -46,4 +46,12 @@
     <update id="resetUserPassword" parameterType="map">
         update userinformation set userPassword = #{newPassword} where userId = #{id}
     </update>
+
+    <insert id="saveUser" parameterType="User">
+        insert into userinformation (userAccount,userName,userPassword,userSex,userPermission,userIntegral,userReccode)
+            values (#{userAccount},#{userName},#{userPassword},#{userSex},#{userPermission},#{userIntegral},#{userReccode})
+        <selectKey keyProperty="userId" order="AFTER" resultType="int">
+            select last_insert_id()
+        </selectKey>
+    </insert>
  </mapper>
