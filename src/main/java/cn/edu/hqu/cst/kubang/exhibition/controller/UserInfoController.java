@@ -146,8 +146,7 @@ public class UserInfoController {
 
     /**
      * @Date: 2020.04.30 17:29
-     * @Description:
-     *   忘记密码
+     * @Description: 忘记密码
      */
     @ApiOperation(value = "忘记密码", notes = "返回005（成功）,024（参数不合法）")
     @ApiImplicitParams({
@@ -157,6 +156,19 @@ public class UserInfoController {
     })
     @PutMapping("/password/reset")
     public ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request) {
-        return userInfoService.resetPassword(id,code,newPassword,request);
+        return userInfoService.resetPassword(id, code, newPassword, request);
+    }
+
+    /**
+     * @Date: 2020.05.01 13:43
+     * @Description: 微信登录
+     */
+    @ApiOperation(value = "微信登录", notes = "返回005（成功）,-002（参数空）,-004（数据库异常）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "code", value = "微信临时凭证", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/wx/login/in")
+    public ResponseJson wxLoginIn(String code) {
+        return userInfoService.wxLoginIn(code);
     }
 }
