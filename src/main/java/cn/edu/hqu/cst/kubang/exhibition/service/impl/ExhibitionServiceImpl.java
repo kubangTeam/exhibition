@@ -1,11 +1,10 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +24,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     private Exhibition exhibition;
 
     @Autowired
-    private UserInformationDao userInformationDao;
-
-    @Autowired
-    private UserInformation userInformation;
+    private UserDao userDao;
 
     @Autowired
     private AccountServiceImp accountServiceImp;
@@ -56,7 +52,7 @@ public class ExhibitionServiceImpl implements IExhibitionService {
         exhibition.setPicture(picPath);
         //设置认证状态 1 提交成功，待审核
         exhibition.setStatus(1);
-        exhibition.setTel(userInformationDao.GetUserInfoFromId(Id).getUserAccount());
+        exhibition.setTel(userDao.GetUserInfoFromId(Id).getUserAccount());
         if (exhibitionDao.saveExhibition(exhibition) == 1) {
             exhibitionRepository.save(exhibition);//将该展会添加到ES中
             return 1;

@@ -4,8 +4,8 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.CompanyService;
-import cn.edu.hqu.cst.kubang.exhibition.service.impl.UserInformationServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
@@ -61,7 +60,7 @@ public class CompanyController {
     ElasticsearchService elasticsearchService;
 
     @Autowired
-    UserInformationServiceImpl userInformationService;
+    private UserService userService;
 
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示8个
@@ -131,7 +130,7 @@ public class CompanyController {
     public Map<String, Object> getCompanyInformation(@RequestParam(value = "id") int id) {
         Map<String, Object> map = new HashMap<>();
         //判断该账号是否认证为商家账号
-        int companyId = userInformationService.isCompanyOrNot(id);
+        int companyId = userService.isCompanyOrNot(id);
         if (companyId != 0) {
             company = companyDao.selectCompanyInformationById(companyId);
             String value = "该用户已通过商家认证";

@@ -3,11 +3,8 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ManagerDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.OrganizerInformationDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Manager;
-import cn.edu.hqu.cst.kubang.exhibition.entity.OrganizerInformation;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +18,7 @@ public class AccountServiceImp implements IAccountService {
     private OrganizerInformationDao organizerInformationDao;
 
     @Autowired
-    private UserInformation userInformation;
-
-    @Autowired
-    private UserInformationDao userInformationDao;
+    private UserDao userDao;
 
     @Autowired
     private Manager manager;
@@ -71,8 +65,8 @@ public class AccountServiceImp implements IAccountService {
      */
     @Override
     public int isCompanyOrNot(int userId) {
-        userInformation = userInformationDao.GetUserInfoFromId(userId);
-        int userCompanyId = userInformation.getUserCompanyId();
+        User user = userDao.GetUserInfoFromId(userId);
+        int userCompanyId = user.getUserCompanyId();
         if(userCompanyId !=0){
             return userCompanyId;
         }else{
@@ -82,12 +76,12 @@ public class AccountServiceImp implements IAccountService {
 
     @Override
     public String identifyUser(int userId) {
-        userInformation = userInformationDao.GetUserInfoFromId(userId);
-        Integer companyId = userInformation.getUserCompanyId();
+        User user = userDao.GetUserInfoFromId(userId);
+        Integer companyId = user.getUserCompanyId();
         company = companyDao.selectCompanyInformationById(companyId);
         int companyStatus = company.getIdentifyStatus();
 
-        Integer organizerId =  userInformation.getUserOrganizerId();
+        Integer organizerId =  user.getUserOrganizerId();
         organizerInformation = organizerInformationDao.GetOrganizerInfoFromId(organizerId);
         int organizerStatus = organizerInformation.getIdentifyStatus();
 

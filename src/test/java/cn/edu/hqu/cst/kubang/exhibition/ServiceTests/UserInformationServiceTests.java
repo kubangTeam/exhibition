@@ -1,9 +1,8 @@
 package cn.edu.hqu.cst.kubang.exhibition.ServiceTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
-import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
-import cn.edu.hqu.cst.kubang.exhibition.service.impl.UserInformationServiceImpl;
+import cn.edu.hqu.cst.kubang.exhibition.service.IShortMessageService;
+import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +16,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UserInformationServiceTests {
 
     @Autowired
-    private UserInformationServiceImpl userInformationService;
+    private UserService userService;
+
+    IShortMessageService shortMessageService;
 
 
     @Test
     public void testIsCompanyOrNot(){
-        if(userInformationService.isCompanyOrNot(1)!=0){
+        if(userService.isCompanyOrNot(1)!=0){
             System.out.println("该用户为商家");
-            System.out.println("商家id为："+userInformationService.isCompanyOrNot(1));
+            System.out.println("商家id为："+userService.isCompanyOrNot(1));
         }else
         System.out.println("该用户不是商家");
+    }
+    @Test
+    public void testSMS(){
+        System.out.println(shortMessageService.sendShortMessage("17863933807"));
+
     }
 }

@@ -1,6 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,18 +14,18 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface UserInformationDao {
+public interface UserDao {
 
-    int UserRegisterFromPhoneNumber(UserInformation userInformation);
+    int UserRegisterFromPhoneNumber(User user);
     void UserRegisterFromEmail(String email, String password,String RecCode);
     //通过账号（电话号码）、id查询用户信息
-    UserInformation GetUseInfoFromAccount(String account);
-    UserInformation GetUserInfoFromId(int userId);
+    User GetUseInfoFromAccount(String account);
+    User GetUserInfoFromId(int userId);
     //绑定用户邮箱
     int bindUserEmail(int userId, String userEmail);
-    List<UserInformation> GetUserInfoFromOrganizerId(int OrganizerId);
+    List<User> GetUserInfoFromOrganizerId(int OrganizerId);
     //检验成功以后，需要在数据库清除对应记录，以避免验证码重复使用
-    int deleteUserInformation(int userId);
+    int deleteUser(int userId);
     int setCompanyId(int userId,int userCompanyId);
 //    void AddUserPoint(String recCode);
 //    boolean CheckPassword(String account, String password);

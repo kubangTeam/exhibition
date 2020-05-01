@@ -2,7 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.JsonBuilder;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
@@ -36,11 +36,9 @@ public class BindEmailController {
     @Autowired
     private IUserEmailService userEmailService;
     @Autowired
-    private UserInformationDao userInformationDao;
+    private UserDao userDao;
     @Autowired
     private UserCodeDao userCodeDao;
-    @Autowired
-    private UserInformationDao userDao;
 
     /**
      * 根据用户的id和邮箱发送验证码
@@ -101,7 +99,7 @@ public class BindEmailController {
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
                 //验证通过  将该邮箱存进数据库 与该用户绑定
-                int status = userInformationDao.bindUserEmail(userId, email);
+                int status = userDao.bindUserEmail(userId, email);
                 if (status == 1) {
                     ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "绑定成功", null);
                     return stringResponseJson;

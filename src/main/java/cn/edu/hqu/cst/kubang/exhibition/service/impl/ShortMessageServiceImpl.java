@@ -1,7 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IShortMessageService;
@@ -20,28 +20,28 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 
 @Service
-public class ShortMessageServiceImpl implements ICompanyService.IShortMessageService
+public class ShortMessageServiceImpl implements IShortMessageService
 {
     @Autowired
     private UserCodeDao userCodeDao;
 
     @Autowired
-    private UserInformationDao userDao;
+    private UserDao userDao;
 
     //对应阿里云账户的 accessKeyId
-    @Value("${SMS.accessKeyId}")
+    @Value("LTAI4FsEudzSht2tKHgD6LCE")
     private String accessKeyId;
 
     //对应阿里云账户的 accessKeySecret
-    @Value("${SMS.accessKeySecret}")
+    @Value("VdJC8u8Pxd7XVqZw0hi4XtL74CegvD")
     private String accessKeySecret;
 
     //对应签名名称
-    @Value("${SMS.signName}")
+    @Value("酷邦网")
     private String signName;
 
     //对应模板代码
-    @Value("${SMS.templateCode}")
+    @Value("SMS_175574488")
     private String templateCode;
 
     @Override

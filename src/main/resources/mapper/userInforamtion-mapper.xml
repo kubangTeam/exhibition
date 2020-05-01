@@ -14,11 +14,11 @@
         userPicture,userChooseCity,userEmail,userOrganizerId
     </sql>
 
-    <select id="selectById" resultType="UserInformation">
+    <select id="selectById" resultType="User">
         select * from userinformation where userId = #{id}
     </select>
 
-    <insert id="UserRegisterFromPhoneNumber" parameterType="UserInformation" keyProperty="userId">
+    <insert id="UserRegisterFromPhoneNumber" parameterType="User" keyProperty="userId">
         INSERT INTO userinformation (<include refid="insertFields"></include>)
         VALUES
         (#{userAccount},#{userCompanyId},#{userName},#{userPassword},
@@ -30,10 +30,10 @@
         INSERT INTO `kubang`.`userinformation` (`userId`, `userAccount`, `userName`, `userPassword`, `userSex`, `userIntegral`, `userReccode`)
         VALUES (#{UserID}, #{email}, #{newUserName}, #{password}, 'male', '0', #{newRecCode})
     </insert>
-    <select id="GetUseInfoFromAccount" parameterType="String" resultType="UserInformation">
+    <select id="GetUseInfoFromAccount" parameterType="String" resultType="User">
         SELECT * from `kubang`.`userinformation` where userAccount=#{account}
     </select>
-    <select id="GetUserInfoFromId" parameterType="int" resultType="UserInformation">
+    <select id="GetUserInfoFromId" parameterType="int" resultType="User">
         SELECT * from `kubang`.`userinformation` where userId=#{userId}
     </select>
     <update id="AddUserPoint" parameterType="String">
@@ -62,7 +62,7 @@
         userId = #{userId};
     </update>
 
-    <select id="GetUserInfoFromOrganizerId" parameterType="int" resultType="UserInformation">
+    <select id="GetUserInfoFromOrganizerId" parameterType="int" resultType="User">
         select <include refid="selectFields"></include>
         from userinformation
         where userOrganizerId = #{userOrganizerId}

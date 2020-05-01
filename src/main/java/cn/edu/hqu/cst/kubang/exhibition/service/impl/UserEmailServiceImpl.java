@@ -4,10 +4,9 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInfoDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Autowired
     private UserCodeDao userCodeDao;
     @Autowired
-    private UserInformationDao userDao;
+    private UserDao userDao;
     @Autowired
     private UserInfoDao userInfoDao;
     @Autowired
@@ -64,7 +63,7 @@ public class UserEmailServiceImpl implements IUserEmailService {
     @Override
     @NullDisable
     public boolean isUserEmailBound(Integer userId) {
-        UserInformation user = userDao.GetUserInfoFromId(userId);
+        User user = userDao.GetUserInfoFromId(userId);
         return !StringUtils.isEmpty(user.getUserEmail());
     }
 

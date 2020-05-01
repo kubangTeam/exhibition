@@ -3,13 +3,12 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +24,7 @@ public class CompanyService implements ICompanyService {
     CompanyDao companyDao;
 
     @Autowired
-    UserInformationDao userInformationDao;
-
-    @Autowired
-    UserInformation userInformation;
+    UserDao userDao;
 
     @Autowired
     AccountServiceImp accountServiceImp;
@@ -56,10 +52,10 @@ public class CompanyService implements ICompanyService {
         company.setType(type);
         company.setIntroduction(introduce);
         //通过用户id获取用户的电话 头像
-        userInformation = userInformationDao.GetUserInfoFromId(userId);
-        company = companyDao.selectCompanyInformationById(userInformation.getUserCompanyId());
+        User user = userDao.GetUserInfoFromId(userId);
+        company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
 
-        if(userInformation.getUserCompanyId()!=null){
+        if(user.getUserCompanyId()!=null){
             if(company.getIdentifyStatus()==0) {
                 return "该账号信息本地保存，等待正式上传";
             }else if(company.getIdentifyStatus()==1){
@@ -75,14 +71,14 @@ public class CompanyService implements ICompanyService {
             }
         }
         else{
-            String userPhone = userInformation.getUserAccount();
-            String headPicture = userInformation.getUserPicture();
+            String userPhone = user.getUserAccount();
+            String headPicture = user.getUserPicture();
             company.setTelephone(userPhone);
             company.setHeadPicture(headPicture);
             //公司认证状态 1：上传成功，等待审核
             company.setIdentifyStatus(1);
             //将个人信息表的公司字段填上公司信息表的主键
-            int result = userInformationDao.setCompanyId(userId,company.getId());
+            int result = userDao.setCompanyId(userId,company.getId());
             if(companyDao.addUnidentifiedCompanyInfo(company)==1 && result ==1){
                 return "公司认证信息上传成功";
             }else{

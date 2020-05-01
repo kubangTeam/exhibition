@@ -1,8 +1,8 @@
 package cn.edu.hqu.cst.kubang.exhibition.MapperTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserInformationDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserInformation;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import java.util.List;
 @ContextConfiguration(classes = ExhibitionApplication.class)
 public class userInformationTests  {
     @Autowired
-    private UserInformationDao userInformationDao;
+    private UserDao userDao;
 
     @Autowired
-    private  UserInformation userInformation;
+    private User user;
 
     @BeforeClass
     public static void beforeClass(){
@@ -39,27 +39,27 @@ public class userInformationTests  {
     public void before(){
         //生成测试数据
 
-        userInformation.setUserAccount("11111111111");
+        user.setUserAccount("11111111111");
         //userInformation.setUserCompanyId(1);
-        userInformation.setUserName("测试数据");
-        userInformation.setUserPassword("测试数据密码");
+        user.setUserName("测试数据");
+        user.setUserPassword("测试数据密码");
         //用户权限 0 普通用户 1 管理员
-        userInformation.setUserPermission(1);
+        user.setUserPermission(1);
         //用户积分
-        userInformation.setUserIntegral(1000);
+        user.setUserIntegral(1000);
         //用户推荐码
-        userInformation.setUserReccode("测试推荐吗");
+        user.setUserReccode("测试推荐吗");
         //承办方id
-        userInformation.setUserOrganizerId(1);
+        user.setUserOrganizerId(1);
 
-        if(userInformationDao.UserRegisterFromPhoneNumber(userInformation) !=0)
+        if(userDao.UserRegisterFromPhoneNumber(user) !=0)
             System.out.println("添加数据成功");
     }
 
     @After
     public void after(){
-        System.out.println(userInformation);
-        int row = userInformationDao.deleteUserInformation(userInformation.getUserId());
+        System.out.println(user);
+        int row = userDao.deleteUser(user.getUserId());
         if(row==1)
             System.out.println("删除数据成功");
     }
@@ -72,31 +72,31 @@ public class userInformationTests  {
     @Test
     public void testGetUseInfoFromAccount(){
         //容易测试出错，当不同userId的账号相同时会报错。可将返回结果改为列表
-        UserInformation row = userInformationDao.GetUseInfoFromAccount(userInformation.getUserAccount());
+        User row = userDao.GetUseInfoFromAccount(user.getUserAccount());
         System.out.println(row);
     }
     @Test
     public void testGetUserInfoFromId(){
-        UserInformation row = userInformationDao.GetUserInfoFromId(userInformation.getUserId());
+        User row = userDao.GetUserInfoFromId(user.getUserId());
         System.out.println(row.getUserCompanyId());
         System.out.println(row);
     }
     @Test
     public void testBindUserEmail(){
-        int row = userInformationDao.bindUserEmail(userInformation.getUserId(),"测试邮箱");
+        int row = userDao.bindUserEmail(user.getUserId(),"测试邮箱");
         System.out.println(row);
     }
 
     @Test
     public  void testGetUserInfoFromOrganizerId(){
-        List<UserInformation> row = userInformationDao.GetUserInfoFromOrganizerId(userInformation.getUserOrganizerId());
+        List<User> row = userDao.GetUserInfoFromOrganizerId(user.getUserOrganizerId());
         System.out.println(row);
     }
 
     @Test
     public void testSetCompanyId(){
-        int row  = userInformationDao.setCompanyId(userInformation.getUserId(),1000);
-        System.out.println(userInformationDao.GetUserInfoFromId(userInformation.getUserId()));
+        int row  = userDao.setCompanyId(user.getUserId(),1000);
+        System.out.println(userDao.GetUserInfoFromId(user.getUserId()));
         System.out.println(row);
     }
 
