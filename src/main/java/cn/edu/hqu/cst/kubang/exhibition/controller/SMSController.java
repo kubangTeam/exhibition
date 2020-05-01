@@ -29,8 +29,7 @@ public class SMSController {
     @Autowired
     private UserCodeDao smsDao;
 
-    @Autowired
-    private IShortMessageService smsService;
+    IShortMessageService smsService;
 
     @Autowired
     private UserInformationDao userDao;
@@ -88,7 +87,7 @@ public class SMSController {
             boolean userPhoneSignle = smsService.isUserPhoneSingle(phoneNumber);
             if (userPhoneSignle) {
                 //验证通过,用户注册成功
-                userDao.UserRegisterFromPhoneNumber(phoneNumber, password, recCode);
+                //userDao.UserRegisterFromPhoneNumber(phoneNumber, password, recCode);
                 json.add("success", "true)");
             } else {
                 json.add("success", "true)");

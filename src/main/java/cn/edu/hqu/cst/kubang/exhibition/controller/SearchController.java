@@ -101,17 +101,21 @@ public class SearchController {
     @RequestMapping(value = "/goods", method = RequestMethod.GET)
     @ApiOperation(value = "搜索展品", notes = "")
     @ApiImplicitParams({
-           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public ResponseJson<Goods> searchGoods(@RequestParam(value = "keyword") String keyword,
-                                   //@PathVariable(value = "num") String num,
-                                   @RequestParam(value = "pageNum") int pageNum,
-                                   @RequestParam(value = "pageSize") int pageSize) {
+
+    public ResponseJson<Goods> searchGoods(
+                                    @RequestParam(value = "userId") int userId,
+                                    @RequestParam(value = "keyword") String keyword,
+                                    @RequestParam(value = "pageNum") int pageNum,
+                                    @RequestParam(value = "pageSize") int pageSize) {
        // String factor = numToFactor(Integer.valueOf(num),1);
         Page<Goods> result= elasticsearchService.searchGoods(keyword,  pageNum, pageSize);
+        searchService.saveSearchRecord(userId,keyword,3);
+
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
@@ -120,17 +124,19 @@ public class SearchController {
     @RequestMapping(value = "/exhibition", method = RequestMethod.GET)
     @ApiOperation(value = "搜索展会", notes = "")
     @ApiImplicitParams({
-           // @ApiImplicitParam(name = "num", value = "排序条件", required = true, dataType = "String", paramType = "path"),
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public ResponseJson<Exhibition> searchExhibition(//@PathVariable(value = "num") int num,
+    public ResponseJson<Exhibition> searchExhibition(
+                                             @RequestParam(value = "userId") int userId,
                                              @RequestParam(value = "keyword") String keyword,
                                              @RequestParam(value = "pageNum") int pageNum,
                                              @RequestParam(value = "pageSize") int pageSize) {
        // String factor = numToFactor(Integer.valueOf(num),0);
         Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
+        searchService.saveSearchRecord(userId,keyword,1);
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
@@ -139,14 +145,18 @@ public class SearchController {
     @RequestMapping(value = "/company", method = RequestMethod.GET)
     @ApiOperation(value = "搜索商家", notes = "")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    public ResponseJson<Company> searchCompany(@RequestParam(value = "keyword") String keyword,
-                                       @RequestParam(value = "pageNum") int pageNum,
-                                       @RequestParam(value = "pageSize") int pageSize) {
+    public ResponseJson<Company> searchCompany(
+                                        @RequestParam(value = "userId") int userId,
+                                        @RequestParam(value = "keyword") String keyword,
+                                        @RequestParam(value = "pageNum") int pageNum,
+                                        @RequestParam(value = "pageSize") int pageSize) {
         Page<Company> result= elasticsearchService.searchCompany(keyword, pageNum, pageSize);
+        searchService.saveSearchRecord(userId,keyword,2);
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
