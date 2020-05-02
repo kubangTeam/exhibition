@@ -38,6 +38,8 @@ public interface IExhibitionService {
     List<Exhibition> queryAll();
     List<Goods> queryAllGoodsByExhibitionId(int exhibitionId);
 
+    List<Exhibition>queryOngoingExhibitionInfo();
+
 //    //查询所有
 //    List<Exhibition> queryAll();
 //    PageInfo<Exhibition> queryAllExhibitions(int pageNum);

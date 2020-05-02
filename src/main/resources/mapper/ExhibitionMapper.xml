@@ -106,4 +106,10 @@
         id = #{id}
     </delete>
 
+
+    <delete id="deleteByStatus">
+        delete from exhibitiondetail
+        where
+        status = #{status}
+    </delete>
 </mapper>

@@ -32,7 +32,7 @@ public class ExhibitionSubareaMapperTests {
     @Before
     public void before(){
         //生成测试数据
-        exhibitionSubarea.setExhibitionId(1);
+        exhibitionSubarea.setExhibitionId(1298);
         exhibitionSubarea.setSubarea("测试展区");
         int i = exhibitionSubareaDao.insertExhibitionSubareaInfo(exhibitionSubarea);
         if(i ==1)
@@ -40,16 +40,16 @@ public class ExhibitionSubareaMapperTests {
         else
             System.out.println("添加数据失败");
     }
-
-    @After
-    public void after(){
-        int row =  exhibitionSubareaDao.deleteExhibitionSubareaInfoById(exhibitionSubarea.getId());
-        if(row ==1){
-            System.out.println("删除成功");
-        }else
-            System.out.println("删除失败");
-
-    }
+//
+//    @After
+//    public void after(){
+//        int row =  exhibitionSubareaDao.deleteExhibitionSubareaInfoById(exhibitionSubarea.getId());
+//        if(row ==1){
+//            System.out.println("删除成功");
+//        }else
+//            System.out.println("删除失败");
+//
+//    }
 
 
 //    List<ExhibitionSubarea> selectByExhibitionId(int exhibitionId);
@@ -60,7 +60,7 @@ public class ExhibitionSubareaMapperTests {
 
     @Test
     public void testSelectByExhibitionId(){
-        List<ExhibitionSubarea> exhibitionSubareasList  = exhibitionSubareaDao.selectByExhibitionId(1);
+        List<ExhibitionSubarea> exhibitionSubareasList  = exhibitionSubareaDao.selectByExhibitionId(exhibitionSubarea.getExhibitionId());
         System.out.println(exhibitionSubareasList.size());
         System.out.println(exhibitionSubareasList);
     }

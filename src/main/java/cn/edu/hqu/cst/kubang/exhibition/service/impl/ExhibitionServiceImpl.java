@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.ComparatorImpl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
@@ -14,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ExhibitionServiceImpl implements IExhibitionService, Constants {
@@ -92,10 +90,11 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     }
 
 
+
     @Override
     public List<Exhibition> queryReadyToStartExhibitionInfo() {
         //查询审核通过的展会列表
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(2);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
         //获取当前时间
         Date data = new Date();
         long value = data.getTime();
@@ -106,7 +105,7 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
             exhibition = it.next();
             int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
             int compareEnd = data.compareTo(exhibition.getEndTime());
-            if (!(compareStart == 1 && compareEnd == -1)) {
+            if (!(compareStart == -1 && compareEnd == -1)) {//起始时间大于当前时间，且结束时间大于当前时间
                 it.remove();
             }
         }
@@ -143,12 +142,42 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
             }
         }
         for(Integer companyId : companyIdList ){
-            List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW));
+            List<Goods> goodsList = goodsDao.selectGoodsByCompanyId(companyId,2);//商品状态通过审核
+            List<Goods> list = this.insertImageIntoGoods(goodsList);
             result.addAll(list);
         }
+        //判断商品的认证状态和时候提交到该展会
         return result;
 
     }
+
+    @Override
+    public List<Exhibition> queryOngoingExhibitionInfo() {
+        //查询审核通过的展会列表 初审通过为2 终审通过为5
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
+        //获取当前时间
+        Date data = new Date();
+        long value = data.getTime();
+        data.setTime(value);
+        //去掉不符合时间的展会
+        Iterator<Exhibition> it = exhibitionList.iterator();
+        while (it.hasNext()) {
+            exhibition = it.next();
+            int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
+            int compareEnd = data.compareTo(exhibition.getEndTime());
+            if (!(compareStart == 1 && compareEnd == -1)) {//起始时间小于当前时间且结束时间大于当前时间
+                it.remove();
+            }
+        }
+        //System.out.println(exhibitionList);
+        //return exhibitionList;
+        //按照起始时间排序 选取开始时间最早的四个
+        Comparator comp = new ComparatorImpl();
+        Collections.sort(exhibitionList,comp);
+        List<Exhibition>onGoingExhibitionList = exhibitionList.subList(0,4);
+        return onGoingExhibitionList;
+    }
+
     private List<Goods> insertImageIntoGoods(List<Goods> list){
         for(Goods goods : list) {
             GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
