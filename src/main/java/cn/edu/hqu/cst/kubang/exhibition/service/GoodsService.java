@@ -68,12 +68,9 @@ public class GoodsService implements Constants {
         return pageInfo;
     }
         //根据分类ID和状态查询在展商品
-    public PageInfo<Goods> queryAllGoodsByCategoryId(int categoryId, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsDao.selectGoodsByCompanyId(categoryId, STATE_IS_ON_SHOW);
-
-        PageInfo<Goods> pageInfo = new PageInfo<>(list);
-        return pageInfo;
+    public List<Goods> queryAllGoodsByCategoryId(int categoryId) {
+        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW));
+        return list;
     }
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {

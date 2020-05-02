@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.ServiceTests;
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
+import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,14 +18,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class GoodsServiceTests {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private IExhibitionService exhibitionService;
 
     @Autowired
     private Company company;
 
     @Test
     public void testSelectCompanyInformationByGoodsId(){
-        company = goodsService.selectCompanyInformationByGoodsId(1);
-        System.out.println(company);
+        /*company = goodsService.selectCompanyInformationByGoodsId(1);
+        System.out.println(company);*/
+        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1));
     }
 
 }

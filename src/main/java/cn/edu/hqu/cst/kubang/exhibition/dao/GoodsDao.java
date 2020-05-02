@@ -22,6 +22,7 @@ public interface GoodsDao {
     Goods selectGoodsById(int goodsId);//根据展品ID查询商品
     List<Goods> selectGoodsByName(@Param("goodsName")String goodsName, @Param("goodsStatus")int goodsStatus);//根据展品名称查询在展或未展商品（goodsStatus=0/1/2/3/4）
     List<Goods> selectGoodsByCompanyId(@Param("companyId")int companyId, @Param("goodsStatus")int goodsStatus);//根据公司id查询某状态的商品（goodsStatus=0/1/2/3/4）
+    List<Goods> selectGoodsByCategoryId(@Param("categoryId")int categoryId, @Param("goodsStatus")int goodsStatus);
     List<GoodsPic> selectGoodsPicByGoodsId(int goodsId);//查询一个展品的所有图片
     int selectGoodsCount();//查询商品总数
     int selectStatusById(int goodsId);//查询商品在展状态
@@ -39,6 +40,4 @@ public interface GoodsDao {
     // 通过分类id查找对应的名字
     String selectCategoryNameByCategoryId(int id);
 
-    // 获取热门搜索
-    List<String> queryHotSearchKey();
 }

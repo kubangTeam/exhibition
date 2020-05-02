@@ -29,7 +29,7 @@ public class goodsMapperTest {
      private GoodsController goodsController;
     @Test
     public void testSelectGoods(){
-        //Goods goods = goodsDao.selectGoodsById(3);
+        Goods goods = goodsDao.selectGoodsById(3);
         //System.out.println(goods);
         //System.out.println(goodsController.getRandomNumList(10,0,100));
        /* List<Map<String, Object>> list = new ArrayList<>();
@@ -37,8 +37,9 @@ public class goodsMapperTest {
         for(int i = 0;i < list.size();i++){
            System.out.println(list.get(i));
         }*/
-        System.out.println(goodsDao.selectCategoryNameById(1));
-        System.out.println(goodsDao.selectCompanyNameById(1));
+        System.out.println(goods);
+        //System.out.println(goodsDao.selectCategoryNameById(1));
+       // System.out.println(goodsDao.selectCompanyNameById(1));
     }
     @Test
     public void testSelectGoodsByCompanyId(){

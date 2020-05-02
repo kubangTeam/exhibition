@@ -1,21 +1,26 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 @Service
-public class ExhibitionServiceImpl implements IExhibitionService {
+public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
     @Autowired
     private ExhibitionDao exhibitionDao;
@@ -31,6 +36,12 @@ public class ExhibitionServiceImpl implements IExhibitionService {
 
     @Autowired
     private ExhibitionRepository exhibitionRepository;
+
+    @Autowired
+    private GoodsDao goodsDao;
+
+    @Autowired
+    private CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10个
@@ -118,6 +129,33 @@ public class ExhibitionServiceImpl implements IExhibitionService {
     @Override
     public List<Exhibition> queryAll(){
         return exhibitionDao.queryAllExhibitions();
+    }
+
+    @Override
+    public List<Goods> queryAllGoodsByExhibitionId(int exhibitionId){
+        List<Goods> result = new ArrayList<>();
+        List<Integer> companyIdList = new ArrayList<>();
+        List<CompanyJoinExhibition> companyJoinExhibitionList = companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
+        if(!companyJoinExhibitionList.isEmpty()){
+            for(CompanyJoinExhibition companyJoinExhibition : companyJoinExhibitionList) {
+                int companyId = companyJoinExhibition.getCompanyId();
+                companyIdList.add(companyId);
+            }
+        }
+        for(Integer companyId : companyIdList ){
+            List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW));
+            result.addAll(list);
+        }
+        return result;
+
+    }
+    private List<Goods> insertImageIntoGoods(List<Goods> list){
+        for(Goods goods : list) {
+            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+            String image = goodsPic.getPic();
+            goods.setImage(image);
+        }
+        return list;
     }
 
 

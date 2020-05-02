@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 
 import com.github.pagehelper.PageHelper;
@@ -42,17 +43,14 @@ import java.util.*;
 @Api(tags = "展会方相关功能")
 public class ExhibitionController {
 
-    @Autowired
-    private IExhibitionService exhibitionService;
+    IExhibitionService exhibitionService;
+
 
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
     @Autowired
-    private CompanyJoinExhibition companyJoinExhibition;
-
-    @Autowired
-    private GoodsDao goodsDao;
+    private GoodsService goodsService;
 
     @Autowired
     private GoodsJoinExhibitionDao goodsJoinExhibitionDao;
@@ -60,8 +58,6 @@ public class ExhibitionController {
     @Autowired
     private ExhibitionSubareaDao exhibitionSubareaDao;
 
-    @Autowired
-    private ExhibitionDao exhibitionDao;
 
 
 
@@ -89,91 +85,53 @@ public class ExhibitionController {
         return map;
     }
 
+
     /**
      * 根据展会id查询展会的所有商品
      * @return
      */
-    @ApiOperation(value = "展会一级商品推荐", notes = "据展会id查询展会的所有商品")
+    @ApiOperation(value = " 根据展会id查询展会的所有商品", notes = "点击分类页的“更多”进入展会页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryGoodsByExhibitionId")
-    public PageInfo<Goods> allGoodByKeyWord(@RequestParam(value = "exhibitionId")int exhibitionId,@RequestParam(value = "pageNum") int pageNum) {
-        //查询出展会id对应的的商家id列表
-        List companyIdList = new ArrayList<>();
-        List<CompanyJoinExhibition> companyJoinExhibitionList = companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
-        for(int i =0;i<companyJoinExhibitionList.size();i++){
-            int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
-            companyIdList.add(i,companyId);
-        }
-        System.out.println(companyIdList);
-        /**
-         * 1、根据商家列表id查询对应商家的商品id列表
-         * 2、在商品id列表中查找参加了该展会的商品
-         */
-        List<Goods> goodsList = new ArrayList<>();
-        List<Goods> temp = new ArrayList<>();
-        int index = 0;
-        for(int j =0;j<companyIdList.size();j++){
-            int companyId = (int) companyIdList.get(j);
-            temp = goodsDao.selectGoodsByCompanyId(companyId,2);
-            for(Goods goods:temp){
-                if(goodsJoinExhibitionDao.checkGoodsJoinOrNot(exhibitionId,goods.getGoodsId()) == 1){
-                    goodsList.add(index,goods);
-                    index++;
-                }
-            }
-        }
-        PageHelper.startPage(pageNum, pageSize2);
-        PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+    public PageInfo<Goods> allGoodByKeyWord(@RequestParam(value = "exhibitionId")int exhibitionId,
+                                            @RequestParam(value = "pageNum") int pageNum,
+                                            @RequestParam(value = "pageSize") int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        PageInfo<Goods> pageInfo = new PageInfo<>(exhibitionService.queryAllGoodsByExhibitionId(exhibitionId));
         return pageInfo;
-
     }
+
 
     /**
      * 根据展会id查询展会id和二级分类id查询商品
      * @return
      */
-    @ApiOperation(value = "展会一级商品推荐", notes = "据展会id查询展会的所有商品")
+    @ApiOperation(value = "根据展会id查询展会id和二级分类id查询商品", notes = "展会Id+分区Id")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "subareaId", value = "分区id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    @GetMapping("/querySubareaGoodsByExhibitionId/{id}/{pageNum}")
+    @GetMapping("/querySubareaGoodsByExhibitionId")
     public PageInfo<Goods> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
-                                                @RequestParam(value = "subareaId")int subareaId,
-                                                 @RequestParam(value = "pageNum")int pageNum) {
-        //查询出展会id对应的的商家id列表
-        List companyIdList = new ArrayList<>();
-        List<CompanyJoinExhibition> companyJoinExhibitionList = new ArrayList<>();
-        companyJoinExhibitionList =  companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
-        for(int i =0;i<companyJoinExhibitionList.size();i++){
-            int companyId  = companyJoinExhibitionList.get(i).getCompanyId();
-            companyIdList.add(i,companyId);
-        }
-        /**
-         * 1、根据商家列表id查询对应商家的商品id列表
-         * 2、在商品id列表中查找参加了该展会的商品 且符合传来的二级分区id
-         */
-        List<Goods> goodsList = new ArrayList<>();
-        List<Goods> temp = new ArrayList<>();
-        int index = 0;
-        for(int j =0;j<companyIdList.size();j++){
-            int companyId = (int) companyIdList.get(j);
-            temp = goodsDao.selectGoodsByCompanyId(companyId,2);
-            for(Goods goods:temp){
-                if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) == 1){
-                    goodsList.add(index,goods);
-                    index++;
-                }
+                                              @RequestParam(value = "subareaId")int subareaId,
+                                              @RequestParam(value = "pageNum")int pageNum,
+                                              @RequestParam(value = "pageSize") int pageSize) {
+
+        List<Goods> goodsList = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
+        for(Goods goods:goodsList){
+            if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) != 1){
+                goodsList.remove(goods);
             }
         }
-        PageHelper.startPage(pageNum, pageSize2);
+        PageHelper.startPage(pageNum, pageSize);
         PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
         return pageInfo;
-
     }
 
     /**
