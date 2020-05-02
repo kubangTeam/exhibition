@@ -27,7 +27,7 @@ import java.util.Calendar;
 //短信发送服务
 @Controller
 @RequestMapping("/SMS")
-@Api("手机注册服务")
+@Api(tags = "手机注册服务")
 public class SMSController {
 
     @Autowired

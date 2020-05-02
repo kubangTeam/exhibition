@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author SunChonggao
@@ -33,23 +34,29 @@ import java.util.List;
 @RequestMapping("/search")
 @Api(tags = "展会、展品和商家搜索")
 public class SearchController {
-    @Autowired
-    private ElasticsearchService elasticsearchService;
 
-    @Autowired
     IExhibitionService exhibitionService;
 
-    @Autowired
-    ExhibitionDao exhibitionDao;
+    ICompanyService companyService;
 
-    @Autowired
-    private ISearchService searchService;
+    private ElasticsearchService elasticsearchService;
 
-    @Autowired
+    private SearchService searchService;
+
     private GoodsService goodsService;
 
     @Autowired
-    ICompanyService companyService;
+    public SearchController(IExhibitionService exhibitionService,
+                            ICompanyService companyService,
+                            ElasticsearchService elasticsearchService,
+                            SearchService searchService,
+                            GoodsService goodsService) {
+        this.exhibitionService = exhibitionService;
+        this.companyService = companyService;
+        this.elasticsearchService = elasticsearchService;
+        this.searchService = searchService;
+        this.goodsService = goodsService;
+    }
 
     @ApiOperation(value = "添加所有展品数据到ES中",notes = "mysql to ES")
     @RequestMapping(value = "/init/goods", method = RequestMethod.GET)
@@ -115,7 +122,12 @@ public class SearchController {
        // String factor = numToFactor(Integer.valueOf(num),1);
         Page<Goods> result= elasticsearchService.searchGoods(keyword,  pageNum, pageSize);
         searchService.saveSearchRecord(userId,keyword,3);
-
+        try{
+            searchService.addHotWord(keyword);
+        }
+        catch (Exception e){
+            System.out.println("热词存储异常：" + e);
+        }
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
@@ -137,6 +149,12 @@ public class SearchController {
        // String factor = numToFactor(Integer.valueOf(num),0);
         Page<Exhibition> result= elasticsearchService.searchExhibition(keyword, pageNum, pageSize);
         searchService.saveSearchRecord(userId,keyword,1);
+        try{
+            searchService.addHotWord(keyword);
+        }
+        catch (Exception e){
+            System.out.println("热词存储异常：" + e);
+        }
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
@@ -157,6 +175,12 @@ public class SearchController {
                                         @RequestParam(value = "pageSize") int pageSize) {
         Page<Company> result= elasticsearchService.searchCompany(keyword, pageNum, pageSize);
         searchService.saveSearchRecord(userId,keyword,2);
+        try{
+            searchService.addHotWord(keyword);
+        }
+        catch (Exception e){
+            System.out.println("热词存储异常：" + e);
+        }
         if(result == null)
             return new ResponseJson(false, "-008", "搜索结果为空", null);
         else
@@ -176,10 +200,21 @@ public class SearchController {
     /**
      * 获取热门搜索
      */
-    @ApiOperation(value = "获取热门搜索")
-    @GetMapping("/hot/key")
-    public List<String> getHotSearch() {
-        return searchService.getHotSearch();
+    @ApiOperation(value = "搜索热词")
+    @GetMapping("/hotWords")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "num", value = "热词个数", required = true, dataType = "int", paramType = "query"),
+    })
+
+    public Set<Object> getHotSearch(@RequestParam(value = "num") int num) {
+        Set<Object> set = null;
+        try{
+             set = searchService.getHotWord(num);
+        }
+        catch (Exception e){
+            System.out.println("热词获取异常:" + e);
+        }
+        return set;
     }
 
 

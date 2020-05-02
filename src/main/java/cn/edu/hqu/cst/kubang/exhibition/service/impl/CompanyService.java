@@ -4,6 +4,8 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.CompanyRepository;
+import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
@@ -17,8 +19,6 @@ import java.util.List;
 
 @Service
 public class CompanyService implements ICompanyService {
-    @Autowired
-    Company company;
 
     @Autowired
     CompanyDao companyDao;
@@ -41,11 +41,15 @@ public class CompanyService implements ICompanyService {
     @Autowired
     Exhibition exhibition;
 
+    @Autowired
+    CompanyRepository companyRepository;
+
 
     @Override
     public String CompanyIdentify(int userId, String name, String address,
                                 String website, String type, String introduce,
                                 String HeadPicture) {
+        Company company = new Company();
         company.setName(name);
         company.setAddress(address);
         company.setWebsite(website);
@@ -53,38 +57,47 @@ public class CompanyService implements ICompanyService {
         company.setIntroduction(introduce);
         //通过用户id获取用户的电话 头像
         User user = userDao.GetUserInfoFromId(userId);
-        company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
+        String msg = "";
+        if(user != null) {
+            Company _company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
+            if (_company != null) {
+                if (_company.getIdentifyStatus() == 0) {
+                    msg = "该账号信息本地保存，等待正式上传";
+                } else if (_company.getIdentifyStatus() == 1) {
+                    msg = "该账号正在等待审核";
+                } else if (_company.getIdentifyStatus() == 2) {
+                    msg = "该账号已通过审核";
+                } else if (_company.getIdentifyStatus() == 3) {
+                    msg = "该账号审核未通过";
+                } else if (_company.getIdentifyStatus() == 4) {
+                    msg = "该账号已删除";
+                } else {
+                    msg = "认证状态字段错误";
+                }
+            } else {
+                String userPhone = user.getUserAccount();
+                String headPicture = user.getUserPicture();
+                company.setTelephone(userPhone);
+                company.setHeadPicture(headPicture);
+                //公司认证状态 1：上传成功，等待审核
+                company.setIdentifyStatus(1);
+                //将个人信息表的公司字段填上公司信息表的主键
+                if (companyDao.addUnidentifiedCompanyInfo(company) > 0) {
+                    if (userDao.setCompanyId(userId, company.getId()) > 0) {
+                        msg = "公司认证信息上传成功";
+                        //将公司信息保存到ES服务器
+                        companyRepository.save(company);
+                    }
+                } else {
+                    msg = "公司认证信息上传失败";
+                }
+            }
+        }
+        else {
+            msg = "无此用户";
+        }
 
-        if(user.getUserCompanyId()!=null){
-            if(company.getIdentifyStatus()==0) {
-                return "该账号信息本地保存，等待正式上传";
-            }else if(company.getIdentifyStatus()==1){
-            return "该账号正在等待审核";
-            }else if(company.getIdentifyStatus()==2){
-                return "该账号已通过审核";
-            }else if(company.getIdentifyStatus()==3){
-                return "该账号审核未通过";
-            }else if(company.getIdentifyStatus()==4){
-                return "该账号已删除";
-            }else{
-                return "认证状态字段错误";
-            }
-        }
-        else{
-            String userPhone = user.getUserAccount();
-            String headPicture = user.getUserPicture();
-            company.setTelephone(userPhone);
-            company.setHeadPicture(headPicture);
-            //公司认证状态 1：上传成功，等待审核
-            company.setIdentifyStatus(1);
-            //将个人信息表的公司字段填上公司信息表的主键
-            int result = userDao.setCompanyId(userId,company.getId());
-            if(companyDao.addUnidentifiedCompanyInfo(company)==1 && result ==1){
-                return "公司认证信息上传成功";
-            }else{
-                return "公司认证信息上传失败";
-            }
-        }
+        return msg;
     }
 
     //查看公司所参加的展会

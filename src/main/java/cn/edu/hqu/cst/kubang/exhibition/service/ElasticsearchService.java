@@ -36,17 +36,25 @@ import java.util.Map;
  */
 @Service
 public class ElasticsearchService {
-    @Autowired
+
     private GoodsRepository goodsRepository;
 
-    @Autowired
     private ExhibitionRepository exhibitionRepository;
 
-    @Autowired
     private CompanyRepository companyRepository;
 
-    @Autowired
     private ElasticsearchTemplate elasticTemplate;
+
+    @Autowired
+    public ElasticsearchService(GoodsRepository goodsRepository,
+                                ExhibitionRepository exhibitionRepository,
+                                CompanyRepository companyRepository,
+                                ElasticsearchTemplate elasticTemplate) {
+        this.goodsRepository = goodsRepository;
+        this.exhibitionRepository = exhibitionRepository;
+        this.companyRepository = companyRepository;
+        this.elasticTemplate = elasticTemplate;
+    }
 
     public void saveGoods(Goods goods) {
         goodsRepository.save(goods);

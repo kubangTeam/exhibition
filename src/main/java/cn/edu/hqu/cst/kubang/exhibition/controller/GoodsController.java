@@ -50,11 +50,11 @@ import java.util.*;
 @RequestMapping("/goods")
 @Api(tags = "商品管理服务")
 public class GoodsController implements Constants {
-    @Autowired
+
     private GoodsService goodsService;
-    @Autowired
+
     private IGoodsMobileService goodsMobileService;
-    @Autowired
+
     private ElasticsearchService elasticsearchService;
 
     @Value("${exhibition.path.domain}")
@@ -64,6 +64,14 @@ public class GoodsController implements Constants {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    @Autowired
+    public GoodsController(GoodsService goodsService,
+                           IGoodsMobileService goodsMobileService,
+                           ElasticsearchService elasticsearchService) {
+        this.goodsService = goodsService;
+        this.goodsMobileService = goodsMobileService;
+        this.elasticsearchService = elasticsearchService;
+    }
 
     //从start到end随机取nums个不重复的整数
     private List getRandomNumList(int nums, int start, int end) {

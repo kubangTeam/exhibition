@@ -4,8 +4,8 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
 import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
-import cn.edu.hqu.cst.kubang.exhibition.service.impl.CompanyService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -47,17 +47,15 @@ import java.util.Map;
 @RequestMapping("/company")
 @Api(tags = "商家功能")
 public class CompanyController {
+
     @Autowired
-    CompanyService companyService;
+    ICompanyService companyService;
 
     @Autowired
     Company company;
 
     @Autowired
     CompanyDao companyDao;
-
-    @Autowired
-    ElasticsearchService elasticsearchService;
 
     @Autowired
     private UserService userService;
@@ -93,25 +91,28 @@ public class CompanyController {
                                                @RequestParam(value = "website") String website,
                                                @RequestParam(value = "type") String type,
                                                @RequestParam(value = "introduce") String introduce,
-                                               @RequestParam(value = "file") MultipartFile file,
-                                               HttpServletRequest request) throws IOException {
+                                               @RequestParam(value = "file") MultipartFile file
+                                               ) throws IOException {
 
         String value = null;
         String code = null;
-        //String path = request.getServletContext().getRealPath("/codeCertificatePic");
         if (file.isEmpty()) {
             value = "未选择文件";
             code = "021";
         } else {
             String webPath = domain + contextPath + "/images/company/";
             String pic = UploadFile.uploadFile(uploadPath, webPath, file);
-            String status = companyService.CompanyIdentify(userId, name, address, website, type, introduce, pic);
+
+            String status = "";
+            try{
+                status = companyService.CompanyIdentify(userId, name, address, website, type, introduce, pic);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
             value = status;
             code = "005";
         }
-        Company company = companyDao.selectCompanyInformationById(userId);
-        elasticsearchService.saveCompany(company);
-
         Map<String, String> map = new HashMap<>();
         map.put("response", value);
         map.put("code", code);

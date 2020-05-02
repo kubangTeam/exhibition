@@ -23,17 +23,24 @@ import java.util.List;
  */
 @Service
 public class GoodsService implements Constants {
-    @Autowired
+
     private GoodsDao goodsDao;
 
-    @Autowired
     private Goods goods;
 
-    @Autowired
     private Company company;
 
-    @Autowired
     private  CompanyDao companyDao;
+
+    @Autowired
+    public GoodsService(GoodsDao goodsDao, Goods goods, Company company, CompanyDao companyDao) {
+        this.goodsDao = goodsDao;
+        this.goods = goods;
+        this.company = company;
+        this.companyDao = companyDao;
+    }
+
+
 
     //查询展品
         //根据ID和状态查询在展和不在展的商品

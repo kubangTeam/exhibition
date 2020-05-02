@@ -2,8 +2,8 @@ package cn.edu.hqu.cst.kubang.exhibition.ServiceTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Search;
-import cn.edu.hqu.cst.kubang.exhibition.service.ISearchService;
-import org.elasticsearch.search.SearchService;
+
+import cn.edu.hqu.cst.kubang.exhibition.service.SearchService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(classes = ExhibitionApplication.class)
 public class SearchServiceTests {
     @Autowired
-    ISearchService searchService;
+    SearchService searchService;
 
     @Test
     public void saveTest(){
