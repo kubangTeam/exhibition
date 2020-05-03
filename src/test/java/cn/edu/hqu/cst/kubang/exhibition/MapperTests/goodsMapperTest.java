@@ -37,7 +37,7 @@ public class goodsMapperTest {
         for(int i = 0;i < list.size();i++){
            System.out.println(list.get(i));
         }*/
-        System.out.println(goods);
+        System.out.println(goodsDao.selectAllGoods().size());
         //System.out.println(goodsDao.selectCategoryNameById(1));
        // System.out.println(goodsDao.selectCompanyNameById(1));
     }
@@ -59,8 +59,9 @@ public class goodsMapperTest {
 
     @Test
     public void testUpdateStatus(){
-        int row = goodsDao.updateStatus(52,2);
-        System.out.println(row);
+        for(int i = 1 ;i<=103;i++) {
+            goodsDao.updateStatus(i, 1);
+        }
     }
 
 }

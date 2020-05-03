@@ -9,11 +9,21 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.util.concurrent.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
 /**
  * @Author SunChonggao
@@ -22,6 +32,8 @@ import java.util.List;
  * @Description:
  */
 @Service
+@Slf4j
+@EnableScheduling
 public class GoodsService implements Constants {
 
     private GoodsDao goodsDao;
@@ -31,6 +43,12 @@ public class GoodsService implements Constants {
     private Company company;
 
     private  CompanyDao companyDao;
+
+    ListeningExecutorService executorService = MoreExecutors.
+            listeningDecorator(Executors.newFixedThreadPool(1));
+
+    @Resource(name = "redisKeyDb")
+    private RedisTemplate<String, Object> redisKeyDb;
 
     @Autowired
     public GoodsService(GoodsDao goodsDao, Goods goods, Company company, CompanyDao companyDao) {
@@ -127,5 +145,41 @@ public class GoodsService implements Constants {
         goods = goodsDao.selectGoodsById(goodsId);
         company =companyDao.selectCompanyInformationById(goods.getCompanyId());
         return  company;
+    }
+    public List getGoodsIdInRedis(){
+        Set sets = redisKeyDb.opsForZSet().range("Goods",0, -1);
+        return new ArrayList<>(sets);
+    }
+    public void addGoodsIntoRedis(int goodsId){
+        redisKeyDb.opsForZSet().add("Goods", goodsId, 0);
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    public boolean updateGoodsInRedis()throws Exception{
+        ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                List<Goods> list = goodsDao.selectAllGoods();
+                System.out.println(list.size());
+                for(Goods goods : list){
+                    redisKeyDb.opsForZSet().add("Goods", goods.getGoodsId(), 0);
+                }
+                return true;
+            }
+        });
+
+        Futures.addCallback(future, new FutureCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean v) {
+                log.info("@Goods: update redis data for Goods successfully");
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+                log.info("@HotWord: fail to update redis data for goods, message is {}", throwable.getMessage());
+            }
+            });
+        return true;
+
+
     }
 }

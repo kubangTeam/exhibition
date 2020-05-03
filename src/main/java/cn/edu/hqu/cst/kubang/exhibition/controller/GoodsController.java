@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -71,19 +72,19 @@ public class GoodsController implements Constants {
         this.elasticsearchService = elasticsearchService;
     }
 
-    //从start到end随机取nums个不重复的整数
-    private List getRandomNumList(int nums, int start, int end) {
-        List list = new ArrayList();
+    //从list中随机取nums个不重复的元素
+    private <T> List<T> getRandomNumList(int nums, List<T> list) {
+        List<T> result = new ArrayList<>();
+        List temp = new ArrayList<>();
         Random r = new Random();
-        while (list.size() != nums) {
-            int num = r.nextInt(end - start) + start;
-            //id不重复且该展品的状态为在展
-            Goods goods = goodsService.queryGoodsById(num);
-            if (!list.contains(num) && goods != null)
-                if (goods.getGoodsStatus() == 1)
-                    list.add(num);
+        while(result.size() < nums){
+            int num = r.nextInt(list.size());
+            if(!temp.contains(num)) {
+                result.add(list.get(num));
+                temp.add(num);
+            }
         }
-        return list;
+        return result;
     }
 
     //展品推荐  个数：recNum  goodsStatus为0的不推荐
@@ -93,12 +94,12 @@ public class GoodsController implements Constants {
     public List<Map<String, Object>> getRecommendGoods() {
         List<Map<String, Object>> list = new ArrayList<>();
         int recNum = COUNT_RECOMMEND;
-        List recId = getRandomNumList(recNum, 0, goodsService.queryGoodsCount());
-        for (Object object : recId) {
-            int id = Integer.parseInt(object.toString());
-            if (goodsService.queryGoodsStatus(id) == STATE_IS_ON_SHOW) {
-                Goods goods = goodsService.queryGoodsById(id);
-                GoodsPic goodsPic = goodsService.queryGoodsPic(id).get(0);
+        List<Integer> goodsIdList = goodsService.getGoodsIdInRedis();
+        List<Integer> recId = getRandomNumList(recNum,goodsIdList);
+        for (Integer goodsId : recId) {
+            if (goodsService.queryGoodsStatus(goodsId) == STATE_IS_ON_SHOW) {
+                Goods goods = goodsService.queryGoodsById(goodsId);
+                GoodsPic goodsPic = goodsService.queryGoodsPic(goodsId).get(0);
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("goodsId", goods.getGoodsId());
                 map.put("goodsName", goods.getGoodsName());
@@ -113,9 +114,9 @@ public class GoodsController implements Constants {
                 map.put("goodsStatus", goods.getGoodsStatus());
                 // map.put("identifyStatus", goods.getIdentifyStatus());
                 map.put("priority", goods.getPriority());
-                map.put("image", goodsPic.getPic());
+                if(goodsPic != null)
+                    map.put("image", goodsPic.getPic());
                 list.add(map);
-                //System.out.println(map.get("goodsId"));
             }
         }
         return list;
@@ -133,14 +134,8 @@ public class GoodsController implements Constants {
     @RequestMapping(path = "/fourGoods", method = RequestMethod.GET)
     @ResponseBody
     public List<Goods> recommendGoodsByCategoryId(int categoryId) {
-        List<Goods> result = new ArrayList<>();
         List<Goods> list = goodsService.queryAllGoodsByCategoryId(categoryId);
-        Random r = new Random();
-        while(result.size() <= 4){
-            int num = r.nextInt(list.size());
-            result.add(list.get(num));
-        }
-        return result;
+        return getRandomNumList(4, list);
 
     }
     //根据展品Id查询所有在展的商品；
@@ -235,6 +230,7 @@ public class GoodsController implements Constants {
     ) throws IOException {
         String infoValue;
         String code;
+        int goodsId = 0;
         if (goodsService.addGoods(goods) > 0) {
             /*if(files.length == 0)
                 picValue = "未选择文件";
@@ -248,6 +244,9 @@ public class GoodsController implements Constants {
                 }*/
             infoValue = "添加成功";
             code = "005";
+            goodsId = goods.getGoodsId();
+            //将goodsId存到Redis中
+            goodsService.addGoodsIntoRedis(goodsId);
         } else {
             infoValue = "添加失败";
             code = "-008";
@@ -255,7 +254,7 @@ public class GoodsController implements Constants {
         Map<String, String> map = new HashMap<>();
         map.put("response", infoValue);
         map.put("code", code);
-        map.put("goodsId", String.valueOf(goods.getGoodsId()));
+        map.put("goodsId", String.valueOf(goodsId));
         return map;
     }
 

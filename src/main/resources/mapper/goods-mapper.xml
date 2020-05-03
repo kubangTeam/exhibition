@@ -10,7 +10,7 @@
     <select id="selectAllGoods" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where goodsStatus = 1;
+        where goodsStatus=1
     </select>
     <select id="selectGoodsById" resultType="Goods">
            select <include refid="selectFields"></include>
