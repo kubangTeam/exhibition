@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -23,12 +24,9 @@ import java.util.*;
  * @Date: 2020.02.18 14:09
  * @Description:
  * 展会方相关功能
- * 1、查看自己的展会信息。
+ * 1、查看自己的展会信息
  * 2、申请广告
  * 3、
- * 根据人群划分划分路径和方法名
- * 买家buyer 卖家(商家)seller 管理员admin 买家与卖家(用户)user 卖家与管理员(服务者)server 买家卖家管理员(所有人)all
- * 此外还增加了超级管理员superAdmin 它唯一职责就是可以对已删除的展会进行操作,暂时还不写
  *
  *
  * 接口简介
@@ -36,15 +34,15 @@ import java.util.*;
  * 2、/queryGoodsByExhibitionId/{id} 据展会id查询展会的所有商品
  * 3、/querySubareaGoodsByExhibitionId/{id} 根据展会id和分区id查询展会分区商品信息
  * 4、/queryReadyToStartExhibitionInfo 返回即将上线的展会信息
+ * 5、/ExhibitionDetails/id 根据id查询展会详情
+ * 6、/queryOngoingExhibitionInfo  返回展会页面四个进行中的展会信息
+ * 7、
  *
  */
 @RestController
 @RequestMapping("/exhibition")
 @Api(tags = "展会方相关功能")
 public class ExhibitionController {
-
-    IExhibitionService exhibitionService;
-
 
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
@@ -57,6 +55,13 @@ public class ExhibitionController {
 
     @Autowired
     private ExhibitionSubareaDao exhibitionSubareaDao;
+
+    @Autowired
+    private ExhibitionServiceImpl exhibitionService;
+    @Autowired
+    private Exhibition exhibition;
+    @Autowired
+    private ExhibitionDao exhibitionDao;
 
 
 
@@ -76,7 +81,8 @@ public class ExhibitionController {
         //List<ExhibitionSubarea> subInformation = new ArrayList<ExhibitionSubarea>();
         Map<String, Object> map = new HashMap<>();
         List<ExhibitionSubarea> subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
-        if(subInformation!=null){
+        ExhibitionNew exhibition = exhibitionDao.queryExhibitionDetailsByID(exhibitionId);
+        if(subInformation!=null && exhibition!=null){
             map.put("subInformation",subInformation);
         }else {
             String value = "该商家分区信息不存在";
@@ -90,14 +96,14 @@ public class ExhibitionController {
      * 根据展会id查询展会的所有商品
      * @return
      */
-    @ApiOperation(value = " 根据展会id查询展会的所有商品", notes = "点击分类页的“更多”进入展会页")
+    @ApiOperation(value = " 根据展会id查询展会的所有商品", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryGoodsByExhibitionId")
-    public PageInfo<Goods> allGoodByKeyWord(@RequestParam(value = "exhibitionId")int exhibitionId,
+    public PageInfo<Goods> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
                                             @RequestParam(value = "pageNum") int pageNum,
                                             @RequestParam(value = "pageSize") int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -122,10 +128,11 @@ public class ExhibitionController {
                                               @RequestParam(value = "subareaId")int subareaId,
                                               @RequestParam(value = "pageNum")int pageNum,
                                               @RequestParam(value = "pageSize") int pageSize) {
-
+        //判断该商品是否参加了该展会
         List<Goods> goodsList = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
+        //判断商品是否符合该分区
         for(Goods goods:goodsList){
-            if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) != 1){
+            if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) == null){
                 goodsList.remove(goods);
             }
         }
@@ -139,10 +146,10 @@ public class ExhibitionController {
      */
     @ApiOperation(value = "返回即将上线的展会信息", notes = "直接调用即可")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "path")
     })
-    @GetMapping("/queryReadyToStartExhibitionInfo")
-    public PageInfo<Exhibition> readyToStartExhibitionInfo(@RequestParam(value = "pageNum")int pageNum) {
+    @GetMapping("/queryReadyToStartExhibitionInfo/{pageNum}")
+    public PageInfo<Exhibition> readyToStartExhibitionInfo(@PathVariable int pageNum) {
         List<Exhibition> exhibitionList =exhibitionService.queryReadyToStartExhibitionInfo();
         PageHelper.startPage(pageNum, pageSize2);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
@@ -161,6 +168,21 @@ public class ExhibitionController {
         return exhibitionService.queryExhibitionDetailById(exhibitionId);
     }
 
+    /**
+     *返回展会页面四个进行中的展会信息，用于展会页展示
+     */
+    @ApiOperation(value = "返回展会页面四个进行中的展会信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
+    public PageInfo<Exhibition> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
+        //System.out.println(exhibitionService.queryOngoingExhibitionInfo());
+        List<Exhibition> exhibitionList = exhibitionService.queryOngoingExhibitionInfo();
+        PageHelper.startPage(1, 4);
+        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
+        return pageInfo;
+    }
 
 
 }

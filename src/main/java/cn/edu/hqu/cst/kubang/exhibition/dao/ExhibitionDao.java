@@ -43,6 +43,8 @@ public interface ExhibitionDao {
 
     int deleteById(int id);//删除测试数据，测试用
 
+    int deleteByStatus(int status);//删除测试数据，测试用
+
     // 根据展会id查找它的轮播图
     List<String> queryExbitionPicById(int exhibitionId);
 }

@@ -25,6 +25,15 @@ import java.util.Map;
  * @author: KongKongBaby
  * @create: 2020-04-27 13:45
  * @description:
+ *
+ * /user/information/login/in 获取用户资料，用户登录
+ * /user/information/name 修改昵称
+ * /user/information/password 修改密码
+ * /user/information/profilePicture 上传头像
+ * /user/information/integral/history 查询用户积分历史
+ * /user/information/password/reset 忘记密码
+ * /user/information/wx/login/in 微信登陆
+ *
  **/
 
 @RestController
