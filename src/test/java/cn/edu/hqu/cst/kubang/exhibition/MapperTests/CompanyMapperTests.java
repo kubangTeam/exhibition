@@ -45,7 +45,6 @@ public class CompanyMapperTests {
         company.setTelephone("18162327341");
         company.setIntroduction("这是一条测试数据");
         company.setIdentifyStatus(1);
-
         if(companyDao.addUnidentifiedCompanyInfo(company) ==1)
             System.out.println("添加数据成功");
     }
@@ -58,7 +57,8 @@ public class CompanyMapperTests {
 
     @Test
     public void testGetUnidentifiedCompanies(){
-        System.out.println(companyDao.getCompaniesByIdentifyStatus(2));
+        System.out.println(companyDao.getCompaniesByIdentifyStatus(company.getIdentifyStatus())
+        );
     }
 
     @Test
@@ -70,7 +70,6 @@ public class CompanyMapperTests {
     @Test
     public void testSelectCompanyInformationById(){
         Company test= companyDao.selectCompanyInformationById(company.getId());
-        System.out.println(test);
         System.out.println(test);
     }
 
@@ -90,6 +89,7 @@ public class CompanyMapperTests {
     }
     @Test
     public void testQueryAll(){
+        System.out.println(companyDao.selectAll().size());
         System.out.println(companyDao.selectAll());
     }
 

@@ -25,21 +25,11 @@ import java.util.List;
 public class goodsMapperTest {
     @Autowired
      private GoodsDao goodsDao;
-    @Autowired
-     private GoodsController goodsController;
+
     @Test
     public void testSelectGoods(){
         Goods goods = goodsDao.selectGoodsById(3);
-        //System.out.println(goods);
-        //System.out.println(goodsController.getRandomNumList(10,0,100));
-       /* List<Map<String, Object>> list = new ArrayList<>();
-        list = goodsController.getRecommendGoods();
-        for(int i = 0;i < list.size();i++){
-           System.out.println(list.get(i));
-        }*/
         System.out.println(goods);
-        //System.out.println(goodsDao.selectCategoryNameById(1));
-       // System.out.println(goodsDao.selectCompanyNameById(1));
     }
     @Test
     public void testSelectGoodsByCompanyId(){

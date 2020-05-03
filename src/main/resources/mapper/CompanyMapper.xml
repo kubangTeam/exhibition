@@ -51,6 +51,11 @@
         WHERE identifyStatus = #{identifyStatus}
     </select>
 
+    <select id="selectAll" resultType="Company">
+        SELECT <include refid="selectFields"></include>
+        FROM companyinformation
+    </select>
+
 
     <select id="selectCompanyInformationById" resultType="Company">
         SELECT <include refid="selectFields"></include>

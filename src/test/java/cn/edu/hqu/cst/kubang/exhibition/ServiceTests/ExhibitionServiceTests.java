@@ -65,6 +65,7 @@ public class ExhibitionServiceTests {
         System.out.println(exhibitionService.queryOngoingExhibitionInfo().size());
         System.out.println(exhibitionService.queryOngoingExhibitionInfo());
     }
+
     @Test
     public void queryReadyToStartExhibitionInfo(){
         System.out.println(exhibitionService.queryReadyToStartExhibitionInfo().size());

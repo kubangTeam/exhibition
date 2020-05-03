@@ -46,9 +46,9 @@ public class GoodsJoinExhibitionMapperTests {
         //生成测试数据
         //需要保证exhibitionId、goodsId、subAreaId都存在
         //展会id为1298 展区为9 商品id 52为公司id 1的商品
-        goodsJoinExhibition.setExhibitionId(1298);
+        goodsJoinExhibition.setExhibitionId(1);
         goodsJoinExhibition.setGoodsId(52);
-        goodsJoinExhibition.setSubareaId(9);
+        goodsJoinExhibition.setSubareaId(8);
 
         int row = goodsJoinExhibitionDao.insertGoodsJoinExhibition(goodsJoinExhibition);
         if(row ==1){
@@ -68,6 +68,7 @@ public class GoodsJoinExhibitionMapperTests {
         GoodsJoinExhibition goodsJoinExhibition1 = goodsJoinExhibitionDao.checkGoodsSubarea(goodsJoinExhibition.getExhibitionId(),goodsJoinExhibition.getGoodsId()
                 ,goodsJoinExhibition.getSubareaId());
         if(goodsJoinExhibition1!=null){
+            System.out.println(goodsJoinExhibition1);
             System.out.println("该数据存在");
         }else
             System.out.println("该数据不存在");

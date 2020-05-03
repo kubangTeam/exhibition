@@ -66,5 +66,4 @@ public class UserCodeMapperTests {
        userCode = userCodeDao.queryUserCodeByAccount(userCode.getAccount());
        System.out.println(userCode);
     }
-
 }

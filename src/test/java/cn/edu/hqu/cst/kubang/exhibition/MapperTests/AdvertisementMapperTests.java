@@ -56,7 +56,7 @@ public class AdvertisementMapperTests {
         companyAdvertisement.setEndTime(data1);
         companyAdvertisement.setPicture("www.company.com");//图片url
         companyAdvertisement.setPriority(2);//高优先级
-        companyAdvertisement.setStatus(2);// 待审核
+        companyAdvertisement.setStatus(2);// 已审核
         advertisementDao.insertAds(companyAdvertisement);
 
         organizerAdvertisement.setOrganizerId(1);
@@ -65,16 +65,12 @@ public class AdvertisementMapperTests {
         organizerAdvertisement.setEndTime(data1);
         organizerAdvertisement.setPicture("www.organizer.com");//图片url
         organizerAdvertisement.setPriority(2);//高优先级
-        organizerAdvertisement.setStatus(2);// 待审核
+        organizerAdvertisement.setStatus(2);// 已审核
         advertisementDao.insertAds(organizerAdvertisement);
     }
 
     @After
     public void after(){
-        //真删除数据
-//        int row = advertisementDao.deleteAllAds();
-//        System.out.println(row);
-        //修改测试数据 假删除状态
         advertisementDao.updateAdsStatus(companyAdvertisement.getId(),4);//4 删除状态
         advertisementDao.updateAdsStatus(organizerAdvertisement.getId(),4);//4 删除状态
     }
@@ -126,21 +122,5 @@ public class AdvertisementMapperTests {
         int row = advertisementDao.updateAds(companyAdvertisement.getId(),data,data1,"www.companyUpdate.com",2);
         System.out.println(row);
     }
-
-//    @Test
-//    public void testUpdateAdsStatus(){
-//        //修改测试数据 假删除状态
-//        int row = advertisementDao.updateAdsStatus(companyAdvertisement.getId(),4);//4 删除状态
-//        int row1 = advertisementDao.updateAdsStatus(organizerAdvertisement.getId(),4);//4 删除状态
-//        System.out.println(row);
-//        System.out.println(row1);
-//    }
-
-
-//    @Test
-//    public void deleteAllAds(){
-//        int row = advertisementDao.deleteAllAds();
-//        System.out.println(row);
-//    }
 
 }

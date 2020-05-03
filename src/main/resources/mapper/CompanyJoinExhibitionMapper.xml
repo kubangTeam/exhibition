@@ -21,7 +21,7 @@
     <delete id="deleteSingleCompanyAttend">
         delete from companyjoinexhibition
         where
-        companyId =#{companyId}
+        id = #{id}
     </delete>
 
     <delete id="deleteAllAttend">
