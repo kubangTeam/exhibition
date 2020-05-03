@@ -24,12 +24,9 @@ import java.util.*;
  * @Date: 2020.02.18 14:09
  * @Description:
  * 展会方相关功能
- * 1、查看自己的展会信息。
+ * 1、查看自己的展会信息
  * 2、申请广告
  * 3、
- * 根据人群划分划分路径和方法名
- * 买家buyer 卖家(商家)seller 管理员admin 买家与卖家(用户)user 卖家与管理员(服务者)server 买家卖家管理员(所有人)all
- * 此外还增加了超级管理员superAdmin 它唯一职责就是可以对已删除的展会进行操作,暂时还不写
  *
  *
  * 接口简介
@@ -38,7 +35,9 @@ import java.util.*;
  * 3、/querySubareaGoodsByExhibitionId/{id} 根据展会id和分区id查询展会分区商品信息
  * 4、/queryReadyToStartExhibitionInfo 返回即将上线的展会信息
  * 5、/ExhibitionDetails/id 根据id查询展会详情
- * 5、/queryOngoingExhibitionInfo  返回展会页面四个进行中的展会信息
+ * 6、/queryOngoingExhibitionInfo  返回展会页面四个进行中的展会信息
+ * 7、
+ *
  */
 @RestController
 @RequestMapping("/exhibition")
@@ -147,7 +146,7 @@ public class ExhibitionController {
      */
     @ApiOperation(value = "返回即将上线的展会信息", notes = "直接调用即可")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryReadyToStartExhibitionInfo/{pageNum}")
     public PageInfo<Exhibition> readyToStartExhibitionInfo(@PathVariable int pageNum) {
