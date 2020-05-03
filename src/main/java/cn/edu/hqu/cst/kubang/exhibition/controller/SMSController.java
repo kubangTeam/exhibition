@@ -40,7 +40,7 @@ public class SMSController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query"),
     })
-    @RequestMapping("/send")
+    @GetMapping("/send")
     @ResponseBody
     public ResponseJson<String> sendVerifyCode(@RequestParam("phoneNumber")String phoneNumber){
         System.out.println("SMS send called");
@@ -72,7 +72,7 @@ public class SMSController {
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
     })
-    @RequestMapping("/check/register")
+    @GetMapping("/check/register")
     @ResponseBody
     public ResponseJson<String> registerCheckCode(@RequestParam("phoneNumber") String phoneNumber
             , @RequestParam("password") String password, @RequestParam("verifyCode") String verifyCode

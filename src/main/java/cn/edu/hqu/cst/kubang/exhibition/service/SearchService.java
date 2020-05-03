@@ -58,6 +58,7 @@ public class SearchService {
         return sets;
     }
 
+    //每天清除一次数据
     @Scheduled(cron = "0 0 1 * * ?")
     public Boolean clearHotWordOutTime() throws Exception {
         ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
