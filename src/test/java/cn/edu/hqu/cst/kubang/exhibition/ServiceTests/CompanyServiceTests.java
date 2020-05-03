@@ -23,7 +23,7 @@ public class CompanyServiceTests {
     @Test
     public void testCompanyIdentify(){
         String result = companyService.CompanyIdentify(2,"测试","测试地址","www.test.com",
-                "1","This is a testData","/pic/load");
+                "1","This is a testData","/pic/load","/test.jpg");
         System.out.println(result);
     }
 

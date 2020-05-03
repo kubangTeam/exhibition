@@ -90,6 +90,7 @@ public class CompanyController {
                                                @RequestParam(value = "address") String address,
                                                @RequestParam(value = "website") String website,
                                                @RequestParam(value = "type") String type,
+                                               @RequestParam(value = "tel") String tel,
                                                @RequestParam(value = "introduce") String introduce,
                                                @RequestParam(value = "file") MultipartFile file
                                                ) throws IOException {
@@ -105,7 +106,7 @@ public class CompanyController {
 
             String status = "";
             try{
-                status = companyService.CompanyIdentify(userId, name, address, website, type, introduce, pic);
+                status = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
             }
             catch (Exception e){
                 System.out.println(e);

@@ -5,7 +5,7 @@
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao">
 
     <sql id="selectFields">
-        goodsId,goodsName,goodsAreaNumber,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority
+        goodsId,goodsName,categoryId,companyId,goodsAreaNumber,website,originPlace,originalPrice,currentPrice,goodsIntroduce,startTime,endTime,goodsStatus,priority
     </sql>
     <select id="selectAllGoods" resultType="Goods">
         select <include refid="selectFields"></include>
@@ -98,8 +98,4 @@
         select category from dispalyzone where categoryId = #{id}
     </select>
 
-
-    <select id="queryHotSearchKey" resultType="String">
-        select `key` from usersearchhot order by `time` desc limit 8
-    </select>
 </mapper>

@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ public interface IExhibitionService {
     List<Exhibition>queryReadyToStartExhibitionInfo();
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
     List<Exhibition> queryAll();
+    List<Goods> queryAllGoodsByExhibitionId(int exhibitionId);
+
+    List<Exhibition>queryOngoingExhibitionInfo();
 
 //    //查询所有
 //    List<Exhibition> queryAll();

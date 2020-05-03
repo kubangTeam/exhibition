@@ -45,10 +45,10 @@ public class GoodsJoinExhibitionMapperTests {
     public void before(){
         //生成测试数据
         //需要保证exhibitionId、goodsId、subAreaId都存在
-        //展会id为1 展区为1 商品id 52为公司id 1的商品
-        goodsJoinExhibition.setExhibitionId(1);
+        //展会id为1298 展区为9 商品id 52为公司id 1的商品
+        goodsJoinExhibition.setExhibitionId(1298);
         goodsJoinExhibition.setGoodsId(52);
-        goodsJoinExhibition.setSubareaId(1);
+        goodsJoinExhibition.setSubareaId(9);
 
         int row = goodsJoinExhibitionDao.insertGoodsJoinExhibition(goodsJoinExhibition);
         if(row ==1){
@@ -62,30 +62,17 @@ public class GoodsJoinExhibitionMapperTests {
             System.out.println("删除成功");
     }
 
-
-
-
     @Test
     public void testCheckGoodsSubarea(){
         //根据商品id、展会id、二级分类id，查询该商品是否参加
-        int row = goodsJoinExhibitionDao.checkGoodsSubarea(goodsJoinExhibition.getExhibitionId(),goodsJoinExhibition.getGoodsId()
+        GoodsJoinExhibition goodsJoinExhibition1 = goodsJoinExhibitionDao.checkGoodsSubarea(goodsJoinExhibition.getExhibitionId(),goodsJoinExhibition.getGoodsId()
                 ,goodsJoinExhibition.getSubareaId());
-        if(row ==1){
+        if(goodsJoinExhibition1!=null){
             System.out.println("该数据存在");
         }else
             System.out.println("该数据不存在");
 
     }
 
-    @Test
-    public void testCheckGoodsJoinOrNot(){
-        //根据商品id和展会id，查询该商品是否参加了该展会
-        int row = goodsJoinExhibitionDao.checkGoodsJoinOrNot(goodsJoinExhibition.getExhibitionId(),goodsJoinExhibition.getGoodsId());
-        if(row ==1){
-            System.out.println("该数据存在");
-        }else
-            System.out.println("该数据不存在");
-
-    }
 
 }

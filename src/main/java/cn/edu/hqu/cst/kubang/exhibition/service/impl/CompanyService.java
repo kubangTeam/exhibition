@@ -48,13 +48,15 @@ public class CompanyService implements ICompanyService {
     @Override
     public String CompanyIdentify(int userId, String name, String address,
                                 String website, String type, String introduce,
-                                String HeadPicture) {
+                                String tel, String headPicture) {
         Company company = new Company();
         company.setName(name);
         company.setAddress(address);
         company.setWebsite(website);
         company.setType(type);
         company.setIntroduction(introduce);
+        company.setTelephone(tel);
+        company.setHeadPicture(headPicture);
         //通过用户id获取用户的电话 头像
         User user = userDao.GetUserInfoFromId(userId);
         String msg = "";
@@ -75,10 +77,6 @@ public class CompanyService implements ICompanyService {
                     msg = "认证状态字段错误";
                 }
             } else {
-                String userPhone = user.getUserAccount();
-                String headPicture = user.getUserPicture();
-                company.setTelephone(userPhone);
-                company.setHeadPicture(headPicture);
                 //公司认证状态 1：上传成功，等待审核
                 company.setIdentifyStatus(1);
                 //将个人信息表的公司字段填上公司信息表的主键
@@ -96,7 +94,6 @@ public class CompanyService implements ICompanyService {
         else {
             msg = "无此用户";
         }
-
         return msg;
     }
 

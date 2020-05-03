@@ -23,12 +23,6 @@
         id = #{id}
     </delete>
 
-    <select id="selectCompanyIdByExhibitionId" resultType="GoodsJoinExhibition">
-        select <include refid="selectFields"></include>
-        from goodsjoinexhibition
-        where exhibitionId = #{exhibitionId} and goodsId = #{goodsId}
-    </select>
-
     <select id="checkGoodsSubarea" resultType="GoodsJoinExhibition">
         select <include refid="selectFields"></include>
         from goodsjoinexhibition
