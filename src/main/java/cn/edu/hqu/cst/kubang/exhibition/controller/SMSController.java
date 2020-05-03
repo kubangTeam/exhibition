@@ -15,10 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +30,7 @@ public class SMSController {
     @Autowired
     private UserCodeDao smsDao;
 
+    @Autowired
     IShortMessageService smsService;
 
     @Autowired
@@ -42,9 +40,10 @@ public class SMSController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query"),
     })
-    @RequestMapping(value = "/send", method = RequestMethod.GET)
+    @RequestMapping("/send")
+    @ResponseBody
     public ResponseJson<String> sendVerifyCode(@RequestParam("phoneNumber")String phoneNumber){
-        //System.out.println("SMS send called");
+        System.out.println("SMS send called");
 
         int result = smsService.sendShortMessage(phoneNumber);
         if(result ==101){
@@ -62,7 +61,7 @@ public class SMSController {
             userCode.setSendingTime(sendingTime);
             userCode.setCode(String.valueOf(result));
             smsDao.saveUserCode(userCode);
-            return new ResponseJson(true, "005", "验证码输入正确", null);
+            return new ResponseJson(true, "005", "验证码已发送", null);
         }
     }
 
@@ -73,7 +72,8 @@ public class SMSController {
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
     })
-    @PostMapping("/check/register")
+    @RequestMapping("/check/register")
+    @ResponseBody
     public ResponseJson<String> registerCheckCode(@RequestParam("phoneNumber") String phoneNumber
             , @RequestParam("password") String password, @RequestParam("verifyCode") String verifyCode
             , @RequestParam("recCode") String recCode) {
