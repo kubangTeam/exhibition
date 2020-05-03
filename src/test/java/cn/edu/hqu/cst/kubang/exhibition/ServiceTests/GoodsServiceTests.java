@@ -31,4 +31,11 @@ public class GoodsServiceTests {
         System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1));
     }
 
+    @Test
+    public void testQueryAllGoodsByCategoryId(){
+        System.out.println(goodsService.queryAllGoodsByCategoryId(1).size());
+        System.out.println(goodsService.queryAllGoodsByCategoryId(1));
+    }
+
+
 }
