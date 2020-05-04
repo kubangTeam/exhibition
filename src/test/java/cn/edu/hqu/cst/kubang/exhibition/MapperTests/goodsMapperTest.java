@@ -37,9 +37,11 @@ public class goodsMapperTest {
         for(int i = 0;i < list.size();i++){
            System.out.println(list.get(i));
         }*/
-        System.out.println(goodsDao.selectAllGoods().size());
+        //System.out.println(goodsDao.selectAllGoods().size());
         //System.out.println(goodsDao.selectCategoryNameById(1));
        // System.out.println(goodsDao.selectCompanyNameById(1));
+        System.out.println(goodsDao.selectRandomGoods(3,0));
+        System.out.println(goodsDao.selectRandomGoods(3,1));
 
     }
     @Test
@@ -61,7 +63,8 @@ public class goodsMapperTest {
     @Test
     public void testUpdateStatus(){
         for(int i = 1 ;i<=103;i++) {
-            goodsDao.updateStatus(i, 1);
+            goodsDao.updateStatus(i, 2);
+
         }
     }
 

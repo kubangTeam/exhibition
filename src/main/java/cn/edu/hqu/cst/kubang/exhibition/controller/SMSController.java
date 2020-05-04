@@ -71,8 +71,8 @@ public class SMSController {
     @ApiOperation(value = "手机号码注册")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "pwd", value = "用户密码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "password", value = "用户密码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
     })
     @GetMapping("/check/register")
@@ -82,7 +82,6 @@ public class SMSController {
                                                   @RequestParam("verifyCode") String verifyCode,
                                                   @RequestParam("recCode") String recCode) {
         Boolean res = smsService.checkCode(phoneNumber, verifyCode);
-        JsonBuilder json = new JsonBuilder();
         if (res) {
             boolean userPhoneSingle = smsService.isUserPhoneSingle(phoneNumber);
             if (userPhoneSingle) {

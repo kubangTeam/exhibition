@@ -11,7 +11,7 @@
     <select id="selectAllGoods" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where goodsStatus=1
+        where goodsStatus = 2
     </select>
     <select id="selectGoodsById" resultType="Goods">
            select <include refid="selectFields"></include>
@@ -97,6 +97,15 @@
 
     <select id="selectCategoryNameByCategoryId" parameterType="int" resultType="String">
         select category from dispalyzone where categoryId = #{id}
+    </select>
+    <select id="selectRandomGoods" parameterType="int" resultType="Goods">
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where goodsId >= (select floor(RAND() * (select MAX(goodsId) from goodsintroduce)))
+        <if test="categoryId!='0'.toString()">
+            and categoryId = #{categoryId}
+        </if>
+        order by goodsId limit 0,#{num}
     </select>
 
 </mapper>

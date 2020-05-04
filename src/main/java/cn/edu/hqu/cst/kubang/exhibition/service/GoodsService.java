@@ -146,7 +146,7 @@ public class GoodsService implements Constants {
         company =companyDao.selectCompanyInformationById(goods.getCompanyId());
         return  company;
     }
-    public List getGoodsIdInRedis(){
+   /* public List getGoodsIdInRedis(){
         Set sets = redisKeyDb.opsForZSet().range("Goods",0, -1);
         return new ArrayList<>(sets);
     }
@@ -181,5 +181,9 @@ public class GoodsService implements Constants {
         return true;
 
 
-    }
+    }*/
+   public List<Goods> getRandomGoods(int num, int categoryId){
+       List<Goods> list = this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, categoryId));
+       return list;
+   }
 }

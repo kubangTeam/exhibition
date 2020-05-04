@@ -72,7 +72,6 @@ public class GoodsController implements Constants {
         this.elasticsearchService = elasticsearchService;
     }
 
-    //从list中随机取nums个不重复的元素
     private <T> List<T> getRandomNumList(int nums, List<T> list) {
         List<T> result = new ArrayList<>();
         List temp = new ArrayList<>();
@@ -91,51 +90,26 @@ public class GoodsController implements Constants {
     @ApiOperation(value = "展品猜你喜欢", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/recommend", method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String, Object>> getRecommendGoods() {
-        List<Map<String, Object>> list = new ArrayList<>();
-        int recNum = COUNT_RECOMMEND;
-        List<Integer> goodsIdList = goodsService.getGoodsIdInRedis();
-        List<Integer> recId = getRandomNumList(recNum,goodsIdList);
-        for (Integer goodsId : recId) {
-            if (goodsService.queryGoodsStatus(goodsId) == STATE_IS_ON_SHOW) {
-                Goods goods = goodsService.queryGoodsById(goodsId);
-                GoodsPic goodsPic = goodsService.queryGoodsPic(goodsId).get(0);
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put("goodsId", goods.getGoodsId());
-                map.put("goodsName", goods.getGoodsName());
-                map.put("categoryId", goods.getCategoryId());
-                map.put("goodsAreaNumber", goods.getGoodsAreaNumber());
-                map.put("companyId", goods.getCompanyId());
-                map.put("website", goods.getWebsite());
-                map.put("originPlace", goods.getOriginPlace());
-                map.put("originalPrice", goods.getOriginalPrice());
-                map.put("currentPrice", goods.getCurrentPrice());
-                map.put("goodIntroduce", goods.getGoodsIntroduce());
-                map.put("goodsStatus", goods.getGoodsStatus());
-                // map.put("identifyStatus", goods.getIdentifyStatus());
-                map.put("priority", goods.getPriority());
-                if(goodsPic != null)
-                    map.put("image", goodsPic.getPic());
-                list.add(map);
-            }
-        }
-        return list;
+    public List<Goods> getRecommendGoods() {
+        return goodsService.getRandomGoods(COUNT_RECOMMEND,0);
     }
 
     //热门展品  个数：recNum  goodsStatus为0的不推荐
     @ApiOperation(value = "热门展品", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
-    public List<Map<String, Object>> getHotGoods() {
-        List<Map<String, Object>> list = this.getRecommendGoods();
-        return list;
+    public List<Goods> getHotGoods() {
+        return goodsService.getRandomGoods(COUNT_RECOMMEND,0);
     }
 
     @ApiOperation(value = "根据一级分类Id推荐4个展品", notes = "重新请求可实现“换一批”")
     @RequestMapping(path = "/fourGoods", method = RequestMethod.GET)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "categoryId", value = "分类ID", required = true, dataType = "int", paramType = "query")
+    })
     @ResponseBody
     public List<Goods> recommendGoodsByCategoryId(int categoryId) {
-        List<Goods> list = goodsService.queryAllGoodsByCategoryId(categoryId);
-        return getRandomNumList(4, list);
+
+        return goodsService.getRandomGoods(4,categoryId);
 
     }
     //根据展品Id查询所有在展的商品；
@@ -246,7 +220,7 @@ public class GoodsController implements Constants {
             code = "005";
             goodsId = goods.getGoodsId();
             //将goodsId存到Redis中
-            goodsService.addGoodsIntoRedis(goodsId);
+            //goodsService.addGoodsIntoRedis(goodsId);
         } else {
             infoValue = "添加失败";
             code = "-008";

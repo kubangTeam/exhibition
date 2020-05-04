@@ -24,21 +24,14 @@ public class GoodsServiceTests {
     @Autowired
     private IExhibitionService exhibitionService;
 
-    @Autowired
-    private Company company;
 
     @Test
-    public void testSelectCompanyInformationByGoodsId() throws Exception {
-        /*company = goodsService.selectCompanyInformationByGoodsId(1);
-        System.out.println(company);*/
-        //System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1));
-        //System.out.println(goodsService.updateGoodsInRedis());
-        //System.out.println(goodsService.getGoodsIdInRedis().size());
-        List<Goods> list = goodsService.queryGoodsALl();
+    public void updateRedis() throws Exception {
+        /*List<Goods> list = goodsService.queryGoodsALl();
         System.out.println(list.size());
         for(Goods goods : list){
             goodsService.addGoodsIntoRedis(goods.getGoodsId());
-        }
+        }*/
 
     }
 

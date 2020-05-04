@@ -40,4 +40,6 @@ public interface GoodsDao {
     // 通过分类id查找对应的名字
     String selectCategoryNameByCategoryId(int id);
 
+    List<Goods> selectRandomGoods(@Param("num")int num, @Param("categoryId")int categoryId);
+
 }
