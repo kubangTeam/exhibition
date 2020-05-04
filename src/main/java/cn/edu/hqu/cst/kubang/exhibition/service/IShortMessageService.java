@@ -10,7 +10,7 @@ public interface IShortMessageService {
     int sendShortMessage(String phoneNumber);
 
     // 保存用户临时信息，包括手机号、验证码、验证码发送的时间
-    void saveUserCode(UserCode userCode);
+    int saveUserCode(UserCode userCode);
 
     //根据邮箱查询对应的验证码和发送验证码的时间
     UserCode queryUserCodeByPhone(String phone);

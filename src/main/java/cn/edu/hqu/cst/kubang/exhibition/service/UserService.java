@@ -21,7 +21,10 @@ public class UserService {
         User user = new User();
         user.setUserAccount(phoneNumber);
         user.setUserPassword(password);
+        user.setUserName(phoneNumber);
+        user.setUserPermission(0);
         user.setUserReccode(recCode);
+        user.setUserIntegral(0);
         return userDao.UserRegisterFromPhoneNumber(user);
     }
 

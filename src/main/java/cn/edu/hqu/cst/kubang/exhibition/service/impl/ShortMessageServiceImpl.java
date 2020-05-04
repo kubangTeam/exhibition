@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UIDGenerator;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 @Service
 public class ShortMessageServiceImpl implements IShortMessageService
@@ -70,6 +72,7 @@ public class ShortMessageServiceImpl implements IShortMessageService
     {
         //产生随机验证码
         int verifyCode = (int) ((Math.random() * 9 + 1) * 100000);
+        //String verifyCode = UIDGenerator.getUUID();
 
         DefaultProfile profile = DefaultProfile.getProfile("default",
                 accessKeyId, accessKeySecret);
@@ -87,7 +90,8 @@ public class ShortMessageServiceImpl implements IShortMessageService
         request.putQueryParameter("PhoneNumbers", phoneNumber);
         request.putQueryParameter("SignName", signName);
         request.putQueryParameter("TemplateCode", templateCode);
-        request.putQueryParameter("TemplateParam", "{\"code\":" + verifyCode + "}");
+        request.putQueryParameter("TemplateParam", "{\"code\": "+ verifyCode + "}");
+        //request.putQueryParameter("TemplateParam", verifyCode);
         try {
             CommonResponse response = client.getCommonResponse(request);
         } catch (ServerException e) {
@@ -101,17 +105,21 @@ public class ShortMessageServiceImpl implements IShortMessageService
     }
 
     @Override
-    public void saveUserCode(UserCode userCode) {
-        userCodeDao.saveUserCode(userCode);
+    public int  saveUserCode(UserCode userCode) {
+
+        int row = userCodeDao.saveUserCode(userCode);
+        return row;
     }
 
     @Override
     public UserCode queryUserCodeByPhone(String phone) {
+
         return userCodeDao.queryUserCodeByAccount(phone);
     }
 
     @Override
     public boolean isUserPhoneSingle(String phoneNumber) {
-         return userDao.GetUseInfoFromAccount(phoneNumber) == null;
+
+        return userDao.GetUseInfoFromAccount(phoneNumber) == null;
     }
 }
