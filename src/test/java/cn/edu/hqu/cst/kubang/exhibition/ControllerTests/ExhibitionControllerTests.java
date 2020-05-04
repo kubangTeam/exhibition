@@ -108,7 +108,7 @@ public class ExhibitionControllerTests {
     @Test
     public void testQueryReadyToStartExhibitionInfo() throws Exception{
         //查询即将开展的展会列表 一页8个
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/1"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -116,8 +116,8 @@ public class ExhibitionControllerTests {
         //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
-        System.out.println(status);
-        System.out.println(content);
+        //System.out.println(status);
+        //System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
@@ -125,7 +125,7 @@ public class ExhibitionControllerTests {
 
     @Test
     public void testQueryOngoingExhibitionInfo() throws Exception{
-        //根据展会id查询展会分区信息
+
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -135,7 +135,7 @@ public class ExhibitionControllerTests {
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
         System.out.println(status);
-        System.out.println(content);
+        //System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }

@@ -150,8 +150,8 @@ public class ExhibitionController {
     })
     @GetMapping("/queryReadyToStartExhibitionInfo/{pageNum}")
     public PageInfo<Exhibition> readyToStartExhibitionInfo(@PathVariable int pageNum) {
+        PageHelper.startPage(pageNum, 8);
         List<Exhibition> exhibitionList =exhibitionService.queryReadyToStartExhibitionInfo();
-        PageHelper.startPage(pageNum, pageSize2);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -177,9 +177,9 @@ public class ExhibitionController {
     })
     @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
     public PageInfo<Exhibition> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
-        //System.out.println(exhibitionService.queryOngoingExhibitionInfo());
+       //先要声明pagehelper
+        PageHelper.startPage(pageNum, 4);
         List<Exhibition> exhibitionList = exhibitionService.queryOngoingExhibitionInfo();
-        PageHelper.startPage(1, 4);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
