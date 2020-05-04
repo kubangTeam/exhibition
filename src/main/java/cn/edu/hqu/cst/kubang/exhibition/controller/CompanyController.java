@@ -77,12 +77,13 @@ public class CompanyController {
             @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "file", value = "企业营业执照", required = true, dataType = "MultipartFile", paramType = "query")
     })
     @PostMapping("/identify")
     /**
-     * 公司认证功能：前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、简介、营业执照
+     * 公司认证功能：前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、电话、简介、营业执照
      *
      */
     public Map<String, String> CompanyIdentify(@RequestParam(value = "userId") int userId,

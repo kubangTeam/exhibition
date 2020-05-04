@@ -51,6 +51,7 @@ public class LocationController {
     })
     @GetMapping("/city")
     public List<City> getAllCities(Integer provinceCode) {
+
         return locationService.getAllCities(provinceCode);
     }
 
