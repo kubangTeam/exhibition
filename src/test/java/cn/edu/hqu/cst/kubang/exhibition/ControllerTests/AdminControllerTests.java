@@ -57,7 +57,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testQueryExhibition() throws Exception{
+    public void testQueryExhibitionByStatus() throws Exception{
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryExhibitionByStatus/2/1"))//状态为1 页数为1
                 //.param("pageNum","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

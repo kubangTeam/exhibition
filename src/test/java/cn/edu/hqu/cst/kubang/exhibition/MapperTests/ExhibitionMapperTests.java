@@ -57,17 +57,9 @@ public class ExhibitionMapperTests {
 
     @After
     public void after(){
-        //真删除 删除全部
-//        if(exhibitionDao.deleteAll()==1)
-//            System.out.println("删除成功");
         if(exhibitionDao.deleteById(exhibition.getId())==1)
             System.out.println("删除成功");
 
-    }
-    @Test
-    public void testDeleteById(){
-        int row  =exhibitionDao.deleteById(1305);
-        System.out.println(row);
     }
 
     @Test

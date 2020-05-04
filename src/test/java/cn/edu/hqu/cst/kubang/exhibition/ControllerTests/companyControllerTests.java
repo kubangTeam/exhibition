@@ -29,9 +29,7 @@ import java.io.FileInputStream;
 @WebAppConfiguration
 @AutoConfigureMockMvc
 public class companyControllerTests {
-    // /company
 // *  1、/identify 公司认证
-// *  2、/getInformation 获取公司资料
 // *  3、/updateInformation 修改商家资料
 // *  4、/queryAttendedExhibition/{userId}/{pageNum} 商家查询自己公司的参加过的展会
     @Autowired
@@ -40,22 +38,7 @@ public class companyControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void testGetInformation() throws Exception{
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformation")
-                .param("id","1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
 
-        mvcResult.getResponse().setCharacterEncoding("UTF-8");
-        //mvcResult.andDo(print()).andExpect(status().isOk());
-        int status=mvcResult.getResponse().getStatus();
-        String content =mvcResult.getResponse().getContentAsString();
-        System.out.println(status);
-        System.out.println(content);
-        Assert.assertEquals(200,status);
-        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-    }
 
     @Test
     public void testGetComapnyInformationById() throws Exception{
@@ -103,7 +86,8 @@ public class companyControllerTests {
                 .param("address","测试地址")
                 .param("website","www.test.com")
                 .param("type","1")
-                .param("introduce","这是一条测试代码"))
+                .param("introduce","这是一条测试代码")
+                .param("tel","11111111111"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         mvcResult.getResponse().setCharacterEncoding("UTF-8");

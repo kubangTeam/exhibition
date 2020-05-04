@@ -54,4 +54,10 @@
             select last_insert_id()
         </selectKey>
     </insert>
+
+
+    <delete id="deleteUser" parameterType="int">
+        delete from userinformation
+        where id = #{userId}
+    </delete>
  </mapper>

@@ -38,7 +38,6 @@ public class userInformationTests  {
     @Before
     public void before(){
         //生成测试数据
-
         user.setUserAccount("11111111111");
         //userInformation.setUserCompanyId(1);
         user.setUserName("测试数据");
@@ -58,8 +57,7 @@ public class userInformationTests  {
 
     @After
     public void after(){
-        System.out.println(user);
-        int row = userDao.deleteUser(user.getUserId());
+        int row = userDao.deleteUserInformation(user.getUserId());
         if(row==1)
             System.out.println("删除数据成功");
     }
@@ -75,6 +73,7 @@ public class userInformationTests  {
         User row = userDao.GetUseInfoFromAccount(user.getUserAccount());
         System.out.println(row);
     }
+
     @Test
     public void testGetUserInfoFromId(){
         User row = userDao.GetUserInfoFromId(user.getUserId());

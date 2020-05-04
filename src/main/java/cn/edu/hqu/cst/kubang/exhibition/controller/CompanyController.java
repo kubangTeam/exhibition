@@ -104,14 +104,14 @@ public class CompanyController {
             String webPath = domain + contextPath + "/images/company/";
             String pic = UploadFile.uploadFile(uploadPath, webPath, file);
 
-            String status = "";
+            Map<String, Object> map = new HashMap<>();
             try{
-                status = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
+               map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
             }
             catch (Exception e){
                 System.out.println(e);
             }
-            value = status;
+            value = (String)map.get("msg");
             code = "005";
         }
         Map<String, String> map = new HashMap<>();
@@ -121,29 +121,29 @@ public class CompanyController {
     }
 
 
-    @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：用户ID")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "int", paramType = "query")
-    })
-    @GetMapping("/getInformation")
-    /**
-     * 获取公司资料：前端根据账号Id查询商家资料
-     */
-    public Map<String, Object> getCompanyInformation(@RequestParam(value = "id") int id) {
-        Map<String, Object> map = new HashMap<>();
-        //判断该账号是否认证为商家账号
-        int companyId = userService.isCompanyOrNot(id);
-        if (companyId != 0) {
-            company = companyDao.selectCompanyInformationById(companyId);
-            String value = "该用户已通过商家认证";
-            map.put("response", value);
-            map.put("companyInformation", company);
-        } else {
-            String value = "该用户未通过商家认证";
-            map.put("response", value);
-        }
-        return map;
-    }
+//    @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：用户ID")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "int", paramType = "query")
+//    })
+//    @GetMapping("/getInformation")
+//    /**
+//     * 获取公司资料：前端根据账号Id查询商家资料
+//     */
+//    public Map<String, Object> getCompanyInformation(@RequestParam(value = "id") int id) {
+//        Map<String, Object> map = new HashMap<>();
+//        //判断该账号是否认证为商家账号
+//        int companyId = userService.isCompanyOrNot(id);
+//        if (companyId != 0) {
+//            company = companyDao.selectCompanyInformationById(companyId);
+//            String value = "该用户已通过商家认证";
+//            map.put("response", value);
+//            map.put("companyInformation", company);
+//        } else {
+//            String value = "该用户未通过商家认证";
+//            map.put("response", value);
+//        }
+//        return map;
+//    }
 
     @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：商家ID")
     @ApiImplicitParams({

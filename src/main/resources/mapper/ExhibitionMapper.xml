@@ -28,10 +28,6 @@
         where id = #{id}
     </select>
 
-
-
-
-
     <select id="queryExhibitionDetailsByID" parameterType="int" resultType="ExhibitionNew">
         select exhibitiondetail.id id,`name`,startTime,endTime,exhibitionName address,
         introduction from exhibitiondetail inner join exhibitionhall on exhibitiondetail.exhibitionHallId = exhibitionhall.id

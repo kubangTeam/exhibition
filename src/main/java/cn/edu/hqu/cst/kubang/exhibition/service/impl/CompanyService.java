@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CompanyService implements ICompanyService {
@@ -46,9 +48,12 @@ public class CompanyService implements ICompanyService {
 
 
     @Override
-    public String CompanyIdentify(int userId, String name, String address,
-                                String website, String type, String introduce,
-                                String tel, String headPicture) {
+    public Map<String, Object> CompanyIdentify(int userId, String name, String address,
+                                               String website, String type, String introduce,
+                                               String tel, String headPicture) {
+        String msg = null;
+        Integer companyId =null;
+
         Company company = new Company();
         company.setName(name);
         company.setAddress(address);
@@ -57,24 +62,26 @@ public class CompanyService implements ICompanyService {
         company.setIntroduction(introduce);
         company.setTelephone(tel);
         company.setHeadPicture(headPicture);
-        //通过用户id获取用户的电话 头像
+
         User user = userDao.GetUserInfoFromId(userId);
-        String msg = "";
         if(user != null) {
-            Company _company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
-            if (_company != null) {
-                if (_company.getIdentifyStatus() == 0) {
-                    msg = "该账号信息本地保存，等待正式上传";
-                } else if (_company.getIdentifyStatus() == 1) {
-                    msg = "该账号正在等待审核";
-                } else if (_company.getIdentifyStatus() == 2) {
-                    msg = "该账号已通过审核";
-                } else if (_company.getIdentifyStatus() == 3) {
-                    msg = "该账号审核未通过";
-                } else if (_company.getIdentifyStatus() == 4) {
-                    msg = "该账号已删除";
-                } else {
-                    msg = "认证状态字段错误";
+            companyId = user.getUserCompanyId();
+            if(companyId!=null){
+                Company _company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
+                if (_company != null) {
+                    if (_company.getIdentifyStatus() == 0) {
+                        msg = "该账号信息本地保存，等待正式上传";
+                    } else if (_company.getIdentifyStatus() == 1) {
+                        msg = "该账号正在等待审核";
+                    } else if (_company.getIdentifyStatus() == 2) {
+                        msg = "该账号已通过审核";
+                    } else if (_company.getIdentifyStatus() == 3) {
+                        msg = "该账号审核未通过";
+                    } else if (_company.getIdentifyStatus() == 4) {
+                        msg = "该账号已删除";
+                    } else {
+                        msg = "认证状态字段错误";
+                    }
                 }
             } else {
                 //公司认证状态 1：上传成功，等待审核
@@ -83,6 +90,7 @@ public class CompanyService implements ICompanyService {
                 if (companyDao.addUnidentifiedCompanyInfo(company) > 0) {
                     if (userDao.setCompanyId(userId, company.getId()) > 0) {
                         msg = "公司认证信息上传成功";
+                        companyId =  company.getId();
                         //将公司信息保存到ES服务器
                         companyRepository.save(company);
                     }
@@ -94,7 +102,11 @@ public class CompanyService implements ICompanyService {
         else {
             msg = "无此用户";
         }
-        return msg;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("msg", msg);
+        map.put("company",companyId);
+        return map;
     }
 
     //查看公司所参加的展会

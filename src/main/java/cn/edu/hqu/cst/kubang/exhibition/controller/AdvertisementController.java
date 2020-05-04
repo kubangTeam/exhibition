@@ -33,6 +33,7 @@ public class AdvertisementController {
      * 获取推荐的广告横幅
      */
     public PageInfo<Advertisement> getCompanyInformation(){
+
         return advertisementService.recommendAds();
     }
 
