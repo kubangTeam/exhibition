@@ -2,10 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.ComparatorImpl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
-import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
-import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
@@ -41,9 +38,22 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
 
+    @Autowired
+    private ExhibitionHallSeviceImpl exhibitionHallSevice;
+
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10个
 
+
+//    public Map<String,Object> addExhibitionCity(Exhibition exhibition){
+//        String city = exhibitionHallSevice.findCityNameByCityCode(exhibition.getExhibitionHallId());
+//        //String Exhibition = null;
+//        //String CityName = null;
+//        Map<String ,Object>map = new HashMap<>();
+//        map.put("Exhibition",exhibition);
+//        map.put("CityName",city);
+//        return map;
+//    }
 
     @Override
     public int holdExhibition(int Id, String name, Date startTime,
@@ -110,6 +120,9 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
             }
         }
         System.out.println(exhibitionList);
+
+        //添加展会
+
         return exhibitionList;
     }
 

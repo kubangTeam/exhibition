@@ -16,4 +16,8 @@ public interface LocationDao {
 
     // 获取所有市的信息
     List<City> getAllCities(Integer provinceCode);
+
+    City getCityByCode(int code);
+
+
 }

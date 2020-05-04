@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionHallDao">
+
+    <select id="selectExhibitionHallByName" resultType="ExhibitionHall">
+        select * from exhibitionhall
+        where exhibitionName = #{exhibitionName}
+    </select>
+
+    <select id="selectExhibitionHallById" resultType="ExhibitionHall">
+        select * from exhibitionhall
+        where id = #{id}
+    </select>
+
+</mapper>

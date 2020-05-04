@@ -11,4 +11,10 @@
     <select id="getAllCities" parameterType="int" resultType="City">
         select * from city where provinceCode = #{provinceCode}
     </select>
+
+
+    <select id="getCityByCode" parameterType="int" resultType="City">
+        select * from city where
+        code = #{code}
+    </select>
 </mapper>
