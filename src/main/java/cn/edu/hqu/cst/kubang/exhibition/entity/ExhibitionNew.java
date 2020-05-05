@@ -30,5 +30,5 @@ public class ExhibitionNew implements Serializable {
     private Date endTime;
     private String address;
     private String introduction;
-    private List<String> picture;
+    private String picture;
 }

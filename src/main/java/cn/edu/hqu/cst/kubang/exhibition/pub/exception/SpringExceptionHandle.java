@@ -41,6 +41,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseJson<String> badRequestNotFound(BindException e) {
         logger.error("404错误异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, null, ResponseCodeEnums.NOT_FOUND);
     }
 
@@ -50,6 +51,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseJson<String> mybatis(Exception e) {
         logger.error("mybatis未绑定异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, ResponseCodeEnums.BOUND_STATEMENT_NOT_FOUNT);
     }
 
@@ -60,6 +62,7 @@ public class SpringExceptionHandle {
     public <T> ResponseJson<T> sendError(UnicomRuntimeException exception, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         logger.error("自定义异常： ", requestURI, exception.getMsg());
+        System.out.println(exception.getCause().getCause() + ": " + exception.getCause().getMessage());
         return new ResponseJson<>(false, exception.getCode(), exception.getMsg());
     }
 
@@ -69,6 +72,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseJson<String> systemError(Exception e) {
         logger.error("数据库操作出现异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, ResponseCodeEnums.DATABASE_ERROR);
     }
 
@@ -78,6 +82,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseJson<String> connect(Exception e) {
         logger.error("网络连接异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, ResponseCodeEnums.CONNECTION_ERROR);
     }
     //参数异常
@@ -86,6 +91,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public ResponseJson<String> errParam(Exception e) {
         logger.error("参数异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, ResponseCodeEnums.ILLEGAL_ARGUMENT);
     }
     //其他异常
@@ -94,6 +100,7 @@ public class SpringExceptionHandle {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public ResponseJson<String> notAllowed(Exception e) {
         logger.error("未知异常： ", e.getMessage());
+        System.out.println(e.getCause().getCause() + ": " + e.getCause().getMessage());
         return new ResponseJson<>(false, ResponseCodeEnums.METHOD_NOT_ALLOWED);
     }
 }

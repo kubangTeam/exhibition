@@ -119,7 +119,7 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
                 it.remove();
             }
         }
-        System.out.println(exhibitionList);
+//        System.out.println(exhibitionList);
 
         //添加展会
 
@@ -132,9 +132,6 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Override
     public ExhibitionNew queryExhibitionDetailById(int exhibitionId) {
         ExhibitionNew exhibitionNew = exhibitionDao.queryExhibitionDetailsByID(exhibitionId);
-        List<String> exhibitionPic = exhibitionDao.queryExbitionPicById(exhibitionId);
-        exhibitionNew.setPicture(exhibitionPic);
-//        System.out.println(exhibitionNew.toString());
         return exhibitionNew;
     }
 
@@ -187,8 +184,8 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
         //按照起始时间排序 选取开始时间最早的四个
         Comparator comp = new ComparatorImpl();
         Collections.sort(exhibitionList,comp);
-        List<Exhibition>onGoingExhibitionList = exhibitionList.subList(0,4);
-        return onGoingExhibitionList;
+//        List<Exhibition>onGoingExhibitionList = exhibitionList.subList(0,4);
+        return exhibitionList;
     }
 
     private List<Goods> insertImageIntoGoods(List<Goods> list){
