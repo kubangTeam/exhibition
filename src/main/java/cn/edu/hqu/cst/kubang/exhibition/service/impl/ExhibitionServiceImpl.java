@@ -117,7 +117,6 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Override
     public Map<String,Object> queryReadyToStartExhibitionInfo(int pageNum) {
         Map<String,Object> map = new HashMap<>();
-        int maxPage = 0;
         List<Exhibition> readyToStartExhibition =null;
         String info = null;
         //查询审核通过的展会列表
@@ -177,9 +176,6 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Override
     public Map<String,Object> queryOngoingExhibitionInfo(int pageNum) {
         Map<String,Object> map = new HashMap<>();
-        int maxPage = 0;
-        List<Exhibition> onGoingExhibitionList =null;
-        String info = null;
         //查询审核通过的展会列表 初审通过为2 终审通过为5
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
         //获取当前时间

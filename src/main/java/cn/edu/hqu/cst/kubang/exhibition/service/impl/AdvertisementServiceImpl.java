@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.AdvertisementDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Advertisement;
@@ -64,7 +65,7 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
     //推荐广告页，每一页8个，暂时只推荐一个页面
     @Override
     @NullDisable
-    public PageInfo<Advertisement> recommendAds() {
+    public Map<String,Object>  recommendAds(int pageNum) {
         //1、筛选出通过审核的广告页 状态为2：审核通过
         //2、判断时间：开始时间早于当前时间，结束时间晚于当前时间；若过期则修改其状态为假删除
         //3、判断优先级：优先级从高到底为2 1 0 ，按照332来排列 前三个为高优先级，后三个为中优先级，最后两个为低优先级；
@@ -110,9 +111,9 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
 
         //合并list集合
         advertisementList = combineMultiList(priority2, priority1, priority0);
-        PageHelper.startPage(1, pageSize2);
-        PageInfo<Advertisement> pageInfo = new PageInfo<>(advertisementList);
-        return pageInfo;
+        Map<String,Object> map = new HashMap<>();
+        map = Pagination.paginationAds(pageNum,pageSize2,advertisementList);
+        return map;
     }
 
     //检查发起的申请

@@ -3,6 +3,8 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Advertisement;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.AdvertisementServiceImpl;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -28,12 +30,20 @@ public class AdvertisementController {
     AdvertisementServiceImpl advertisementService;
 
     @ApiOperation(value = "返回推荐的横幅",notes = "前端调用即可，一页8个")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
+    })
     @GetMapping("/get")
     /**
      * 获取推荐的广告横幅
      */
-    public PageInfo<Advertisement> getCompanyInformation(){
-        return advertisementService.recommendAds();
+    public ResponseJson<Map<String,Object>> getCompanyInformation(@RequestParam(value = "pageNum") int pageNum){
+        Map<String,Object>map = advertisementService.recommendAds(pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
 }
