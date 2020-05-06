@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
@@ -149,11 +150,13 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryReadyToStartExhibitionInfo/{pageNum}")
-    public PageInfo<Exhibition> readyToStartExhibitionInfo(@PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, 8);
-        List<Exhibition> exhibitionList =exhibitionService.queryReadyToStartExhibitionInfo();
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+    public ResponseJson<Map<String,Object>> readyToStartExhibitionInfo(@PathVariable int pageNum) {
+        Map<String,Object>map = exhibitionService.queryReadyToStartExhibitionInfo(pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
     /**
@@ -176,12 +179,13 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
-    public PageInfo<Exhibition> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
-       //先要声明pagehelper
-        PageHelper.startPage(pageNum, 4);
-        List<Exhibition> exhibitionList = exhibitionService.queryOngoingExhibitionInfo();
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
+        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo(pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
 

@@ -44,6 +44,12 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10个
 
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8个
+
+    @Value("${pagehelper.pageSize3}")
+    private int pageSize3;//一页显示4个
+
 
 //    public Map<String,Object> addExhibitionCity(Exhibition exhibition){
 //        String city = exhibitionHallSevice.findCityNameByCityCode(exhibition.getExhibitionHallId());
@@ -102,7 +108,11 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
 
     @Override
-    public List<Exhibition> queryReadyToStartExhibitionInfo() {
+    public Map<String,Object> queryReadyToStartExhibitionInfo(int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        int maxPage = 0;
+        List<Exhibition> readyToStartExhibition =null;
+        String info = null;
         //查询审核通过的展会列表
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
         //获取当前时间
@@ -119,11 +129,30 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
                 it.remove();
             }
         }
-//        System.out.println(exhibitionList);
 
-        //添加展会
 
-        return exhibitionList;
+        int i = (int)Math.floor(exhibitionList.size()/pageSize2);
+        float j = (float)exhibitionList.size()/pageSize2 -i;
+        if(j!=0)
+            maxPage = i+1;
+        else
+            maxPage = i;
+        if(pageNum>0 && pageNum<=maxPage){
+            if(pageNum ==maxPage && j!=0){
+                info = "残余尾页";
+                readyToStartExhibition  = exhibitionList.subList((pageNum-1)*pageSize2,exhibitionList.size());
+            }else{
+                info = "整数页";
+                readyToStartExhibition = exhibitionList.subList((pageNum-1)*pageSize2,pageSize2*pageNum);
+            }
+
+        }else{
+            info = "页数错误";
+        }
+        map.put("maxPage",maxPage);
+        map.put("info",info);
+        map.put("exhibitionList",readyToStartExhibition);
+        return map;
     }
 
     /**
@@ -162,7 +191,11 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     }
 
     @Override
-    public List<Exhibition> queryOngoingExhibitionInfo() {
+    public Map<String,Object> queryOngoingExhibitionInfo(int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        int maxPage = 0;
+        List<Exhibition> onGoingExhibitionList =null;
+        String info = null;
         //查询审核通过的展会列表 初审通过为2 终审通过为5
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
         //获取当前时间
@@ -184,8 +217,28 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
         //按照起始时间排序 选取开始时间最早的四个
         Comparator comp = new ComparatorImpl();
         Collections.sort(exhibitionList,comp);
-//        List<Exhibition>onGoingExhibitionList = exhibitionList.subList(0,4);
-        return exhibitionList;
+        int i = (int)Math.floor(exhibitionList.size()/pageSize3);
+        float j = (float)exhibitionList.size()/pageSize3 -i;
+        if(j!=0)
+            maxPage = i+1;
+        else
+            maxPage = i;
+        if(pageNum>0 && pageNum<=maxPage){
+            if(pageNum ==maxPage && j!=0){
+                info = "残余尾页";
+                onGoingExhibitionList  = exhibitionList.subList((pageNum-1)*pageSize3,exhibitionList.size());
+            }else{
+                info = "整数页";
+                onGoingExhibitionList = exhibitionList.subList((pageNum-1)*pageSize3,pageSize3*pageNum);
+            }
+
+        }else{
+            info = "页数错误";
+        }
+        map.put("maxPage",maxPage);
+        map.put("info",info);
+        map.put("exhibitionList",onGoingExhibitionList);
+        return map;
     }
 
     private List<Goods> insertImageIntoGoods(List<Goods> list){

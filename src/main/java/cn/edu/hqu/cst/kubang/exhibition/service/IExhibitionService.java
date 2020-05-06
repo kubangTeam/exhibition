@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  @author: 邢佳成
@@ -33,12 +34,12 @@ public interface IExhibitionService {
     //根据账号id和展会状态查询展会信息 若为管理员则对所有展会按照状态查询 若为承办方 则按照承办方的所举办的展会的状态来查询
     List<Exhibition>queryExhibitionInfoByUserIdAndStatus(int userId,int status);
 
-    List<Exhibition>queryReadyToStartExhibitionInfo();
+    Map<String,Object>queryReadyToStartExhibitionInfo(int pageNum);
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
     List<Exhibition> queryAll();
     List<Goods> queryAllGoodsByExhibitionId(int exhibitionId);
 
-    List<Exhibition>queryOngoingExhibitionInfo();
+    Map<String,Object> queryOngoingExhibitionInfo(int pageNum);
 
 //    //查询所有
 //    List<Exhibition> queryAll();
