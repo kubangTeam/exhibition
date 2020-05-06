@@ -132,11 +132,17 @@ public class GoodsService implements Constants {
     public int deleteGoodsPic(int picId){
         return goodsDao.deleteGoodsPic(picId);
     }
+
     private List<Goods> insertImageIntoGoods(List<Goods> list){
         for(Goods goods : list) {
-            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
-            String image = goodsPic.getPic();
-            goods.setImage(image);
+            List<GoodsPic> goodsPics= goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId());
+            if(goodsPics==null){
+                continue;
+            }else {
+                GoodsPic goodsPic = goodsPics.get(0);
+                String image = goodsPic.getPic();
+                goods.setImage(image);
+            }
         }
         return list;
     }

@@ -64,7 +64,7 @@ public class ExhibitionControllerTests {
     public void testGoodsQueryByExhibitionId() throws Exception{
         //根据展会id查询展会所有商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryGoodsByExhibitionId")
-                .param("exhibitionId","1298")
+                .param("exhibitionId","1")
                 .param("pageNum","1")
                 .param("pageSize","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -86,8 +86,8 @@ public class ExhibitionControllerTests {
     public void testQuerySubareaGoodsByExhibitionId() throws Exception{
         //根据展会id和二级id查询展会所有商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/querySubareaGoodsByExhibitionId")
-                .param("exhibitionId","1298")
-                .param("subareaId","9")
+                .param("exhibitionId","1")
+                .param("subareaId","3")
                 .param("pageNum","1")
                 .param("pageSize","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

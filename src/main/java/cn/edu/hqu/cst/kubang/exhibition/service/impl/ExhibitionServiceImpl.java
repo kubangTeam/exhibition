@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.ComparatorImpl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
@@ -49,6 +50,12 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
     @Value("${pagehelper.pageSize3}")
     private int pageSize3;//一页显示4个
+
+    @Autowired
+    private GoodsJoinExhibitionDao goodsJoinExhibitionDao;
+
+    @Autowired
+    private  GoodsJoinExhibition goodsJoinExhibition;
 
 
 //    public Map<String,Object> addExhibitionCity(Exhibition exhibition){
@@ -129,29 +136,7 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
                 it.remove();
             }
         }
-
-
-        int i = (int)Math.floor(exhibitionList.size()/pageSize2);
-        float j = (float)exhibitionList.size()/pageSize2 -i;
-        if(j!=0)
-            maxPage = i+1;
-        else
-            maxPage = i;
-        if(pageNum>0 && pageNum<=maxPage){
-            if(pageNum ==maxPage && j!=0){
-                info = "残余尾页";
-                readyToStartExhibition  = exhibitionList.subList((pageNum-1)*pageSize2,exhibitionList.size());
-            }else{
-                info = "整数页";
-                readyToStartExhibition = exhibitionList.subList((pageNum-1)*pageSize2,pageSize2*pageNum);
-            }
-
-        }else{
-            info = "页数错误";
-        }
-        map.put("maxPage",maxPage);
-        map.put("info",info);
-        map.put("exhibitionList",readyToStartExhibition);
+        map = Pagination.pagination(pageNum,pageSize2,exhibitionList);
         return map;
     }
 
@@ -170,25 +155,24 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     }
 
     @Override
-    public List<Goods> queryAllGoodsByExhibitionId(int exhibitionId){
-        List<Goods> result = new ArrayList<>();
-        List<Integer> companyIdList = new ArrayList<>();
-        List<CompanyJoinExhibition> companyJoinExhibitionList = companyJoinExhibitionDao.selectCompanyByExhibitionId(exhibitionId);
-        if(!companyJoinExhibitionList.isEmpty()){
-            for(CompanyJoinExhibition companyJoinExhibition : companyJoinExhibitionList) {
-                int companyId = companyJoinExhibition.getCompanyId();
-                companyIdList.add(companyId);
+    public Map<String,Object>  queryAllGoodsByExhibitionId(int exhibitionId,int pageNum){
+        List<Goods> goodsList =new ArrayList<Goods>();
+        List<GoodsJoinExhibition>goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId);
+        for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
+            if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
+                Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
+                goodsList.add(goods);
+            }else{
+                continue;
             }
         }
-        for(Integer companyId : companyIdList ){
-            List<Goods> goodsList = goodsDao.selectGoodsByCompanyId(companyId,2);//商品状态通过审核
-            List<Goods> list = this.insertImageIntoGoods(goodsList);
-            result.addAll(list);
-        }
-        //判断商品的认证状态和时候提交到该展会
-        return result;
-
+        goodsList = insertImageIntoGoods(goodsList);
+        Map<String,Object> map = new HashMap<>();
+        map = Pagination.paginationGoods(pageNum,pageSize3,goodsList);
+        return map;
     }
+
+
 
     @Override
     public Map<String,Object> queryOngoingExhibitionInfo(int pageNum) {
@@ -212,150 +196,44 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
                 it.remove();
             }
         }
-        //System.out.println(exhibitionList);
-        //return exhibitionList;
-        //按照起始时间排序 选取开始时间最早的四个
         Comparator comp = new ComparatorImpl();
         Collections.sort(exhibitionList,comp);
-        int i = (int)Math.floor(exhibitionList.size()/pageSize3);
-        float j = (float)exhibitionList.size()/pageSize3 -i;
-        if(j!=0)
-            maxPage = i+1;
-        else
-            maxPage = i;
-        if(pageNum>0 && pageNum<=maxPage){
-            if(pageNum ==maxPage && j!=0){
-                info = "残余尾页";
-                onGoingExhibitionList  = exhibitionList.subList((pageNum-1)*pageSize3,exhibitionList.size());
-            }else{
-                info = "整数页";
-                onGoingExhibitionList = exhibitionList.subList((pageNum-1)*pageSize3,pageSize3*pageNum);
-            }
+        map = Pagination.pagination(pageNum,pageSize3,exhibitionList);
+        return map;
+    }
 
-        }else{
-            info = "页数错误";
+    @Override
+    public Map<String, Object> queryGoodsByExhibitionIdAndSubareaId(int exhibitionId, int subAreaId, int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        List<GoodsJoinExhibition>goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionIdAndSubareaId(exhibitionId,subAreaId);
+        List<Goods> goodsList =new ArrayList<Goods>();
+
+        for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
+            if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
+                Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
+                goodsList.add(goods);
+            }else{
+                continue;
+            }
         }
-        map.put("maxPage",maxPage);
-        map.put("info",info);
-        map.put("exhibitionList",onGoingExhibitionList);
+        goodsList = insertImageIntoGoods(goodsList);
+        map = Pagination.paginationGoods(pageNum,pageSize3,goodsList);
         return map;
     }
 
     private List<Goods> insertImageIntoGoods(List<Goods> list){
         for(Goods goods : list) {
-            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
-            String image = goodsPic.getPic();
-            goods.setImage(image);
+            if(goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0)!=null){
+                GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+                String image = goodsPic.getPic();
+                goods.setImage(image);
+            }else{
+                //当商品没有图片时，删除该商品
+                list.remove(goods);
+            }
         }
         return list;
     }
 
-
-
-
-//    @Override
-//    @NullDisable
-//    public PageInfo<Exhibition> queryAllExhibitions(int pageNum) {
-//        PageHelper.startPage(pageNum, pageSize1);
-//        List<Exhibition> exhibitionList = exhibitionDao.queryAllExhibitions();
-//        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-//        return pageInfo;
-//    }
-//
-//
-//    //根据 状态查询所有 不包括删除
-//    @Override
-//    @NullDisable
-//    public PageInfo<Exhibition> queryExhibitionsByStatus(Integer status, int pageNum) {
-//        PageHelper.startPage(pageNum, pageSize1);
-//        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(status);
-//        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-//        return pageInfo;
-//    }
-//
-//    //根据 关键词查询所有  不包括删除
-//    @Override
-//    @NullDisable
-//    public PageInfo<Exhibition> queryExhibitionsByKeyWord(String keyWord, int pageNum) {
-//        PageHelper.startPage(pageNum, pageSize1);
-//        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
-//        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-//        return pageInfo;
-//    }
-//
-//    @Override
-//    public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
-//        return null;
-//    }
-//
-//    //根据状态和关键词查询 比如查找未通过审核的关键词为“1”的所有展品 不包括已删除
-//    @Override
-//    @NullDisable
-//    public PageInfo<Exhibition> queryExhibitionsByStatusAndKeyWord(String keyWord, int pageNum, Integer... status) {
-//        PageHelper.startPage(pageNum, pageSize1);
-//        List<Exhibition> keyList = exhibitionDao.queryExhibitionsByKeyWord(keyWord.split(" "));
-//        PageInfo<Exhibition> pageInfo = new PageInfo<>(keyList);
-//        return pageInfo;
-//    }
-//
-//    @Override
-//    public int saveExhibition(Exhibition exhibition) {
-//        if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
-//                && StringUtils.isEmpty(exhibition.getExhibitionHallId())) {
-//            System.out.println("name start_time end_time exhibiton_hall_id 不允许为空");
-//            return -1;
-//        }
-//        exhibition.setStatus(0);
-//        int i = exhibitionDao.saveExhibition(exhibition);
-//        return i;
-//    }
-//
-//    @Override
-//    public int modifyExhibition(Exhibition exhibition, Integer userId) {
-//        //在数据库中 name start_time end_time exhibiton_hall_id status为非空字段
-//        if (StringUtils.isEmpty(exhibition.getStartTime()) && StringUtils.isEmpty(exhibition.getEndTime())
-//                && StringUtils.isEmpty(exhibition.getExhibitionHallId()) && null == userId) {
-//            System.out.println("name start_time end_time exhibiton_hall_id userId不允许为空");
-//            return -1;
-//        }
-//        /**前端根据用户的性质，   如果是普通用户，那么只有在0状态才可以修改，修改界面不显示status，后台得到的结果是null
-//         如果是管理员，那么可以修改任何状态，修改界面显示status且必须填写，后台得到的结果不是null
-//         这样根据是不是null来判断是不是管理员，为了确保正确性，可以进行双重判断
-//         */
-//        if (null == exhibition.getStatus() || userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
-//            exhibition.setStatus(0);
-//        return exhibitionDao.modifyExhibition(exhibition);
-//    }
-//
-//    @Override
-//    @NullDisable
-//    public int modifyExhibitionStatus(Integer id, Integer userId, Integer status) {
-//        if (userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
-//            return -1;//权限不足
-//        return exhibitionDao.modifyExhibitionStatus(id, status);
-//    }
-//
-//    @Override
-//    public int deleteExhibition(Integer id, Integer userId) {
-//        return 0;
-//    }
-
-    /**
-     @Override
-     @NullDisable public int deleteExhibition(Integer id, Integer userId) {
-     if (exhibitionDao.queryExhibitionByID(id).getStatus() != 0 && userInformationDao.GetUserInfoFromId(userId).getUserPermission() == 0)
-     return -1;//权限不足
-     return exhibitionDao.deleteExhibition(id);
-     }
-
-     //根据用户id查询他的公司的展品
-     @Override
-     @NullDisable public PageInfo<Exhibition> queryAllExhibitionsByUserId(Integer userId, int pageNum) {
-     PageHelper.startPage(pageNum, pageSize1);
-     List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByUserId(userId);
-     PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-     return pageInfo;
-     }
-     **/
 
 }

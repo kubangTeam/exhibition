@@ -39,6 +39,16 @@ public class GoodsServiceTests {
     public void testQueryAllGoodsByCategoryId(){
         System.out.println(goodsService.queryAllGoodsByCategoryId(1).size());
         System.out.println(goodsService.queryAllGoodsByCategoryId(1));
+
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(2).size());
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(2));
+//
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(3).size());
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(3));
+//
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(4).size());
+//        System.out.println(goodsService.queryAllGoodsByCategoryId(4));
+
     }
 
 

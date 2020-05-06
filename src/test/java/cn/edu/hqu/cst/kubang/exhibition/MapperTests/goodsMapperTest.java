@@ -59,6 +59,26 @@ public class goodsMapperTest {
         System.out.println(list);
     }
 
+    @Test
+    public void testSelectGoodsByCategoryId(){
+        List<Goods> list = goodsDao.selectGoodsByCategoryId(1,2);
+        System.out.println(list.size());
+        //System.out.println(list);
+
+        list = goodsDao.selectGoodsByCategoryId(2,2);
+        System.out.println(list.size());
+        //System.out.println(list);
+
+        list = goodsDao.selectGoodsByCategoryId(3,2);
+        System.out.println(list.size());
+        //System.out.println(list);
+
+        list = goodsDao.selectGoodsByCategoryId(4,2);
+        System.out.println(list.size());
+        //System.out.println(list);
+
+    }
+
 
     @Test
     public void testUpdateStatus(){

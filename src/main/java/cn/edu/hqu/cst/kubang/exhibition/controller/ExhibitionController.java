@@ -104,12 +104,15 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryGoodsByExhibitionId")
-    public PageInfo<Goods> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
+    public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
                                             @RequestParam(value = "pageNum") int pageNum,
                                             @RequestParam(value = "pageSize") int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<Goods> pageInfo = new PageInfo<>(exhibitionService.queryAllGoodsByExhibitionId(exhibitionId));
-        return pageInfo;
+        Map<String,Object>map = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
 
@@ -125,21 +128,17 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/querySubareaGoodsByExhibitionId")
-    public PageInfo<Goods> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
+    public  ResponseJson<Map<String,Object>> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
                                               @RequestParam(value = "subareaId")int subareaId,
                                               @RequestParam(value = "pageNum")int pageNum,
                                               @RequestParam(value = "pageSize") int pageSize) {
-        //判断该商品是否参加了该展会
-        List<Goods> goodsList = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
-        //判断商品是否符合该分区
-        for(Goods goods:goodsList){
-            if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) == null){
-                goodsList.remove(goods);
-            }
+        Map<String,Object>map = exhibitionService.queryGoodsByExhibitionIdAndSubareaId(exhibitionId,subareaId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
         }
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
-        return pageInfo;
+
     }
 
     /**
