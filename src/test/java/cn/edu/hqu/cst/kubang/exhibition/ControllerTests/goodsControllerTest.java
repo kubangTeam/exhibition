@@ -153,8 +153,7 @@ public class goodsControllerTest {
         //根据商品分类查询商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/goods/query/category")
                 .param("categoryId","1")
-                .param("pageNum","1")
-                .param("pageSize","10"))
+                .param("pageNum","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 

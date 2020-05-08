@@ -26,9 +26,9 @@
     </insert>
 
 
-    <insert id="UserRegisterFromEmail" parameterType="String" keyProperty="userId">
-        INSERT INTO `kubang`.`userinformation` (`userId`, `userAccount`, `userName`, `userPassword`, `userSex`, `userIntegral`, `userReccode`)
-        VALUES (#{UserID}, #{email}, #{newUserName}, #{password}, 'male', '0', #{newRecCode})
+    <insert id="UserRegisterFromEmail" parameterType="String">
+        INSERT INTO `kubang`.`userinformation` (`userAccount`, `userName`, `userPassword`, `userSex`,`userPermission`, `userIntegral`, `userReccode`)
+        VALUES (#{email}, #{email}, #{password}, '男','0', '0', #{RecCode})
     </insert>
 
     <select id="GetUseInfoFromAccount" parameterType="String" resultType="User">
@@ -42,7 +42,7 @@
         SELECT * from `kubang`.`userinformation` where userId=#{userId}
     </select>
     <update id="AddUserPoint" parameterType="String">
-        UPDATE `kubang`.`userinformation` SET `userIntegral`='userIntegral'+10 WHERE `userRecCode`=#{recCode};
+        UPDATE `kubang`.`userinformation` SET userIntegral=userIntegral+10 WHERE `userRecCode`=#{recCode};
     </update>
     <update id="UpdatePassword" parameterType="String">
         UPDATE `kubang`.`userinformation` SET `userPassword`=#{newPassword} WHERE  `userAccount`=#{account}
@@ -87,5 +87,8 @@
         where userId = #{userId}
     </delete>
 
-
+    <delete id="deleteUserInformationByAccount" parameterType="String">
+        delete from userinformation
+        where userAccount = #{userAccount}
+    </delete>
 </mapper>

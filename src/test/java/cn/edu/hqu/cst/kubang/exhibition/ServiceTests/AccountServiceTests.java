@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.ServiceTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.AdvertisementServiceImpl;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.UserEmailServiceImpl;
 import org.junit.Test;
@@ -18,6 +19,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ContextConfiguration(classes = ExhibitionApplication.class)
 public class AccountServiceTests {
+
+
+
+    @Autowired
+    private AccountServiceImp accountServiceImp;
+
+    @Test
+    public void test(){
+        accountServiceImp.registerFromEmail("2502665955@qq.com","1111111","hduisa");
+    }
 
 //    //检查验证码
 //    Boolean checkCode(String email, String newCode);

@@ -60,23 +60,36 @@ public class ExhibitionServiceTests {
 //            System.out.println("删除成功");
 //    }
 
+
+
+
     @Test
     public void testQueryOngoingExhibitionInfo(){
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo().size());
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo());
+        System.out.println(exhibitionService.queryOngoingExhibitionInfo(1));//整数页
+        System.out.println(exhibitionService.queryOngoingExhibitionInfo(5));//残余尾页
+        System.out.println(exhibitionService.queryOngoingExhibitionInfo(6));//异常页
     }
 
     @Test
     public void queryReadyToStartExhibitionInfo(){
-        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo().size());
-        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo());
+        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo(1));//整数页
+        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo(3));//残余尾页
+        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo(4));//异常页
     }
+
+    @Test
+    public void queryGoodsByExhibitionIdAndSubareaId(){
+        System.out.println(exhibitionService.queryGoodsByExhibitionIdAndSubareaId(1,3,1));//整数页
+        //System.out.println(exhibitionService.queryGoodsByExhibitionIdAndSubareaId(1,1,1));//残余尾页
+        //System.out.println(exhibitionService.queryGoodsByExhibitionIdAndSubareaId(1,1,1));//异常页
+    }
+
 
 
     @Test
     public void queryAllGoodsByExhibitionId(){
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1298).size());
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1298));
+        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,1));
+        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,10));
     }
 
 }

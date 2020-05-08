@@ -13,6 +13,9 @@ public interface IUserEmailService {
     //该邮箱是否被其他用户绑定
     boolean isUserEmailSingle(String email);
 
+    //该邮箱是否被其他用户注册
+    boolean isUserAccountSingle(String account);
+
     //该用户是否已经绑定了邮箱
     boolean isUserEmailBound(Integer userId);
 

@@ -6,6 +6,8 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IGoodsMobileService;
@@ -147,16 +149,18 @@ public class GoodsController implements Constants {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "categoryId", value = "类别ID", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
+            //@ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/category", method = RequestMethod.GET)
-    public PageInfo<Goods> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,
-                                                     @RequestParam(value = "pageNum") int pageNum,
-                                                     @RequestParam(value = "pageSize") int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = goodsService.queryAllGoodsByCategoryId(categoryId);
-        PageInfo<Goods> pageInfo = new PageInfo<>(list);
-        return pageInfo;
+    public ResponseJson<Map<String,Object>> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,
+                                                                      @RequestParam(value = "pageNum") int pageNum
+                                                                      ) {
+        Map<String,Object>map =goodsService.queryAllGoodsByCategoryId(categoryId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
     //根据公司Id查询所有在展的商品;

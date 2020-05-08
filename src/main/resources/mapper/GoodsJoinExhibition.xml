@@ -28,4 +28,25 @@
         from goodsjoinexhibition
         where exhibitionId = #{exhibitionId} and goodsId = #{goodsId} and subareaId = #{subareaId}
     </select>
+
+    <select id="checkGoods" resultType="GoodsJoinExhibition">
+        select <include refid="selectFields"></include>
+        from goodsjoinexhibition
+        where exhibitionId = #{exhibitionId} and goodsId = #{goodsId}
+    </select>
+
+    <select id="selectByExhibitionId" resultType="GoodsJoinExhibition">
+        select <include refid="selectFields"></include>
+        from goodsjoinexhibition
+        where exhibitionId = #{exhibitionId}
+    </select>
+
+
+    <select id="selectByExhibitionIdAndSubareaId" resultType="GoodsJoinExhibition">
+        select <include refid="selectFields"></include>
+        from goodsjoinexhibition
+        where exhibitionId = #{exhibitionId} and subareaId = #{subareaId}
+    </select>
+
+
 </mapper>

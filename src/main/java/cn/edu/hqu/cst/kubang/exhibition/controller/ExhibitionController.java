@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
@@ -103,12 +104,15 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryGoodsByExhibitionId")
-    public PageInfo<Goods> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
+    public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
                                             @RequestParam(value = "pageNum") int pageNum,
                                             @RequestParam(value = "pageSize") int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<Goods> pageInfo = new PageInfo<>(exhibitionService.queryAllGoodsByExhibitionId(exhibitionId));
-        return pageInfo;
+        Map<String,Object>map = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
 
@@ -124,21 +128,17 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/querySubareaGoodsByExhibitionId")
-    public PageInfo<Goods> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
+    public  ResponseJson<Map<String,Object>> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
                                               @RequestParam(value = "subareaId")int subareaId,
                                               @RequestParam(value = "pageNum")int pageNum,
                                               @RequestParam(value = "pageSize") int pageSize) {
-        //判断该商品是否参加了该展会
-        List<Goods> goodsList = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
-        //判断商品是否符合该分区
-        for(Goods goods:goodsList){
-            if(goodsJoinExhibitionDao.checkGoodsSubarea(exhibitionId,goods.getGoodsId(),subareaId) == null){
-                goodsList.remove(goods);
-            }
+        Map<String,Object>map = exhibitionService.queryGoodsByExhibitionIdAndSubareaId(exhibitionId,subareaId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
         }
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
-        return pageInfo;
+
     }
 
     /**
@@ -149,11 +149,13 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryReadyToStartExhibitionInfo/{pageNum}")
-    public PageInfo<Exhibition> readyToStartExhibitionInfo(@PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, 8);
-        List<Exhibition> exhibitionList =exhibitionService.queryReadyToStartExhibitionInfo();
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+    public ResponseJson<Map<String,Object>> readyToStartExhibitionInfo(@PathVariable int pageNum) {
+        Map<String,Object>map = exhibitionService.queryReadyToStartExhibitionInfo(pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
     /**
@@ -176,12 +178,13 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
-    public PageInfo<Exhibition> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
-       //先要声明pagehelper
-        PageHelper.startPage(pageNum, 4);
-        List<Exhibition> exhibitionList = exhibitionService.queryOngoingExhibitionInfo();
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
+        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo(pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 
 

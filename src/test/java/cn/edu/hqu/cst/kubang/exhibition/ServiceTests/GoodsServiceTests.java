@@ -37,8 +37,9 @@ public class GoodsServiceTests {
 
     @Test
     public void testQueryAllGoodsByCategoryId(){
-        System.out.println(goodsService.queryAllGoodsByCategoryId(1).size());
-        System.out.println(goodsService.queryAllGoodsByCategoryId(1));
+        System.out.println(goodsService.queryAllGoodsByCategoryId(1,1).size());
+        System.out.println(goodsService.queryAllGoodsByCategoryId(1,1));
+
     }
 
 

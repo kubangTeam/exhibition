@@ -64,7 +64,7 @@ public class ExhibitionControllerTests {
     public void testGoodsQueryByExhibitionId() throws Exception{
         //根据展会id查询展会所有商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryGoodsByExhibitionId")
-                .param("exhibitionId","1298")
+                .param("exhibitionId","1")
                 .param("pageNum","1")
                 .param("pageSize","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -86,8 +86,8 @@ public class ExhibitionControllerTests {
     public void testQuerySubareaGoodsByExhibitionId() throws Exception{
         //根据展会id和二级id查询展会所有商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/querySubareaGoodsByExhibitionId")
-                .param("exhibitionId","1298")
-                .param("subareaId","9")
+                .param("exhibitionId","1")
+                .param("subareaId","3")
                 .param("pageNum","1")
                 .param("pageSize","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -108,7 +108,7 @@ public class ExhibitionControllerTests {
     @Test
     public void testQueryReadyToStartExhibitionInfo() throws Exception{
         //查询即将开展的展会列表 一页8个
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/2"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -116,10 +116,35 @@ public class ExhibitionControllerTests {
         //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
-        //System.out.println(status);
-        //System.out.println(content);
+        System.out.println(status);
+        System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/3"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        status=mvcResult.getResponse().getStatus();
+        content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryReadyToStartExhibitionInfo/4"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        status=mvcResult.getResponse().getStatus();
+        content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
     }
 
 
@@ -135,9 +160,35 @@ public class ExhibitionControllerTests {
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
         System.out.println(status);
-        //System.out.println(content);
+        System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/5"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        status=mvcResult.getResponse().getStatus();
+        content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/6"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        status=mvcResult.getResponse().getStatus();
+        content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+
     }
 
     @Test

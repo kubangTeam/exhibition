@@ -45,6 +45,9 @@ public class SMSControllerTests {
     @Autowired
     private IShortMessageService iShortMessageService;
 
+    @Autowired
+    private UserDao userDao;
+
     @Before
     public void before(){
         String phoneNumber = "17338719294";
@@ -61,8 +64,10 @@ public class SMSControllerTests {
 
     @After
     public void after(){
+        if(userDao.deleteUserInformationByAccount( "17338719294")==1)
+            System.out.println("删除账号成功");
         if((Integer)userCodeDao.deleteUserCode(userCode.getAccount())!=null)
-            System.out.println("删除成功");
+            System.out.println("删除记录成功");
     }
 
     @Test
@@ -90,7 +95,7 @@ public class SMSControllerTests {
                 .param("phoneNumber",userCode.getAccount())
                 .param("password","测试密码")
                 .param("verifyCode",userCode.getCode())
-                .param("recCode","测试验证码"))
+                .param("recCode","123"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 

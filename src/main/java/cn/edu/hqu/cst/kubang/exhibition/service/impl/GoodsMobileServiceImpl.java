@@ -34,4 +34,6 @@ public class GoodsMobileServiceImpl implements IGoodsMobileService {
         GoodsNewDto goodsNewDto = ConvertBean.pojoToDto(goods, category, companyName, picture);
         return goodsNewDto;
     }
+
+
 }

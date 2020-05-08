@@ -1,27 +1,24 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
-import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
-import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
@@ -43,6 +40,9 @@ public class GoodsService implements Constants {
     private Company company;
 
     private  CompanyDao companyDao;
+
+    @Value("${pagehelper.pageSize3}")
+    private int pageSize3;//一页显示4个
 
     ListeningExecutorService executorService = MoreExecutors.
             listeningDecorator(Executors.newFixedThreadPool(1));
@@ -85,11 +85,19 @@ public class GoodsService implements Constants {
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
-        //根据分类ID和状态查询在展商品
-    public List<Goods> queryAllGoodsByCategoryId(int categoryId) {
-        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW));
-        return list;
+
+    //根据分类ID和状态查询在展商品
+    public Map<String,Object> queryAllGoodsByCategoryId(int categoryId,int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        List<Goods> list=null;
+        if(goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW)!=null){
+            list = goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW);
+            list = this.insertImageIntoGoods(list);
+        }
+        map = Pagination.paginationGoods(pageNum,pageSize3,list);
+        return map;
     }
+
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {
         return this.insertImageIntoGoods(goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW));
@@ -132,11 +140,17 @@ public class GoodsService implements Constants {
     public int deleteGoodsPic(int picId){
         return goodsDao.deleteGoodsPic(picId);
     }
+
     private List<Goods> insertImageIntoGoods(List<Goods> list){
         for(Goods goods : list) {
-            GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
-            String image = goodsPic.getPic();
-            goods.setImage(image);
+            if(goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId())!=null){
+                List<GoodsPic> goodsPics= goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId());
+                GoodsPic goodsPic = goodsPics.get(0);
+                String image = goodsPic.getPic();
+                goods.setImage(image);
+            }else {
+                list.remove(goods);
+            }
         }
         return list;
     }

@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UIDGenerator;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ManagerDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.OrganizerInformationDao;
@@ -8,6 +9,8 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class AccountServiceImp implements IAccountService {
@@ -56,6 +59,21 @@ public class AccountServiceImp implements IAccountService {
     @Override
     public int registerByPhoneNumber() {
         return 0;
+    }
+
+    @Override
+    public int  registerFromEmail(String email, String password,String RecCode) {
+        int recCode = userDao.AddUserPoint(RecCode);
+        if(recCode==0){
+            return 001;
+        }else if(recCode==1)
+        {
+           String userReccode = UIDGenerator.getUUID();
+           int i = userDao.UserRegisterFromEmail(email,password,userReccode);
+           if(i==1)return 002;
+        }else
+            return 003;
+        return 004;
     }
 
     /**判断账号是否为公司账号
@@ -107,4 +125,7 @@ public class AccountServiceImp implements IAccountService {
         else
             return "非管理员账号或管理员账号错误";
     }
+
+
+
 }

@@ -44,7 +44,8 @@ public class AdvertisementControllerTests {
      */
     @Test
     public void testRecommendAds() throws Exception {
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/advertisement/get"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/advertisement/get")
+                .param("pageNum","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         mvcResult.getResponse().setCharacterEncoding("UTF-8");
@@ -52,7 +53,7 @@ public class AdvertisementControllerTests {
         int status=mvcResult.getResponse().getStatus();
         String content =mvcResult.getResponse().getContentAsString();
         System.out.println(status);
-        System.out.println(content);
+        //System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
 

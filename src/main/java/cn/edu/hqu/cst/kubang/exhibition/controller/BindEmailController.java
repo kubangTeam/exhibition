@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,8 @@ public class BindEmailController {
     private UserDao userDao;
     @Autowired
     private UserCodeDao userCodeDao;
+    @Autowired
+    private AccountServiceImp accountServiceImp;
 
     /**
      * 根据用户的id和邮箱发送验证码
@@ -82,6 +85,39 @@ public class BindEmailController {
         return stringResponseJson;
     }
 
+    @ApiOperation(value = "发送验证码", notes = "给邮箱发送验证码（用于邮箱注册）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "to", value = "用户填写的邮箱", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/send/emailRegister")
+    public ResponseJson<String> bindSendEmail(@RequestParam("to") String to) {
+        //定义发送内容
+        String subject = "酷邦助手验证码";
+        String code = UUID.randomUUID().toString().substring(0, 8);
+        String content = "你好，您的验证码是: " + code;
+
+        //删除数据库中存在的相同邮箱的记录
+        userCodeDao.deleteUserCode(to);
+        //调用发送方法
+        int status = userEmailService.sendSimpleMail(to, subject, content);
+        if (status == 200) {
+            UserCode userCode = new UserCode(null, to, code, String.valueOf(Calendar.getInstance().getTimeInMillis()));
+            Integer changeRow = userCodeDao.saveUserCode(userCode);
+            if (changeRow == 1) {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "已发送", null);
+                return stringResponseJson;
+            } else {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+                return stringResponseJson;
+            }
+        }
+        ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+        return stringResponseJson;
+    }
+
+
+
+
     /**
      * 根据用户的id、邮箱、发送验证码绑定用户账号
      */
@@ -95,6 +131,8 @@ public class BindEmailController {
     public ResponseJson<String> bindCheckCode(Integer userId, String email, String newCode) {
         Boolean res = userEmailService.checkCode(email, newCode);
         if (res) {
+            //验证通过，删除usecode数据避免验证码重复使用
+            userCodeDao.deleteUserCode(email);
             //验证码检查通过 接着检查邮箱是否已被绑定
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
@@ -122,25 +160,32 @@ public class BindEmailController {
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pwd", value = "用户密码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "recCode", value = "推荐码(必须为数据库存在的推荐码，不能随意填写)", required = true, dataType = "String", paramType = "query"),
     })
     @PostMapping("/check/register")
     public ModelAndView registerCheckCode(@RequestParam("email") String email
-            , @RequestParam("pwd") String password, @RequestParam("code") String verifyCode
-            , @RequestParam("recCode") String recCode) {
+                                        , @RequestParam("pwd") String password,
+                                          @RequestParam("code") String verifyCode
+                                        , @RequestParam("recCode") String recCode) {
         Boolean res = userEmailService.checkCode(email, verifyCode);
         JsonBuilder json = new JsonBuilder();
         if (res) {
             //验证码检查通过 接着检查邮箱是否已被绑定
-            boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
+            boolean userEmailSingle = userEmailService.isUserAccountSingle(email);
             if (userEmailSingle) {
                 //验证通过,用户注册成功
-                userDao.UserRegisterFromEmail(email, password, recCode);
-                json.add("success", "true)");
+                int i = accountServiceImp.registerFromEmail(email, password, recCode);
+                if(i==002)
+                    json.add("success", "true)");
+                else if(i==001) {
+                    json.add("success", "true)");
+                    json.add("errCode", "301");
+                    json.add("errMsg", "推荐码填写错误");
+                }
             } else {
                 json.add("success", "true)");
                 json.add("errCode", "301");
-                json.add("errMsg", "该邮箱已被其他用户绑定！");
+                json.add("errMsg", "该邮箱已被其他用户注册！");
             }
         } else {
             json.add("success", "true)");

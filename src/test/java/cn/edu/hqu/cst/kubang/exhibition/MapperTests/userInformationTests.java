@@ -64,7 +64,13 @@ public class userInformationTests  {
 
     @Test
     public void testUserRegisterFromEmail(){
-        //void UserRegisterFromEmail(String email, String password,String RecCode);
+        String email = "2502665955@qq.com";
+        String password = "1111111";
+        String RecCode = "111111";
+        if(userDao.UserRegisterFromEmail(email, password,RecCode)==1){
+            System.out.println("邮箱注册成功");
+
+        }
     }
 
     @Test
@@ -98,5 +104,13 @@ public class userInformationTests  {
         System.out.println(userDao.GetUserInfoFromId(user.getUserId()));
         System.out.println(row);
     }
+
+    @Test
+    public void testAddPoint(){
+        int row  = userDao.AddUserPoint("123");
+        System.out.println(userDao.GetUserInfoFromId(user.getUserId()));
+        System.out.println(row);
+    }
+
 
 }
