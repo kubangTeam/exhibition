@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -39,6 +40,8 @@ public class BindEmailController {
     private UserDao userDao;
     @Autowired
     private UserCodeDao userCodeDao;
+    @Autowired
+    private AccountServiceImp accountServiceImp;
 
     /**
      * 根据用户的id和邮箱发送验证码
@@ -92,6 +95,9 @@ public class BindEmailController {
         String subject = "酷邦助手验证码";
         String code = UUID.randomUUID().toString().substring(0, 8);
         String content = "你好，您的验证码是: " + code;
+
+        //删除数据库中存在的相同邮箱的记录
+        userCodeDao.deleteUserCode(to);
         //调用发送方法
         int status = userEmailService.sendSimpleMail(to, subject, content);
         if (status == 200) {
@@ -168,8 +174,14 @@ public class BindEmailController {
             boolean userEmailSingle = userEmailService.isUserAccountSingle(email);
             if (userEmailSingle) {
                 //验证通过,用户注册成功
-                userDao.UserRegisterFromEmail(email, password, recCode);
-                json.add("success", "true)");
+                int i = accountServiceImp.registerFromEmail(email, password, recCode);
+                if(i==002)
+                    json.add("success", "true)");
+                else if(i==001) {
+                    json.add("success", "true)");
+                    json.add("errCode", "301");
+                    json.add("errMsg", "推荐码填写错误");
+                }
             } else {
                 json.add("success", "true)");
                 json.add("errCode", "301");

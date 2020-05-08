@@ -106,8 +106,8 @@ public class BindEmailControllerTests {
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/email/check/register")
                 .param("pwd","111111111")
                 .param("email","2502665955@qq.com")
-                .param("code","53e3213f")
-                .param("recCode","11111"))
+                .param("code","f6935766")
+                .param("recCode","hduisa"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         mvcResult.getResponse().setCharacterEncoding("UTF-8");

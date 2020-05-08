@@ -10,6 +10,8 @@ public interface IAccountService {
     //用户手机号注册
     int registerByPhoneNumber();
 
+    int registerFromEmail(String email, String password,String RecCode);
+
     int isCompanyOrNot(int userId);
 
 

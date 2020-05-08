@@ -45,6 +45,8 @@ public class EmailServiceTests {
     String content = "1111";//内容
     @Before
     public void before(){
+
+        userCodeDao.deleteUserCode(to);
         String phoneNumber ="11111111111";
         String password = "sunquan";
         String recCode = "cedsad";
@@ -111,7 +113,8 @@ public class EmailServiceTests {
     }
     @Test
     public void testCheckCode(){
-        if(userEmailService.checkCode(to,content) ==true)
+
+        if(userEmailService.checkCode(to,"827091c5") ==true)
             System.out.println("用户邮箱验证码填写正确");
         else
             System.out.println("用户邮箱验证码填写失败");

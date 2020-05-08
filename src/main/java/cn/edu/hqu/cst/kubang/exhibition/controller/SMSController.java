@@ -45,7 +45,8 @@ public class SMSController {
     @ResponseBody
     public ResponseJson<String> sendVerifyCode(@RequestParam("phoneNumber")String phoneNumber){
         System.out.println("SMS send called");
-
+        //删除数据库中存在的相同邮箱的记录
+        smsDao.deleteUserCode(phoneNumber);
         int result = smsService.sendShortMessage(phoneNumber);
         if(result ==101){
             return new ResponseJson(false, "-008", "服务器连接错误", null);
@@ -87,16 +88,15 @@ public class SMSController {
             if (userPhoneSingle) {
                 //验证通过,用户注册成功
                 int result = userService.registerByPhoneNumber(phoneNumber, password, recCode);
-                if(result==1)
+                if(result==002)
                     return new ResponseJson(true, "005", "注册成功", null);
                 else
-                    return new ResponseJson(true, "005", " 插入数据库失败", null);
+                    return new ResponseJson(true, "005", "插入数据库失败或者推荐码错误", null);
             }else
                 return new ResponseJson(false, "014", "该手机号已被其他用户绑定", null);
         } else
             return new ResponseJson(false, "025", "验证码错误", null);
 
-        //return new ResponseJson(false, "025", "其他错误", null);
 
     }
 }

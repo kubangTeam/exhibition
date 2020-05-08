@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UIDGenerator;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,18 @@ public class UserService {
         user.setUserPassword(password);
         user.setUserName(phoneNumber);
         user.setUserPermission(0);
-        user.setUserReccode(recCode);
+        String userReccode = UIDGenerator.getUUID();
+        user.setUserReccode(userReccode);
         user.setUserIntegral(0);
-        return userDao.UserRegisterFromPhoneNumber(user);
+        int result = userDao.AddUserPoint(recCode);
+        //可能会存在问题（多个用户推荐码相同）
+        if(result ==1){
+            if(userDao.UserRegisterFromPhoneNumber(user)==1)
+                return 002;
+        }else
+            return 001;
+        return  004;
+
     }
 
     public int isCompanyOrNot(int userId) {

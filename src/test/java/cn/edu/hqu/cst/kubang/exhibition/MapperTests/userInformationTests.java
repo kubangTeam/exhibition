@@ -105,6 +105,12 @@ public class userInformationTests  {
         System.out.println(row);
     }
 
+    @Test
+    public void testAddPoint(){
+        int row  = userDao.AddUserPoint("123");
+        System.out.println(userDao.GetUserInfoFromId(user.getUserId()));
+        System.out.println(row);
+    }
 
 
 }

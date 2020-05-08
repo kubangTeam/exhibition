@@ -42,7 +42,7 @@
         SELECT * from `kubang`.`userinformation` where userId=#{userId}
     </select>
     <update id="AddUserPoint" parameterType="String">
-        UPDATE `kubang`.`userinformation` SET `userIntegral`='userIntegral'+10 WHERE `userRecCode`=#{recCode};
+        UPDATE `kubang`.`userinformation` SET userIntegral=userIntegral+10 WHERE `userRecCode`=#{recCode};
     </update>
     <update id="UpdatePassword" parameterType="String">
         UPDATE `kubang`.`userinformation` SET `userPassword`=#{newPassword} WHERE  `userAccount`=#{account}
@@ -87,5 +87,8 @@
         where userId = #{userId}
     </delete>
 
-
+    <delete id="deleteUserInformationByAccount" parameterType="String">
+        delete from userinformation
+        where userAccount = #{userAccount}
+    </delete>
 </mapper>
