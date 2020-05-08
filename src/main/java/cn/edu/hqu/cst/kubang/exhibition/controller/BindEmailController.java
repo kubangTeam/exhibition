@@ -165,7 +165,7 @@ public class BindEmailController {
         JsonBuilder json = new JsonBuilder();
         if (res) {
             //验证码检查通过 接着检查邮箱是否已被绑定
-            boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
+            boolean userEmailSingle = userEmailService.isUserAccountSingle(email);
             if (userEmailSingle) {
                 //验证通过,用户注册成功
                 userDao.UserRegisterFromEmail(email, password, recCode);
@@ -173,7 +173,7 @@ public class BindEmailController {
             } else {
                 json.add("success", "true)");
                 json.add("errCode", "301");
-                json.add("errMsg", "该邮箱已被其他用户绑定！");
+                json.add("errMsg", "该邮箱已被其他用户注册！");
             }
         } else {
             json.add("success", "true)");

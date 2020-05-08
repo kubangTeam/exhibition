@@ -63,6 +63,12 @@ public class UserEmailServiceImpl implements IUserEmailService {
         return  users.size() == 0;
     }
 
+    @Override
+    public boolean isUserAccountSingle(String account) {
+        User user = userInfoDao.queryUserInfoByAccount(account);
+        return  user ==null;
+    }
+
 
     @Override
     @NullDisable
