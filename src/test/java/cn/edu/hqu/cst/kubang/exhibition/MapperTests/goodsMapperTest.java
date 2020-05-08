@@ -40,8 +40,8 @@ public class goodsMapperTest {
         //System.out.println(goodsDao.selectAllGoods().size());
         //System.out.println(goodsDao.selectCategoryNameById(1));
        // System.out.println(goodsDao.selectCompanyNameById(1));
-        System.out.println(goodsDao.selectRandomGoods(3,0));
-        System.out.println(goodsDao.selectRandomGoods(3,1));
+        //System.out.println(goodsDao.selectRandomGoods(3,0));
+        //System.out.println(goodsDao.selectRandomGoods(3,1));
 
     }
     @Test

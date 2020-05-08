@@ -102,6 +102,7 @@
         select <include refid="selectFields"></include>
         from goodsintroduce
         where goodsId >= (select floor(RAND() * (select MAX(goodsId) from goodsintroduce)))
+        and goodsStatus = #{goodsStatus}
         <if test="categoryId!='0'.toString()">
             and categoryId = #{categoryId}
         </if>

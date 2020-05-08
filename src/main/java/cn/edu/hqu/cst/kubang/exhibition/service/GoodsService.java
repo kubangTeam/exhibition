@@ -183,7 +183,7 @@ public class GoodsService implements Constants {
 
     }*/
    public List<Goods> getRandomGoods(int num, int categoryId){
-       List<Goods> list = this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, categoryId));
+       List<Goods> list = this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, categoryId, STATE_IS_ON_SHOW));
        return list;
    }
 }
