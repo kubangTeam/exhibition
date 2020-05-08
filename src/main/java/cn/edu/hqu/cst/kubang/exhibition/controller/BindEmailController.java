@@ -68,21 +68,7 @@ public class BindEmailController {
         String subject = "酷邦助手验证码";
         String code = UUID.randomUUID().toString().substring(0, 8);
         String content = "你好，您的验证码是: " + code;
-        //调用发送方法
-        int status = userEmailService.sendSimpleMail(to, subject, content);
-        if (status == 200) {
-            UserCode userCode = new UserCode(null, to, code, String.valueOf(Calendar.getInstance().getTimeInMillis()));
-            Integer changeRow = userCodeDao.saveUserCode(userCode);
-            if (changeRow == 1) {
-                ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "已发送", null);
-                return stringResponseJson;
-            } else {
-                ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
-                return stringResponseJson;
-            }
-        }
-        ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
-        return stringResponseJson;
+        return sendMail(to, subject, content, code);
     }
 
     @ApiOperation(value = "发送验证码", notes = "给邮箱发送验证码（用于邮箱注册）")
@@ -98,21 +84,7 @@ public class BindEmailController {
 
         //删除数据库中存在的相同邮箱的记录
         userCodeDao.deleteUserCode(to);
-        //调用发送方法
-        int status = userEmailService.sendSimpleMail(to, subject, content);
-        if (status == 200) {
-            UserCode userCode = new UserCode(null, to, code, String.valueOf(Calendar.getInstance().getTimeInMillis()));
-            Integer changeRow = userCodeDao.saveUserCode(userCode);
-            if (changeRow == 1) {
-                ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "已发送", null);
-                return stringResponseJson;
-            } else {
-                ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
-                return stringResponseJson;
-            }
-        }
-        ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
-        return stringResponseJson;
+        return sendMail(to, subject, content, code);
     }
 
 
@@ -242,5 +214,23 @@ public class BindEmailController {
         }
         return json.getJsonResult();
     }
+    private ResponseJson<String> sendMail(String to, String subject, String content, String code) {
+        //调用发送方法
+        int status = userEmailService.sendSimpleMail(to, subject, content);
+        if (status == 200) {
+            UserCode userCode = new UserCode(null, to, code, String.valueOf(Calendar.getInstance().getTimeInMillis()));
+            Integer changeRow = userCodeDao.saveUserCode(userCode);
+            if (changeRow == 1) {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "已发送", null);
+                return stringResponseJson;
+            } else {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+                return stringResponseJson;
+            }
+        }
+        ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+        return stringResponseJson;
+    }
+
 
 }
