@@ -74,7 +74,7 @@ public class SMSController {
             @ApiImplicitParam(name = "phoneNumber", value = "手机号码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "password", value = "用户密码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "verifyCode", value = "验证码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "recCode", value = "推荐码(必须为数据库存在的推荐码，不能随意填写)", required = true, dataType = "String", paramType = "query"),
     })
     @GetMapping("/check/register")
     @ResponseBody

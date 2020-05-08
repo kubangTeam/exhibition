@@ -160,7 +160,7 @@ public class BindEmailController {
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "pwd", value = "用户密码", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "recCode", value = "推荐码", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "recCode", value = "推荐码(必须为数据库存在的推荐码，不能随意填写)", required = true, dataType = "String", paramType = "query"),
     })
     @PostMapping("/check/register")
     public ModelAndView registerCheckCode(@RequestParam("email") String email
