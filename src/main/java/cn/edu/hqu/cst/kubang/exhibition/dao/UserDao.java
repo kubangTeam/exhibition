@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserDao {
 
     int UserRegisterFromPhoneNumber(User user);
-    void UserRegisterFromEmail(String email, String password,String RecCode);
+    int UserRegisterFromEmail(String email, String password,String RecCode);
     //通过账号（电话号码）、id查询用户信息
     User GetUseInfoFromAccount(String account);
     User GetUserInfoFromId(int userId);

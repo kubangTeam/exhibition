@@ -43,14 +43,18 @@ public class UserEmailServiceImpl implements IUserEmailService {
      */
     public Boolean checkCode(String email, String newCode) {
         //数据库根据email获取对应的code和sendingTime
-        UserCode userCode = userCodeDao.queryUserCodeByAccount(email);
-        Long sendingTime = Long.valueOf(userCode.getSendingTime());
-        String oldCode = userCode.getCode();
-        //计算时间差
-        Long checkingTime = Calendar.getInstance().getTimeInMillis();
-        Long minute = (checkingTime - sendingTime) / (1000 * 60);
-        //30分钟内且验证码正确
-        return minute <= 30 && newCode.equals(oldCode);
+        if(userCodeDao.queryUserCodeByAccount(email)!=null){
+            UserCode userCode = userCodeDao.queryUserCodeByAccount(email);
+            Long sendingTime = Long.valueOf(userCode.getSendingTime());
+            String oldCode = userCode.getCode();
+            //计算时间差
+            Long checkingTime = Calendar.getInstance().getTimeInMillis();
+            Long minute = (checkingTime - sendingTime) / (1000 * 60);
+            //30分钟内且验证码正确
+            return minute <= 30 && newCode.equals(oldCode);
+        }else
+            return false;
+
     }
 
     @Override

@@ -82,6 +82,36 @@ public class BindEmailController {
         return stringResponseJson;
     }
 
+    @ApiOperation(value = "发送验证码", notes = "给邮箱发送验证码（用于邮箱注册）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "to", value = "用户填写的邮箱", required = true, dataType = "String", paramType = "query")
+    })
+    @PostMapping("/send/emailRegister")
+    public ResponseJson<String> bindSendEmail(@RequestParam("to") String to) {
+        //定义发送内容
+        String subject = "酷邦助手验证码";
+        String code = UUID.randomUUID().toString().substring(0, 8);
+        String content = "你好，您的验证码是: " + code;
+        //调用发送方法
+        int status = userEmailService.sendSimpleMail(to, subject, content);
+        if (status == 200) {
+            UserCode userCode = new UserCode(null, to, code, String.valueOf(Calendar.getInstance().getTimeInMillis()));
+            Integer changeRow = userCodeDao.saveUserCode(userCode);
+            if (changeRow == 1) {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(true, "005", "已发送", null);
+                return stringResponseJson;
+            } else {
+                ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+                return stringResponseJson;
+            }
+        }
+        ResponseJson<String> stringResponseJson = new ResponseJson<>(false, "-001", "系统错误", null);
+        return stringResponseJson;
+    }
+
+
+
+
     /**
      * 根据用户的id、邮箱、发送验证码绑定用户账号
      */
@@ -95,6 +125,8 @@ public class BindEmailController {
     public ResponseJson<String> bindCheckCode(Integer userId, String email, String newCode) {
         Boolean res = userEmailService.checkCode(email, newCode);
         if (res) {
+            //验证通过，删除usecode数据避免验证码重复使用
+            userCodeDao.deleteUserCode(email);
             //验证码检查通过 接着检查邮箱是否已被绑定
             boolean userEmailSingle = userEmailService.isUserEmailSingle(email);
             if (userEmailSingle) {
@@ -126,8 +158,9 @@ public class BindEmailController {
     })
     @PostMapping("/check/register")
     public ModelAndView registerCheckCode(@RequestParam("email") String email
-            , @RequestParam("pwd") String password, @RequestParam("code") String verifyCode
-            , @RequestParam("recCode") String recCode) {
+                                        , @RequestParam("pwd") String password,
+                                          @RequestParam("code") String verifyCode
+                                        , @RequestParam("recCode") String recCode) {
         Boolean res = userEmailService.checkCode(email, verifyCode);
         JsonBuilder json = new JsonBuilder();
         if (res) {
