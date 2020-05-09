@@ -10,6 +10,9 @@ public interface IUserInfoService {
     // 获取用户信息
     ResponseJson<User> getUserInfo(String account, String password);
 
+    //检查账户是否存在
+    boolean isAccountExist(String account);
+
     // 改头像
     ResponseJson changePhoto(Integer id, String photo);
 
@@ -26,7 +29,7 @@ public interface IUserInfoService {
     ResponseJson queryUserIntegral(Integer id);
 
     // 重置密码
-    ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request);
+    ResponseJson resetPassword(String userAccount, String code, String newPassword);
 
     // 微信登录
     ResponseJson wxLoginIn(String code);

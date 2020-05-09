@@ -1,8 +1,10 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UIDGenerator;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
+import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ public class UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserCodeDao userCodeDao;
 
     public int registerByPhoneNumber(String phoneNumber, String password, String recCode) {
         User user = new User();
@@ -48,7 +53,7 @@ public class UserService {
         }
     }
 
-
-
-
+    public int deleteUserCode(String account){
+        return userCodeDao.deleteUserCode(account);
+    }
 }

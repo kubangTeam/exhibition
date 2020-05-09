@@ -12,13 +12,13 @@ public interface Constants {
      */
     int STATE_IS_ON_READY = 0;
     /**
-     * 审核未通过
-     */
-    int STATE_IS_ON_REFUSE = 3;
-    /**
      * 审核通过
      */
     int STATE_IS_ON_SHOW = 2;
+    /**
+     * 审核未通过
+     */
+    int STATE_IS_ON_REFUSE = 3;
     /**
      * 已删除状态
      */

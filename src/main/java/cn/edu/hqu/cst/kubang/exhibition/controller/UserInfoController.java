@@ -152,22 +152,6 @@ public class UserInfoController {
     public ResponseJson<List<UserIntegralDTO>> queryUserIntegralHistory(Integer id) {
         return userInfoService.queryUserIntegral(id);
     }
-
-    /**
-     * @Date: 2020.04.30 17:29
-     * @Description: 忘记密码
-     */
-    @ApiOperation(value = "忘记密码", notes = "返回005（成功）,024（参数不合法）")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户的id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "code", value = "短信验证码", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "newPassword", value = "新密码", required = true, dataType = "String", paramType = "query")
-    })
-    @PutMapping("/password/reset")
-    public ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request) {
-        return userInfoService.resetPassword(id, code, newPassword, request);
-    }
-
     /**
      * @Date: 2020.05.01 13:43
      * @Description: 微信登录

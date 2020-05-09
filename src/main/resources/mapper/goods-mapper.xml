@@ -99,14 +99,21 @@
         select category from dispalyzone where categoryId = #{id}
     </select>
     <select id="selectRandomGoods" parameterType="int" resultType="Goods">
-        select <include refid="selectFields"></include>
+       <!-- select <include refid="selectFields"></include>
         from goodsintroduce
         where goodsId >= (select floor(RAND() * (select MAX(goodsId) from goodsintroduce)))
         and goodsStatus = #{goodsStatus}
         <if test="categoryId!='0'.toString()">
             and categoryId = #{categoryId}
         </if>
-        order by goodsId limit 0,#{num}
+        order by goodsId limit 0,#{num}-->
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where
+        <if test="categoryId!=0">
+            categoryId = #{categoryId}
+        </if>
+        order by rand() limit #{num};
     </select>
 
 </mapper>

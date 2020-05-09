@@ -111,7 +111,8 @@ public class GoodsController implements Constants {
     @ResponseBody
     public List<Goods> recommendGoodsByCategoryId(int categoryId) {
 
-        return goodsService.getRandomGoods(4,categoryId);
+        List<Goods> list = goodsService.getRandomGoods(4,categoryId);
+        return list;
 
     }
     //根据展品Id查询所有在展的商品；

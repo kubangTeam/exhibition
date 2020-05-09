@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
-public class UserEmailServiceImpl implements IUserEmailService {
+public class  UserEmailServiceImpl implements IUserEmailService {
 
     @Autowired
     private UserCodeDao userCodeDao;
@@ -106,5 +106,6 @@ public class UserEmailServiceImpl implements IUserEmailService {
         }
         return 200;
     }
+
 
 }

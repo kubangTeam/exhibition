@@ -32,7 +32,8 @@ public class GoodsServiceTests {
         for(Goods goods : list){
             goodsService.addGoodsIntoRedis(goods.getGoodsId());
         }*/
-
+        for(int i = 0; i < 10;i++)
+            System.out.println(goodsService.getRandomGoods(4,4).size());
     }
 
     @Test

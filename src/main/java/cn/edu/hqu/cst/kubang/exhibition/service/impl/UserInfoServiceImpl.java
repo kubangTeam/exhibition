@@ -1,10 +1,9 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserInfoDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
-import cn.edu.hqu.cst.kubang.exhibition.entity.User;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegral;
-import cn.edu.hqu.cst.kubang.exhibition.entity.UserIntegralDTO;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserInfoService;
 import cn.edu.hqu.cst.kubang.exhibition.util.ConvertBean;
 import cn.edu.hqu.cst.kubang.exhibition.util.RandomUtil;
@@ -40,6 +39,10 @@ public class UserInfoServiceImpl implements IUserInfoService {
 
     @Autowired
     private UserInfoDao userInfoDao;
+    @Autowired
+    private UserCodeDao userCodeDao;
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public ResponseJson<User> getUserInfo(String account, String password) {
@@ -51,6 +54,15 @@ public class UserInfoServiceImpl implements IUserInfoService {
             return new ResponseJson(true, "017", "登录成功", user);
         } else
             return new ResponseJson(false, "003", "密码错误", null);
+    }
+
+    @Override
+    public boolean isAccountExist(String account){
+        User user = userInfoDao.queryUserInfoByAccount(account);
+        if(user == null)
+            return false;
+        else
+            return true;
     }
 
     @Override
@@ -105,17 +117,20 @@ public class UserInfoServiceImpl implements IUserInfoService {
     }
 
     @Override
-    public ResponseJson resetPassword(Integer id, String code, String newPassword, HttpServletRequest request) {
-        if (id == null || StringUtils.isEmpty(code) || StringUtils.isEmpty(newPassword) || id < 0)
+    public ResponseJson resetPassword(String userAccount, String code, String newPassword) {
+        if (userAccount == null || StringUtils.isEmpty(code) || StringUtils.isEmpty(newPassword))
             return new ResponseJson(false, "024", "参数不合法", null);
-        HttpSession session = request.getSession();
+        /*HttpSession session = request.getSession();
         String key = "messageCodeUserID" + id;
         // 因为session有过期时间，所以不进行时间差比较
-        String messageCode = (String) session.getAttribute(key);
+        String messageCode = (String) session.getAttribute(key);*/
+        User user = userDao.GetUseInfoFromAccount(userAccount);
+        UserCode userCode = userCodeDao.queryUserCodeByAccount(userAccount);
+        String messageCode = userCode.getCode();
         if (!code.equals(messageCode)) {
             return new ResponseJson(false, "025", "验证码错误", null);
         } else {
-            Integer changeRow = userInfoDao.resetUserPassword(id, newPassword);
+            Integer changeRow = userInfoDao.resetUserPassword(user.getUserId(), newPassword);
             if (changeRow == 1) {
                 return new ResponseJson(true, "005", "操作成功", null);
             } else {

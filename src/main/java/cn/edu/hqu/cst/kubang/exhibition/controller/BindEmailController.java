@@ -214,7 +214,7 @@ public class BindEmailController {
         }
         return json.getJsonResult();
     }
-    private ResponseJson<String> sendMail(String to, String subject, String content, String code) {
+    public ResponseJson<String> sendMail(String to, String subject, String content, String code) {
         //调用发送方法
         int status = userEmailService.sendSimpleMail(to, subject, content);
         if (status == 200) {

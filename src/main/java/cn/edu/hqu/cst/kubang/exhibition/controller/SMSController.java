@@ -45,7 +45,7 @@ public class SMSController {
     @ResponseBody
     public ResponseJson<String> sendVerifyCode(@RequestParam("phoneNumber")String phoneNumber){
         System.out.println("SMS send called");
-        //删除数据库中存在的相同邮箱的记录
+        //删除数据库中存在的相同手机的记录
         smsDao.deleteUserCode(phoneNumber);
         int result = smsService.sendShortMessage(phoneNumber);
         if(result ==101){
