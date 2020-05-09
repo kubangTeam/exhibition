@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyJoinExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
@@ -12,6 +13,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +26,9 @@ public class CompanyService implements ICompanyService {
 
     @Autowired
     CompanyDao companyDao;
+
+    @Autowired
+    Company company;
 
     @Autowired
     UserDao userDao;
@@ -45,6 +50,9 @@ public class CompanyService implements ICompanyService {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8个
 
 
     @Override
@@ -111,28 +119,93 @@ public class CompanyService implements ICompanyService {
 
     //查看公司所参加的展会
     @Override
-    public List<Exhibition> queryCompanyAttendedExhibition(int userId) {
+    public Map<String, Object> queryCompanyAttendedExhibition(int userId,int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        String info = null;
+
         int companyId = accountServiceImp.isCompanyOrNot(userId);
-        List<CompanyJoinExhibition> companyJoinExhibitionList =companyJoinExhibitionDao.selectExhibitionByCompanyId(companyId);
+        List<CompanyJoinExhibition> companyJoinExhibitionList =null;
         List exhibitionId = new ArrayList();
         List exbitionList = new ArrayList<Exhibition>();
 
-        for(int i  = 0;i<companyJoinExhibitionList.size();i++){
-            CompanyJoinExhibition temp = companyJoinExhibitionList.get(i);
-            exhibition = exhibitionDao.queryExhibitionByID(temp.getExhibitionId());
-            //查询到了展会就添加进去，为查询到展会就跳过继续查询
-            if(exhibition!=null) {
-                exhibitionId.add(i, temp.getExhibitionId());
-                exbitionList.add(i, exhibition);
-            }else continue;
+        if(companyJoinExhibitionDao.selectExhibitionByCompanyId(companyId)!=null){
+            for(int i  = 0;i<companyJoinExhibitionList.size();i++){
+                CompanyJoinExhibition temp = companyJoinExhibitionList.get(i);
+                exhibition = exhibitionDao.queryExhibitionByID(temp.getExhibitionId());
+                //查询到了展会就添加进去，为查询到展会就跳过继续查询
+                if(exhibition!=null) {
+                    exhibitionId.add(i, temp.getExhibitionId());
+                    exbitionList.add(i, exhibition);
+                }else continue;
+            }
+        }else{
+            info = "数据库错误";
+            map.put("info",info);
+            return map;
         }
-        return exbitionList;
-
+        map = Pagination.paginationCompany(pageNum,pageSize2,exbitionList);
+        return map;
     }
+
     @Override
-    //查询所有公司,用于搜索
-    public List<Company> queryAll(){
-        return companyDao.selectAll();
+    public Map<String, Object> queryAllCompany(int pageNum) {
+        Map<String,Object> map = new HashMap<>();
+        String info = null;
+        List<Company> companyList = null;
+        if(companyDao.selectAll()!=null){
+            companyList = companyDao.selectAll();
+            map = Pagination.paginationCompany(pageNum,pageSize2,companyList);
+        }else{
+            info = "数据库错误";
+            map.put("info",info);
+            return map;
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> queryCompanyByStatus(int pageNum,int status) {
+        Map<String,Object> map = new HashMap<>();
+        List<Company> companyList = null;
+        String info = null;
+        if(companyDao.getCompaniesByIdentifyStatus(status)!=null){
+            companyList = companyDao.getCompaniesByIdentifyStatus(status);
+            map = Pagination.paginationCompany(pageNum,pageSize2,companyList);
+        }else{
+            info = "数据库错误";
+            map.put("info",info);
+            return map;
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> CompanyInfoUpdate(int companyId, String name,
+                                                 String address, String website, String type,
+                                                 String tel, String introduce,
+                                                 String HeadPicture) {
+        Map<String,Object> map = new HashMap<>();
+        String info = null;
+        company =null;
+        company = companyDao.selectCompanyInformationById(companyId);
+        if(company!=null){
+            company.setName(name);
+            company.setAddress(address);
+            company.setWebsite(website);
+            company.setType(type);
+            company.setTelephone(tel);
+            company.setIntroduction(introduce);
+            company.setHeadPicture(HeadPicture);
+            if(companyDao.updateCompanyInformation(company)==1){
+                info = "修改成功";
+                //System.out.println(companyDao.selectCompanyInformationById(companyId).getWebsite());
+                map.put("info",info);
+            }
+        }else{
+            info = "商家不存在";
+            map.put("info",info);
+        }
+        return map;
     }
 
 

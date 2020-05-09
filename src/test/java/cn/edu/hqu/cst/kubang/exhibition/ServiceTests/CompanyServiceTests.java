@@ -76,7 +76,18 @@ public class CompanyServiceTests {
 
     @Test
     public void testQueryCompanyAttendedExhibition(){
-        List<Exhibition> result = companyService.queryCompanyAttendedExhibition(1);
-        System.out.println(result);
+//        List<Exhibition> result = companyService.queryCompanyAttendedExhibition(1);
+//        System.out.println(result);
     }
+
+
+
+
+
+//
+//    @Test
+//    public void testQueryCompanyAttendedExhibition(){
+//        List<Exhibition> result = companyService.queryCompanyAttendedExhibition(1);
+//        System.out.println(result);
+//    }
 }

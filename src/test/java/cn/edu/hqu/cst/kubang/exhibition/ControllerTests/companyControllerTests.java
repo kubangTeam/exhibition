@@ -2,7 +2,12 @@ package cn.edu.hqu.cst.kubang.exhibition.ControllerTests;
 
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.controller.CompanyController;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,10 +45,37 @@ public class companyControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private Company company;
+
+    @Autowired
+    private CompanyDao companyDao;
+
+
+    @Before
+    public void before(){
+        //生成测试数据
+        company.setName("测试数据");
+        company.setType("农业");
+        company.setAddress("测试地址");
+        company.setWebsite("www.test.com");
+        company.setTelephone("18162327341");
+        company.setIntroduction("这是一条测试数据");
+        company.setIdentifyStatus(1);
+        if(companyDao.addUnidentifiedCompanyInfo(company) ==1)
+            System.out.println("添加数据成功");
+    }
+
+    @After
+    public void after(){
+        if(companyDao.delete(company.getId())==1)
+            System.out.println("删除成功");
+    }
+
 
 
     @Test
-    public void testGetComapnyInformationById() throws Exception{
+    public void testGetCompanyInformationById() throws Exception{
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/company/getInformationByCompanyId")
                 .param("id","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -100,12 +134,39 @@ public class companyControllerTests {
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
     @Test
-    public void testUpdateInformation(){
+    public void testUpdateInformation() throws Exception {
+
+//        //转换为json
+//        String requestJson = JSONObject.toJSONString(goods);
+//        //查询热门展品 根据商品分类
+//        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/goods/add")
+//                .contentType(MediaType.APPLICATION_JSON).content(requestJson))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn();
+
+        File file = new File("/Users/sunquan/Downloads/psb.jpeg");
+        MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
+                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/company/updateInformation")
+                .file(firstFile)
+                .param("companyId",String.valueOf(company.getId()))
+                .param("name","测试代码")
+                .param("address","测试地址")
+                .param("website","www.update.com")
+                .param("type","1")
+                .param("introduce","这是一条测试代码")
+                .param("tel","11111111111"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
 
     }
-
-
-
-
 
 }

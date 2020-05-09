@@ -1,7 +1,9 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -47,8 +49,17 @@ public class AdminController {
     @Autowired
     private ExhibitionDao exhibitionDao;
 
+    @Autowired
+    private CompanyDao companyDao;
+
+
+    @Autowired
+    private Company company;
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示10
+
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8
 
     //管理员根据状态查询所有的展会
     @ApiOperation(value = "返回所有状态的展会",notes = "通过页数查询固定长度（pageSize1=10）的展会信息")
@@ -163,6 +174,34 @@ public class AdminController {
 
 
 
+
+    //管理员根据状态查询所有的展会
+    @ApiOperation(value = "管理员根据状态查询所有的公司",notes = "通过公司状态、页数查询固定长度（pageSize2）的展会信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "status", value = "公司的状态", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/queryCompanyByStatus/{status}/{pageNum}")
+    public PageInfo<Company> adminQueryCompanyByStatus(@PathVariable int status, @PathVariable int pageNum) {
+        PageHelper.startPage(pageNum, pageSize1);
+        List<Company> companyList  = companyDao.getCompaniesByIdentifyStatus(status);
+        PageInfo<Company> pageInfo = new PageInfo<>(companyList);
+        return pageInfo;
+    }
+
+
+    //管理员根据状态查询所有的展会
+    @ApiOperation(value = "管理员查询所有的公司",notes = "通过页数查询固定长度（pageSize2）的展会信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/queryAllCompany/{pageNum}")
+    public PageInfo<Company> adminQueryAllCompany(@PathVariable int pageNum) {
+        PageHelper.startPage(pageNum, pageSize1);
+        List<Company> companyList  = companyDao.selectAll();
+        PageInfo<Company> pageInfo = new PageInfo<>(companyList);
+        return pageInfo;
+    }
 
 
 }

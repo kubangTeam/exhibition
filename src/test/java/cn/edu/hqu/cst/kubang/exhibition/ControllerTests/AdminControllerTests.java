@@ -57,6 +57,40 @@ public class AdminControllerTests {
     }
 
     @Test
+    public void testQueryAllCompanyByStatus() throws Exception{
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryCompanyByStatus/1/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+    }
+
+    @Test
+    public void testQueryAllCompany() throws Exception{
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryAllCompany/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+    }
+
+
+
+    @Test
     public void testQueryExhibitionByStatus() throws Exception{
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryExhibitionByStatus/2/1"))//状态为1 页数为1
                 //.param("pageNum","1"))
@@ -148,11 +182,6 @@ public class AdminControllerTests {
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
-
-
-
-
-
 
 
 
