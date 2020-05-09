@@ -34,7 +34,7 @@
             <if test = "codeCertificatePic !=null">codeCertificatePic =#{codeCertificatePic},</if>
             <if test = "responsiblePersonName !=null">responsiblePersonName =#{responsiblePersonName},</if>
             <if test = "responsiblePersonIdcard !=null">responsiblePersonIdcard =#{responsiblePersonIdcard},</if>
-            <if test = "headPicture !=null">headPicure =#{headPicture}</if>
+            <if test = "headPicture !=null">headPicture =#{headPicture}</if>
         </set>
         where id = #{id}
     </update>

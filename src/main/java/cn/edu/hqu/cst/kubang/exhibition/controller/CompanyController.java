@@ -3,6 +3,8 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
 import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
@@ -104,7 +106,6 @@ public class CompanyController {
         } else {
             String webPath = domain + contextPath + "/images/company/";
             String pic = UploadFile.uploadFile(uploadPath, webPath, file);
-
             Map<String, Object> map = new HashMap<>();
             try{
                map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
@@ -120,31 +121,6 @@ public class CompanyController {
         map.put("code", code);
         return map;
     }
-
-
-//    @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：用户ID")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "用户ID", required = true, dataType = "int", paramType = "query")
-//    })
-//    @GetMapping("/getInformation")
-//    /**
-//     * 获取公司资料：前端根据账号Id查询商家资料
-//     */
-//    public Map<String, Object> getCompanyInformation(@RequestParam(value = "id") int id) {
-//        Map<String, Object> map = new HashMap<>();
-//        //判断该账号是否认证为商家账号
-//        int companyId = userService.isCompanyOrNot(id);
-//        if (companyId != 0) {
-//            company = companyDao.selectCompanyInformationById(companyId);
-//            String value = "该用户已通过商家认证";
-//            map.put("response", value);
-//            map.put("companyInformation", company);
-//        } else {
-//            String value = "该用户未通过商家认证";
-//            map.put("response", value);
-//        }
-//        return map;
-//    }
 
     @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：商家ID")
     @ApiImplicitParams({
@@ -170,22 +146,40 @@ public class CompanyController {
 
     /**
      * 修改商家资料，需要固定能够修改的字段
-     * @param company
+     * @param
      * @return
      */
     @ApiOperation(value = "修改商家资料",notes = "前端需要传送的参数：商家类")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "companyId", value = "商家ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "file", value = "头像", required = true, dataType = "MultipartFile", paramType = "query")
     })
     @PostMapping("/updateInformation")
     /**
      * 编辑公司资料
      */
-    public String updateCompanyInformation(@RequestBody Company company) {
-        if (companyDao.updateCompanyInformation(company) == 1) {
-            return "修改成功";
-        } else {
-            return "修改失败";
+    public ResponseJson<Map<String,Object>> updateCompanyInformation(@RequestParam(value = "companyId") int companyId,
+                                                                     @RequestParam(value = "name") String name,
+                                                                     @RequestParam(value = "address") String address,
+                                                                     @RequestParam(value = "website") String website,
+                                                                     @RequestParam(value = "type") String type,
+                                                                     @RequestParam(value = "tel") String tel,
+                                                                     @RequestParam(value = "introduce") String introduce,
+                                                                     @RequestParam(value = "file") MultipartFile file) throws IOException {
+
+        String webPath = domain + contextPath + "/images/company/";
+        String pic = UploadFile.uploadFile(uploadPath, webPath, file);
+        Map<String,Object>map =companyService.CompanyInfoUpdate(companyId,name,address,website,type,tel,introduce,pic);
+        if(map.get("info")=="修改成功"){
+            return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
         }
     }
 
@@ -194,14 +188,17 @@ public class CompanyController {
     @ApiOperation(value = "商家查询自己公司的参加过的展会")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "int", paramType = "path"),
-            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页(8个每一页)", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryAttendedExhibition/{userId}/{pageNum}")
-    public PageInfo<Exhibition> sellerQueryCompanyExhibitions(@PathVariable int userId, @PathVariable int pageNum) {
-        PageHelper.startPage(pageNum, pageSize1);
-        List<Exhibition> exhibitionList = companyService.queryCompanyAttendedExhibition(userId);
-        PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
-        return pageInfo;
+    public ResponseJson<Map<String,Object>> sellerQueryCompanyExhibitions(@PathVariable int userId, @PathVariable int pageNum) {
 
+        Map<String, Object> map = new HashMap<>();
+        map = companyService.queryCompanyAttendedExhibition(userId,pageNum);
+        if(map.get("info")=="页数错误"){
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }else{
+            return new ResponseJson(true, map);
+        }
     }
 }

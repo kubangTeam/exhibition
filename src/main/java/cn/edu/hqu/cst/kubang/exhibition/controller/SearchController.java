@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
@@ -45,6 +46,8 @@ public class SearchController {
 
     private GoodsService goodsService;
 
+    private CompanyDao companyDao;
+
     @Autowired
     public SearchController(IExhibitionService exhibitionService,
                             ICompanyService companyService,
@@ -78,7 +81,7 @@ public class SearchController {
     @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
     @RequestMapping(value = "/init/company", method = RequestMethod.GET)
     public ResponseJson<String> initCompanySearchData(){
-        List<Company> listCompany = companyService.queryAll();
+        List<Company> listCompany = companyDao.selectAll();
         //System.out.println(listCompany.get(0));
         for(Company company : listCompany)
             elasticsearchService.saveCompany(company);
