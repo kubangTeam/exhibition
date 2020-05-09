@@ -3,6 +3,7 @@ package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.ComparatorImpl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
+import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
@@ -56,6 +57,12 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
     @Autowired
     private  GoodsJoinExhibition goodsJoinExhibition;
+
+    @Autowired
+    private ExhibitionSubarea exhibitionSubarea;
+
+    @Autowired
+    private ExhibitionSubareaDao exhibitionSubareaDao;
 
 
 //    public Map<String,Object> addExhibitionCity(Exhibition exhibition){
@@ -153,21 +160,50 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
         return exhibitionDao.queryAllExhibitions();
     }
 
-    @Override
-    public Map<String,Object>  queryAllGoodsByExhibitionId(int exhibitionId,int pageNum){
-        List<Goods> goodsList =new ArrayList<Goods>();
-        List<GoodsJoinExhibition>goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId);
-        for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
-            if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
-                Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
-                goodsList.add(goods);
-            }else{
-                continue;
-            }
+
+
+    //从Java中随机抽取List集合中特定个数的子项
+    @NullDisable
+    public List<Goods> getSubStringByRandom(List<Goods> list, int count) {
+        List backList = null;
+        backList = new ArrayList<Goods>();
+        Random random = new Random();
+        int backSum = 0;
+        if (list.size() >= count) {
+            backSum = count;
+        } else {
+            backSum = list.size();
         }
-        goodsList = insertImageIntoGoods(goodsList);
+        for (int i = 0; i < backSum; i++) {
+            int target = random.nextInt(list.size());
+            backList.add(list.get(target));
+            list.remove(target);
+        }
+        return backList;
+    }
+    @Override
+    public Map<String,Object>  queryAllGoodsByExhibitionId(int exhibitionId){
+        List<Goods> goodsList =new ArrayList<Goods>();
+        List<GoodsJoinExhibition>goodsJoinExhibitions = null;
         Map<String,Object> map = new HashMap<>();
-        map = Pagination.paginationGoods(pageNum,pageSize3,goodsList);
+        String info = null;
+        if(goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId)!=null){
+            goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId);
+            for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
+                if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
+                    Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
+                    goodsList.add(goods);
+                }else{
+                    continue;
+                }
+            }
+            goodsList = insertImageIntoGoods(goodsList);
+            goodsList = getSubStringByRandom(goodsList,pageSize3);
+            map.put("goodsList",goodsList);
+        }else{
+            info = "无展品参展";
+            map.put("info",info);
+        }
         return map;
     }
 
@@ -201,19 +237,47 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
     @Override
     public Map<String, Object> queryGoodsByExhibitionIdAndSubareaId(int exhibitionId, int subAreaId, int pageNum) {
         Map<String,Object> map = new HashMap<>();
-        List<GoodsJoinExhibition>goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionIdAndSubareaId(exhibitionId,subAreaId);
+        List<GoodsJoinExhibition>goodsJoinExhibitions = null;
+        String info =null;
         List<Goods> goodsList =new ArrayList<Goods>();
-
-        for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
-            if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
-                Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
-                goodsList.add(goods);
-            }else{
-                continue;
+        if(goodsJoinExhibitionDao.selectByExhibitionIdAndSubareaId(exhibitionId,subAreaId)!=null){
+            goodsJoinExhibitions =  goodsJoinExhibitionDao.selectByExhibitionIdAndSubareaId(exhibitionId,subAreaId);
+            for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
+                if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
+                    Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
+                    goodsList.add(goods);
+                }else{
+                    continue;
+                }
             }
+            goodsList = insertImageIntoGoods(goodsList);
+            map = Pagination.paginationGoods(pageNum,pageSize2,goodsList);
+        }else{
+            info ="该分区无商品";
+            map.put("info",info);
         }
-        goodsList = insertImageIntoGoods(goodsList);
-        map = Pagination.paginationGoods(pageNum,pageSize3,goodsList);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> querySubareaByExhibitionId(int exhibitionId) {
+        Map<String, Object> map = new HashMap<>();
+        String info = null;
+        List<ExhibitionSubarea> subInformation =null;
+        Exhibition exhibition =null;
+        subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
+        exhibition = exhibitionDao.queryExhibitionByID(exhibitionId);
+        if(subInformation!=null){
+            if(exhibition.getStatus()==5){//展会状态为5，最终审核通过
+                info = "查询成功";
+                map.put("subInformation",subInformation);
+            }else {
+                info = "展会审核信息不对";
+            }
+        }else{
+            info ="该商家分区信息不存在";
+        }
+        map.put("info",info);
         return map;
     }
 

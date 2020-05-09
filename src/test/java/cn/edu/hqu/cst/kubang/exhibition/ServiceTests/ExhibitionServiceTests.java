@@ -88,8 +88,8 @@ public class ExhibitionServiceTests {
 
     @Test
     public void queryAllGoodsByExhibitionId(){
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,1));
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,10));
+//        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,1));
+//        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,10));
     }
 
 }

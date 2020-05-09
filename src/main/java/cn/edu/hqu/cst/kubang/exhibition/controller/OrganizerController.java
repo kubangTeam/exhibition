@@ -103,10 +103,11 @@ public class OrganizerController {
             @ApiImplicitParam(name = "session", value = "举办届数", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "picture", value = "展会图标", required = true, dataType = "MultipartFile", paramType = "query")
+            @ApiImplicitParam(name = "picture", value = "展会图标", required = true, dataType = "MultipartFile", paramType = "query"),
+            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true,allowMultiple=true, dataType = "String", paramType = "query")
     })
     @PostMapping("/holdExhibition")
-    public Map<String,String> CompanyIdentify(@RequestParam(value = "id") int userId,
+    public Map<String,String> holdExhibition(@RequestParam(value = "userId") int userId,
                                               @RequestParam(value = "name") String name,
                                               @RequestParam(value = "startTime") Date startTime,
                                               @RequestParam(value = "endTime") Date endTime,
@@ -115,6 +116,7 @@ public class OrganizerController {
                                               @RequestParam(value = "period") String period,
                                               @RequestParam(value = "introduce") String introduce,
                                               @RequestParam(value = "picture") MultipartFile file,
+                                             @RequestParam(value = "subAreaList") String[] subAreaList,
                                               HttpServletRequest request) throws IOException {
 
         String value = null;
