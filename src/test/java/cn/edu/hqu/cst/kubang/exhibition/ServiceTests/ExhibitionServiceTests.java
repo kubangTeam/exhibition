@@ -65,9 +65,9 @@ public class ExhibitionServiceTests {
 
     @Test
     public void testQueryOngoingExhibitionInfo(){
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo(1));//整数页
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo(5));//残余尾页
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo(6));//异常页
+        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//整数页
+//        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//残余尾页
+//        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//异常页
     }
 
     @Test
@@ -88,8 +88,8 @@ public class ExhibitionServiceTests {
 
     @Test
     public void queryAllGoodsByExhibitionId(){
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,1));
-        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,10));
+//        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,1));
+//        System.out.println(exhibitionService.queryAllGoodsByExhibitionId(1,10));
     }
 
 }

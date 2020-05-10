@@ -3,7 +3,9 @@ package cn.edu.hqu.cst.kubang.exhibition.ControllerTests;
 import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.controller.CompanyController;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
+import cn.edu.hqu.cst.kubang.exhibition.entity.User;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
@@ -51,6 +53,12 @@ public class companyControllerTests {
     @Autowired
     private CompanyDao companyDao;
 
+    @Autowired
+    private User user;
+
+    @Autowired
+    private UserDao userDao;
+
 
     @Before
     public void before(){
@@ -61,15 +69,37 @@ public class companyControllerTests {
         company.setWebsite("www.test.com");
         company.setTelephone("18162327341");
         company.setIntroduction("这是一条测试数据");
-        company.setIdentifyStatus(1);
+        company.setIdentifyStatus(1);//待审核
+        company.setHeadPicture("/pic/data");
         if(companyDao.addUnidentifiedCompanyInfo(company) ==1)
-            System.out.println("添加数据成功");
+            System.out.println("添加测试商家数据成功");
+
+
+        user.setUserAccount("11111111111");
+        //userInformation.setUserCompanyId(1);
+        user.setUserName("测试数据");
+        user.setUserPassword("测试数据密码");
+        //用户权限 0 普通用户 1 管理员
+        user.setUserPermission(1);
+        //用户积分
+        user.setUserIntegral(1000);
+        //用户推荐码
+        user.setUserReccode("测试推荐码");
+        //承办方id
+        user.setUserOrganizerId(1);
+        //测试商家认证不同情况
+        user.setUserCompanyId(company.getId());
+
+        if(userDao.UserRegisterFromPhoneNumber(user) ==1)
+            System.out.println("添加测试用户信息数据成功");
     }
 
     @After
     public void after(){
-        if(companyDao.delete(company.getId())==1)
-            System.out.println("删除成功");
+        int row = userDao.deleteUserInformation(user.getUserId());
+        int row1 = companyDao.delete(company.getId());
+        if(row==1 && row1 ==1)
+            System.out.println("删除数据成功");
     }
 
 
@@ -115,7 +145,7 @@ public class companyControllerTests {
                 MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/company/identify")
                 .file(firstFile)
-                .param("userId","1")
+                .param("userId",String.valueOf(user.getUserId()))
                 .param("name","测试代码")
                 .param("address","测试地址")
                 .param("website","www.test.com")
@@ -168,5 +198,8 @@ public class companyControllerTests {
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
 
     }
+
+
+
 
 }

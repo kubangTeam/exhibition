@@ -88,7 +88,7 @@ public class CompanyController {
      * 公司认证功能：前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、电话、简介、营业执照
      *
      */
-    public Map<String, String> CompanyIdentify(@RequestParam(value = "userId") int userId,
+    public ResponseJson<Map<String,Object>> CompanyIdentify(@RequestParam(value = "userId") int userId,
                                                @RequestParam(value = "name") String name,
                                                @RequestParam(value = "address") String address,
                                                @RequestParam(value = "website") String website,
@@ -100,26 +100,16 @@ public class CompanyController {
 
         String value = null;
         String code = null;
-        if (file.isEmpty()) {
-            value = "未选择文件";
-            code = "021";
-        } else {
-            String webPath = domain + contextPath + "/images/company/";
-            String pic = UploadFile.uploadFile(uploadPath, webPath, file);
-            Map<String, Object> map = new HashMap<>();
-            try{
-               map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
-            }
-            catch (Exception e){
-                System.out.println(e);
-            }
-            value = (String)map.get("msg");
-            code = "005";
+
+        String webPath = domain + contextPath + "/images/company/";
+        String pic = UploadFile.uploadFile(uploadPath, webPath, file);
+        Map<String, Object> map = new HashMap<>();
+        map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
+        if(map.get("msg")=="公司认证信息上传成功"){
+            return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, map);
         }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
     }
 
     @ApiOperation(value = "商家查询自己的资料", notes = "前端需要传送的参数：商家ID")

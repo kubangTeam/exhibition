@@ -150,7 +150,6 @@ public class GoodsController implements Constants {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "categoryId", value = "类别ID", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
-            //@ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/query/category", method = RequestMethod.GET)
     public ResponseJson<Map<String,Object>> queryAllGoodsByCategoryId(@RequestParam(value = "categoryId") int categoryId,

@@ -32,6 +32,7 @@ public class AdvertisementController {
     @ApiOperation(value = "返回推荐的横幅",notes = "前端调用即可，一页8个")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "页数", required = true, dataType = "int", paramType = "query")
+
     })
     @GetMapping("/get")
     /**

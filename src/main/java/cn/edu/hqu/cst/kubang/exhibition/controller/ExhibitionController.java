@@ -64,9 +64,6 @@ public class ExhibitionController {
     @Autowired
     private ExhibitionDao exhibitionDao;
 
-
-
-
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个
 
@@ -78,18 +75,14 @@ public class ExhibitionController {
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryExhibitionSubareaById")
-    public Map<String, Object> subareaInformation(@RequestParam(value = "exhibitionId")int exhibitionId) {
-        //List<ExhibitionSubarea> subInformation = new ArrayList<ExhibitionSubarea>();
+    public ResponseJson<Map<String,Object>> subareaInformation(@RequestParam(value = "exhibitionId")int exhibitionId) {
         Map<String, Object> map = new HashMap<>();
-        List<ExhibitionSubarea> subInformation = exhibitionSubareaDao.selectByExhibitionId(exhibitionId);
-        ExhibitionNew exhibition = exhibitionDao.queryExhibitionDetailsByID(exhibitionId);
-        if(subInformation!=null && exhibition!=null){
-            map.put("subInformation",subInformation);
-        }else {
-            String value = "该商家分区信息不存在";
-            map.put("response", value);
+        map = exhibitionService.querySubareaByExhibitionId(exhibitionId);
+        if(map.get("info")=="查询成功"){
+            return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
         }
-        return map;
     }
 
 
@@ -97,17 +90,14 @@ public class ExhibitionController {
      * 根据展会id查询展会的所有商品
      * @return
      */
-    @ApiOperation(value = " 根据展会id查询展会的所有商品", notes = "")
+    @ApiOperation(value = " 根据展会id查询展会的四个推荐商品", notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
     })
-    @GetMapping("/queryGoodsByExhibitionId")
-    public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId,
-                                            @RequestParam(value = "pageNum") int pageNum,
-                                            @RequestParam(value = "pageSize") int pageSize) {
-        Map<String,Object>map = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId,pageNum);
+    @GetMapping("/queryFourGoodsByExhibitionId")
+    public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId) {
+        Map<String,Object>map = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
         if(map.get("info")=="页数错误"){
             return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
         }else{
@@ -120,18 +110,16 @@ public class ExhibitionController {
      * 根据展会id查询展会id和二级分类id查询商品
      * @return
      */
-    @ApiOperation(value = "根据展会id查询展会id和二级分类id查询商品", notes = "展会Id+分区Id")
+    @ApiOperation(value = "根据展会id查询展会id和二级分类id查询商品", notes = "展会Id+分区Id(每一页固定8个数据)")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "subareaId", value = "分区id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/querySubareaGoodsByExhibitionId")
     public  ResponseJson<Map<String,Object>> allSubareaGoodById(@RequestParam(value = "exhibitionId")int exhibitionId,
                                               @RequestParam(value = "subareaId")int subareaId,
-                                              @RequestParam(value = "pageNum")int pageNum,
-                                              @RequestParam(value = "pageSize") int pageSize) {
+                                              @RequestParam(value = "pageNum")int pageNum) {
         Map<String,Object>map = exhibitionService.queryGoodsByExhibitionIdAndSubareaId(exhibitionId,subareaId,pageNum);
         if(map.get("info")=="页数错误"){
             return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
@@ -175,15 +163,15 @@ public class ExhibitionController {
      */
     @ApiOperation(value = "返回展会页面四个进行中的展会信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+            //@ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
-    @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
-    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
-        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo(pageNum);
-        if(map.get("info")=="页数错误"){
-            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
-        }else{
+    @GetMapping("/queryOngoingExhibitionInfo")
+    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo() {
+        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo();
+        if(map.get("info")=="查询成功"){
             return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, map);
         }
     }
 

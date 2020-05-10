@@ -61,8 +61,9 @@ public class CompanyService implements ICompanyService {
                                                String tel, String headPicture) {
         String msg = null;
         Integer companyId =null;
-
-        Company company = new Company();
+        User user =null;
+        //配置了bean就不能在定义同名对象？？？
+        //Company company = null;
         company.setName(name);
         company.setAddress(address);
         company.setWebsite(website);
@@ -71,45 +72,42 @@ public class CompanyService implements ICompanyService {
         company.setTelephone(tel);
         company.setHeadPicture(headPicture);
 
-        User user = userDao.GetUserInfoFromId(userId);
+        user = userDao.GetUserInfoFromId(userId);
         if(user != null) {
             companyId = user.getUserCompanyId();
-            if(companyId!=null){
-                Company _company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
-                if (_company != null) {
-                    if (_company.getIdentifyStatus() == 0) {
+            if (companyId == null || companyId == 0) {
+                //公司认证状态 1：上传成功，等待审核
+                company.setIdentifyStatus(1);
+                //将个人信息表的公司字段填上公司信息表的主键
+                if (companyDao.addUnidentifiedCompanyInfo(company) == 1) {
+                    if (userDao.setCompanyId(userId, company.getId()) == 1) {
+                        msg = "公司认证信息上传成功";
+                        companyId = company.getId();
+                        //将公司信息保存到ES服务器
+                        companyRepository.save(company);
+                    }
+                } else
+                    msg = "公司认证信息上传失败";
+            } else {
+                if (companyDao.selectCompanyInformationById(user.getUserCompanyId()) != null) {
+                    company = companyDao.selectCompanyInformationById(user.getUserCompanyId());
+                    if (company.getIdentifyStatus() == 0) {
                         msg = "该账号信息本地保存，等待正式上传";
-                    } else if (_company.getIdentifyStatus() == 1) {
+                    } else if (company.getIdentifyStatus() == 1) {
                         msg = "该账号正在等待审核";
-                    } else if (_company.getIdentifyStatus() == 2) {
+                    } else if (company.getIdentifyStatus() == 2) {
                         msg = "该账号已通过审核";
-                    } else if (_company.getIdentifyStatus() == 3) {
+                    } else if (company.getIdentifyStatus() == 3) {
                         msg = "该账号审核未通过";
-                    } else if (_company.getIdentifyStatus() == 4) {
+                    } else if (company.getIdentifyStatus() == 4) {
                         msg = "该账号已删除";
                     } else {
                         msg = "认证状态字段错误";
                     }
-                }
-            } else {
-                //公司认证状态 1：上传成功，等待审核
-                company.setIdentifyStatus(1);
-                //将个人信息表的公司字段填上公司信息表的主键
-                if (companyDao.addUnidentifiedCompanyInfo(company) > 0) {
-                    if (userDao.setCompanyId(userId, company.getId()) > 0) {
-                        msg = "公司认证信息上传成功";
-                        companyId =  company.getId();
-                        //将公司信息保存到ES服务器
-                        companyRepository.save(company);
-                    }
-                } else {
-                    msg = "公司认证信息上传失败";
-                }
+                }else
+                    msg = "用户已提交认证，但公司信息缺失";
             }
-        }
-        else {
-            msg = "无此用户";
-        }
+        } else msg = "无此用户";
 
         Map<String, Object> map = new HashMap<>();
         map.put("msg", msg);
@@ -146,6 +144,7 @@ public class CompanyService implements ICompanyService {
         map = Pagination.paginationCompany(pageNum,pageSize2,exbitionList);
         return map;
     }
+
 
     @Override
     public Map<String, Object> queryAllCompany(int pageNum) {

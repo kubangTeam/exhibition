@@ -46,7 +46,7 @@ public class ExhibitionControllerTests {
     public void testQueryExhibitionSubareaByExhibitionId() throws Exception{
         //根据展会id查询展会分区信息
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryExhibitionSubareaById")
-                .param("exhibitionId","1298"))
+                .param("exhibitionId","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -63,10 +63,8 @@ public class ExhibitionControllerTests {
     @Test
     public void testGoodsQueryByExhibitionId() throws Exception{
         //根据展会id查询展会所有商品
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryGoodsByExhibitionId")
-                .param("exhibitionId","1")
-                .param("pageNum","1")
-                .param("pageSize","2"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryFourGoodsByExhibitionId")
+                .param("exhibitionId","2"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -87,9 +85,8 @@ public class ExhibitionControllerTests {
         //根据展会id和二级id查询展会所有商品
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/querySubareaGoodsByExhibitionId")
                 .param("exhibitionId","1")
-                .param("subareaId","3")
-                .param("pageNum","1")
-                .param("pageSize","2"))
+                .param("subareaId","1")
+                .param("pageNum","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -151,7 +148,7 @@ public class ExhibitionControllerTests {
     @Test
     public void testQueryOngoingExhibitionInfo() throws Exception{
 
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/1"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -163,31 +160,6 @@ public class ExhibitionControllerTests {
         System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-
-        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/5"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        mvcResult.getResponse().setCharacterEncoding("UTF-8");
-        //mvcResult.andDo(print()).andExpect(status().isOk());
-        status=mvcResult.getResponse().getStatus();
-        content =mvcResult.getResponse().getContentAsString();
-        System.out.println(status);
-        System.out.println(content);
-        Assert.assertEquals(200,status);
-        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-
-        mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/exhibition/queryOngoingExhibitionInfo/6"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        mvcResult.getResponse().setCharacterEncoding("UTF-8");
-        //mvcResult.andDo(print()).andExpect(status().isOk());
-        status=mvcResult.getResponse().getStatus();
-        content =mvcResult.getResponse().getContentAsString();
-        System.out.println(status);
-        System.out.println(content);
-        Assert.assertEquals(200,status);
-        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-
 
     }
 

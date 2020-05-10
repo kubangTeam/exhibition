@@ -43,6 +43,8 @@ public class GoodsService implements Constants {
 
     @Value("${pagehelper.pageSize3}")
     private int pageSize3;//一页显示4个
+    @Value("${pagehelper.pageSize2}")
+    private int pageSize2;//一页显示8个
 
     ListeningExecutorService executorService = MoreExecutors.
             listeningDecorator(Executors.newFixedThreadPool(1));
@@ -57,9 +59,6 @@ public class GoodsService implements Constants {
         this.company = company;
         this.companyDao = companyDao;
     }
-
-
-
     //查询展品
         //根据ID和状态查询在展和不在展的商品
     public Goods queryGoodsById(int goodsId){
@@ -94,7 +93,7 @@ public class GoodsService implements Constants {
             list = goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW);
             list = this.insertImageIntoGoods(list);
         }
-        map = Pagination.paginationGoods(pageNum,pageSize3,list);
+        map = Pagination.paginationGoods(pageNum,pageSize2,list);
         return map;
     }
 
