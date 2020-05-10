@@ -104,10 +104,10 @@ public class CompanyService implements ICompanyService {
                     } else {
                         msg = "认证状态字段错误";
                     }
-                }
+                }else
+                    msg = "用户已提交认证，但公司信息缺失";
             }
-        }
-        else msg = "无此用户";
+        } else msg = "无此用户";
 
         Map<String, Object> map = new HashMap<>();
         map.put("msg", msg);
