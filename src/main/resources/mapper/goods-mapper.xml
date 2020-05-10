@@ -94,25 +94,20 @@
     <select id="selectGoodsNewById" parameterType="int" resultType="GoodsNewPojo">
         select * from goodsintroduce where goodsId = #{id}
     </select>
-
     <select id="selectCategoryNameByCategoryId" parameterType="int" resultType="String">
         select category from dispalyzone where categoryId = #{id}
     </select>
     <select id="selectRandomGoods" parameterType="int" resultType="Goods">
-       <!-- select <include refid="selectFields"></include>
+        select <include refid="selectFields"></include>
         from goodsintroduce
         where goodsId >= (select floor(RAND() * (select MAX(goodsId) from goodsintroduce)))
         and goodsStatus = #{goodsStatus}
-        <if test="categoryId!='0'.toString()">
-            and categoryId = #{categoryId}
-        </if>
-        order by goodsId limit 0,#{num}-->
+        order by goodsId limit 0,#{num}
+    </select>
+    <select id="selectRandomGoodsByCategoryId" parameterType="int" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where
-        <if test="categoryId!=0">
-            categoryId = #{categoryId}
-        </if>
+        where  categoryId = #{categoryId} and goodsStatus = #{goodsStatus}
         order by rand() limit #{num};
     </select>
 
