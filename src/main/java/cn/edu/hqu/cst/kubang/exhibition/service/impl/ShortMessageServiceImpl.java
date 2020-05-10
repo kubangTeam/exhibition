@@ -31,19 +31,19 @@ public class ShortMessageServiceImpl implements IShortMessageService
     private UserDao userDao;
 
     //对应阿里云账户的 accessKeyId
-    @Value("LTAI4FsEudzSht2tKHgD6LCE")
+    @Value("${SMS.accessKeyId}")
     private String accessKeyId;
 
     //对应阿里云账户的 accessKeySecret
-    @Value("VdJC8u8Pxd7XVqZw0hi4XtL74CegvD")
+    @Value("${SMS.accessKeySecret}")
     private String accessKeySecret;
 
     //对应签名名称
-    @Value("酷邦网")
+    @Value("${SMS.signName}")
     private String signName;
 
     //对应模板代码
-    @Value("SMS_175574488")
+    @Value("${SMS.templateCode}")
     private String templateCode;
 
     @Override
