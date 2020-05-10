@@ -104,6 +104,7 @@ public class CompanyController {
         String webPath = domain + contextPath + "/images/company/";
         String pic = UploadFile.uploadFile(uploadPath, webPath, file);
         Map<String, Object> map = new HashMap<>();
+
         map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
         if(map.get("msg")=="公司认证信息上传成功"){
             return new ResponseJson(true, map);

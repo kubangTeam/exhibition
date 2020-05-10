@@ -57,8 +57,8 @@ public class CompanyService implements ICompanyService {
 
     @Override
     public Map<String, Object> CompanyIdentify(int userId, String name, String address,
-                                               String website, String type, String introduce,
-                                               String tel, String headPicture) {
+                                               String website, String type, String tel,
+                                               String introduce, String headPicture) {
         String msg = null;
         Integer companyId =null;
         User user =null;

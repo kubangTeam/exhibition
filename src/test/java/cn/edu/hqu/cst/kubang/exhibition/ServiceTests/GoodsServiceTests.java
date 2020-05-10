@@ -43,5 +43,10 @@ public class GoodsServiceTests {
 
     }
 
+    @Test
+    public void queryGetGoodsByRandom(){
+        List<Goods>goodsList = goodsService.getRandomGoods(4,0);
+    }
+
 
 }
