@@ -181,6 +181,21 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
         }
         return backList;
     }
+    //从Java中随机抽取List集合中特定个数的子项
+    @NullDisable
+    public List<Exhibition> getFirstFourSubString(List<Exhibition> list, int count) {
+        List backList = null;
+        backList = new ArrayList<Exhibition>();
+        Random random = new Random();
+        int backSum = 0;
+        if (list.size() >= count) {
+            backSum = count;
+        } else {
+            backSum = list.size();
+        }
+        backList = list.subList(0,backSum);
+        return backList;
+    }
     @Override
     public Map<String,Object>  queryAllGoodsByExhibitionId(int exhibitionId){
         List<Goods> goodsList =new ArrayList<Goods>();
@@ -210,27 +225,34 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
 
     @Override
-    public Map<String,Object> queryOngoingExhibitionInfo(int pageNum) {
+    public Map<String,Object> queryOngoingExhibitionInfo() {
         Map<String,Object> map = new HashMap<>();
         //查询审核通过的展会列表 初审通过为2 终审通过为5
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
-        //获取当前时间
-        Date data = new Date();
-        long value = data.getTime();
-        data.setTime(value);
-        //去掉不符合时间的展会
-        Iterator<Exhibition> it = exhibitionList.iterator();
-        while (it.hasNext()) {
-            exhibition = it.next();
-            int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
-            int compareEnd = data.compareTo(exhibition.getEndTime());
-            if (!(compareStart == 1 && compareEnd == -1)) {//起始时间小于当前时间且结束时间大于当前时间
-                it.remove();
+        List<Exhibition> exhibitionList = null;
+        if(exhibitionDao.queryExhibitionsByStatus(5)!=null){
+            exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
+            //获取当前时间
+            Date data = new Date();
+            long value = data.getTime();
+            data.setTime(value);
+            //去掉不符合时间的展会
+            Iterator<Exhibition> it = exhibitionList.iterator();
+            while (it.hasNext()) {
+                exhibition = it.next();
+                int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
+                int compareEnd = data.compareTo(exhibition.getEndTime());
+                if (!(compareStart == 1 && compareEnd == -1)) {//起始时间小于当前时间且结束时间大于当前时间
+                    it.remove();
+                }
             }
+            Comparator comp = new ComparatorImpl();
+            Collections.sort(exhibitionList,comp);
+            exhibitionList = getFirstFourSubString(exhibitionList,4);
+            map.put("info","查询成功");
+            map.put("exhibitionList",exhibitionList);
+        }else{
+            map.put("info","展会不存在或者认证状态出错");
         }
-        Comparator comp = new ComparatorImpl();
-        Collections.sort(exhibitionList,comp);
-        map = Pagination.pagination(pageNum,pageSize3,exhibitionList);
         return map;
     }
 

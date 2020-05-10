@@ -39,7 +39,7 @@ public interface IExhibitionService {
     List<Exhibition> queryAll();
     Map<String,Object> queryAllGoodsByExhibitionId(int exhibitionId);
 
-    Map<String,Object> queryOngoingExhibitionInfo(int pageNum);
+    Map<String,Object> queryOngoingExhibitionInfo();
     Map<String ,Object>queryGoodsByExhibitionIdAndSubareaId(int exhibitionId,int subAreaId,int pageNum);
 
 

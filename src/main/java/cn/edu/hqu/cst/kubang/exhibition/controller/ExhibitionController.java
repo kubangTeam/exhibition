@@ -163,15 +163,15 @@ public class ExhibitionController {
      */
     @ApiOperation(value = "返回展会页面四个进行中的展会信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+            //@ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
-    @GetMapping("/queryOngoingExhibitionInfo/{pageNum}")
-    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo(@PathVariable int pageNum) {
-        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo(pageNum);
-        if(map.get("info")=="页数错误"){
-            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
-        }else{
+    @GetMapping("/queryOngoingExhibitionInfo")
+    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo() {
+        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo();
+        if(map.get("info")=="查询成功"){
             return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, map);
         }
     }
 
