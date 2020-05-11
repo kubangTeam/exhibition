@@ -5,6 +5,7 @@ import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.*;
@@ -40,6 +41,9 @@ public class GoodsService implements Constants {
     private Company company;
 
     private  CompanyDao companyDao;
+
+    @Autowired
+    private AccountServiceImp accountServiceImp;
 
     @Value("${pagehelper.pageSize3}")
     private int pageSize3;//一页显示4个

@@ -12,6 +12,4 @@ import org.springframework.stereotype.Repository;
 public interface OrganizerInformationDao {
     OrganizerInformation GetOrganizerInfoFromId(int id);
 
-
-
 }

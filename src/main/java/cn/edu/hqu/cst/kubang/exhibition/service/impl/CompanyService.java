@@ -121,7 +121,7 @@ public class CompanyService implements ICompanyService {
         Map<String,Object> map = new HashMap<>();
         String info = null;
 
-        int companyId = accountServiceImp.isCompanyOrNot(userId);
+        int companyId = (int)accountServiceImp.isCompanyOrNot(userId).get("companyId");
         List<CompanyJoinExhibition> companyJoinExhibitionList =null;
         List exhibitionId = new ArrayList();
         List exbitionList = new ArrayList<Exhibition>();

@@ -10,6 +10,8 @@ import cn.edu.hqu.cst.kubang.exhibition.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -29,33 +31,48 @@ public class AccountServiceImp implements IAccountService {
     @Autowired
     private ManagerDao managerDao;
 
-
-    @Autowired
-    private CompanyDao companyDao;
     @Autowired
     private Company company;
 
-    /**判断账号是否为承办方账号
-     *
-     * @param userId
-     * @return
-     */
+    @Autowired
+    private CompanyDao companyDao;
+
+
+
+
     @Override
-    public int isOrganizerOrNot(int userId) {
-        organizerInformation=organizerInformationDao.GetOrganizerInfoFromId(userId);
-        int organizerId = organizerInformation.getId();
-        if( organizerId!=0){
-            return organizerId;
+    public Map<String,Object> isOrganizerOrNot(int userId) {
+        Map<String,Object> map = new HashMap<>();
+        String msg = null;
+        User user = userDao.GetUserInfoFromId(userId);
+        Integer userOrganizerId = user.getUserOrganizerId();
+        if(user.getUserOrganizerId()==null ||user.getUserOrganizerId()==0){
+            msg = "个人用户";
         }else{
-            return 0;
+            if(organizerInformationDao.GetOrganizerInfoFromId(userOrganizerId)!=null){
+                organizerInformation = organizerInformationDao.GetOrganizerInfoFromId(userOrganizerId);
+                int status = organizerInformation.getIdentifyStatus();
+                if (status == 0) {
+                    msg = "该账号信息本地保存，等待正式上传";
+                } else if (status == 1) {
+                    msg = "该账号正在等待审核";
+                } else if (status == 2) {
+                    msg = "该账号已通过审核";
+                } else if (status == 3) {
+                    msg = "该账号审核未通过";
+                } else if (status == 4) {
+                    msg = "该账号已删除";
+                } else {
+                    msg = "认证状态字段错误";
+                }
+            }else{
+                msg = "承办方信息不存在";
+            }
         }
-
+        map.put("info",msg);
+        map.put("organizerId",userOrganizerId);
+        return map;
     }
-
-    /**
-     *
-     * @return
-     */
     @Override
     public int registerByPhoneNumber() {
         return 0;
@@ -82,15 +99,42 @@ public class AccountServiceImp implements IAccountService {
      * @return
      */
     @Override
-    public int isCompanyOrNot(int userId) {
+    public Map<String,Object> isCompanyOrNot(int userId) {
+
+        Map<String,Object> map = new HashMap<>();
+        String msg = null;
         User user = userDao.GetUserInfoFromId(userId);
         int userCompanyId = user.getUserCompanyId();
-        if(userCompanyId !=0){
-            return userCompanyId;
+        if(userCompanyId!=0){
+            if(companyDao.selectCompanyInformationById(userCompanyId)!=null){
+                company = companyDao.selectCompanyInformationById(userCompanyId);
+                int status = company.getIdentifyStatus();
+                if (status == 0) {
+                    msg = "该账号信息本地保存，等待正式上传";
+                } else if (status == 1) {
+                    msg = "该账号正在等待审核";
+                } else if (status == 2) {
+                    msg = "该账号已通过审核";
+                } else if (status == 3) {
+                    msg = "该账号审核未通过";
+                } else if (status == 4) {
+                    msg = "该账号已删除";
+                } else {
+                    msg = "认证状态字段错误";
+                }
+            }else{
+                msg = "公司信息不存在";
+            }
         }else{
-            return 0;
+            msg = "个人用户";
         }
+        map.put("info",msg);
+        map.put("companyId",userCompanyId);
+        return map;
     }
+
+
+
 
     @Override
     public String identifyUser(int userId) {
@@ -118,14 +162,15 @@ public class AccountServiceImp implements IAccountService {
     }
 
     @Override
-    public String identifyAdmin(String account) {
+    public Map<String,Object>identifyAdmin(String account) {
+        Map<String,Object> map = new HashMap<>();
+        String msg = null;
         manager = managerDao.checkAdminByAccount(account);
         if(manager.getPassword()!=null)
-            return "管理员";
+            msg = "管理员";
         else
-            return "非管理员账号或管理员账号错误";
+            msg = "非管理员账号或管理员账号错误";
+        map.put("info",msg);
+        return  map;
     }
-
-
-
 }
