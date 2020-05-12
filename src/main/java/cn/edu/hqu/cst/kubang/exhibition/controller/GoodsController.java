@@ -166,19 +166,30 @@ public class GoodsController implements Constants {
     //根据公司Id查询所有在展的商品;
     //参数：公司Id8
     //默认查询在展商品
-    @ApiOperation(value = "根据公司Id查询所有在展的商品", notes = "分页查询，默认查询在展商品")
+    @ApiOperation(value = "根据公司Id查询所有通过审核的商品", notes = "分页查询，默认查询在展商品")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "goodsStatus", value = "商品状态(可选，默认为2（已通过审核))", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    @RequestMapping(value = "/query/company", method = RequestMethod.GET)
+    //@RequestMapping(value = "/query/company", method = RequestMethod.GET)
+    @GetMapping("/query/company")
     public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
+                                                    @RequestParam(value = "goodsStatus",required = false) Integer goodsStatus,
                                                     @RequestParam(value = "pageNum") int pageNum,
                                                     @RequestParam(value = "pageSize") int pageSize) {
-        PageInfo<Goods> pageInfo = goodsService.queryAllGoodsByCompanyId(companyId, pageNum, pageSize);
+
+        PageInfo<Goods> pageInfo =null;
+        if(goodsStatus!=null){
+            pageInfo = goodsService.queryGoodsByCompanyIdAndStatus(companyId, goodsStatus,pageNum, pageSize);
+        }else{
+            pageInfo = goodsService.queryAllGoodsByCompanyId(companyId,pageNum, pageSize);
+        }
         return pageInfo;
     }
+
+
 
     //根据关键词查询所有在展的商品
     //参数：关键词
