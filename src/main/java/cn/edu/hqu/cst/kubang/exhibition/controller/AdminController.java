@@ -3,8 +3,11 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -51,6 +54,12 @@ public class AdminController {
 
     @Autowired
     private CompanyDao companyDao;
+
+    @Autowired
+    private GoodsDao goodsDao;
+
+    @Autowired
+    private GoodsService goodsService;
 
 
     @Autowired
@@ -202,6 +211,21 @@ public class AdminController {
         PageInfo<Company> pageInfo = new PageInfo<>(companyList);
         return pageInfo;
     }
+
+    //管理员根据状态查询所有的展会
+    @ApiOperation(value = "根据状态查询所有的商品",notes = "通过商品状态、页数查询长度为10的商品信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "status", value = "商品的状态", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/queryGoodsByStatus/{status}/{pageNum}")
+    public PageInfo<Goods> adminQueryGoodsByStatus(@PathVariable int status, @PathVariable int pageNum) {
+        //PageHelper.startPage(pageNum, pageSize1);
+        PageInfo<Goods> pageInfo =null;
+        pageInfo   = goodsService.queryByGoodsStatus(status,pageNum,pageSize1);
+        return pageInfo;
+    }
+
 
 
 }

@@ -104,6 +104,7 @@ public class CompanyController {
         String webPath = domain + contextPath + "/images/company/";
         String pic = UploadFile.uploadFile(uploadPath, webPath, file);
         Map<String, Object> map = new HashMap<>();
+
         map = companyService.CompanyIdentify(userId, name, address, website, type, tel, introduce, pic);
         if(map.get("msg")=="公司认证信息上传成功"){
             return new ResponseJson(true, map);
@@ -161,10 +162,17 @@ public class CompanyController {
                                                                      @RequestParam(value = "type") String type,
                                                                      @RequestParam(value = "tel") String tel,
                                                                      @RequestParam(value = "introduce") String introduce,
-                                                                     @RequestParam(value = "file") MultipartFile file) throws IOException {
+                                                                     @RequestParam(value = "file",required = false) MultipartFile file) throws IOException {
 
-        String webPath = domain + contextPath + "/images/company/";
-        String pic = UploadFile.uploadFile(uploadPath, webPath, file);
+        String webPath = null;
+        String pic =null;
+        if(file!=null){
+            webPath = domain + contextPath + "/images/company/";
+            pic = UploadFile.uploadFile(uploadPath, webPath, file);
+        }else{
+            pic = companyDao.selectCompanyInformationById(companyId).getHeadPicture();
+            System.out.println(pic);
+        }
         Map<String,Object>map =companyService.CompanyInfoUpdate(companyId,name,address,website,type,tel,introduce,pic);
         if(map.get("info")=="修改成功"){
             return new ResponseJson(true, map);

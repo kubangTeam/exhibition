@@ -57,8 +57,8 @@ public class CompanyService implements ICompanyService {
 
     @Override
     public Map<String, Object> CompanyIdentify(int userId, String name, String address,
-                                               String website, String type, String introduce,
-                                               String tel, String headPicture) {
+                                               String website, String type, String tel,
+                                               String introduce, String headPicture) {
         String msg = null;
         Integer companyId =null;
         User user =null;
@@ -121,7 +121,7 @@ public class CompanyService implements ICompanyService {
         Map<String,Object> map = new HashMap<>();
         String info = null;
 
-        int companyId = accountServiceImp.isCompanyOrNot(userId);
+        int companyId = (int)accountServiceImp.isCompanyOrNot(userId).get("companyId");
         List<CompanyJoinExhibition> companyJoinExhibitionList =null;
         List exhibitionId = new ArrayList();
         List exbitionList = new ArrayList<Exhibition>();

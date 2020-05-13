@@ -30,31 +30,16 @@ public class AccountServiceTests {
         accountServiceImp.registerFromEmail("2502665955@qq.com","1111111","hduisa");
     }
 
-//    //检查验证码
-//    Boolean checkCode(String email, String newCode);
-//
-//    //该邮箱是否被其他用户绑定
-//    boolean isUserEmailSingle(String email);
-//
-//    //该用户是否已经绑定了邮箱
-//    boolean isUserEmailBound(Integer userId);
-//
-//    // 收件人 主题 内容
-//    int sendSimpleMail(String to, String subject, String content);
-//    @Autowired
-//    private UserEmailServiceImpl userEmailService;
-//
-//    @Autowired
-//    private UserCode userCode;
-//
-//    @Test
-//    public void testCheckCode(){
-//        String email =
-//
-//    }
-//
-//    @Test
-//    public void testExamineAds(){
-//        System.out.println(advertisementService.examineAds(1,1));
-//    }
+
+    @Test
+    public void testIsCompanyOrNot(){
+        System.out.println(accountServiceImp.isCompanyOrNot(669));
+
+    }
+
+    @Test
+    public void testIsOrganizerOrNot(){
+        System.out.println(accountServiceImp.isOrganizerOrNot(1));
+
+    }
 }

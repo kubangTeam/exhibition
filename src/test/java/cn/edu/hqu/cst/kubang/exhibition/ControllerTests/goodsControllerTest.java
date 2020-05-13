@@ -206,6 +206,28 @@ public class goodsControllerTest {
     }
 
 
+    @Test
+    public void testGoodsByCompanyIdAndStatus() throws Exception{
+        //根据商品分类查询商品
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/goods/query/company")
+                .param("companyId","1")
+                //.param("goodsStatus","2")
+                .param("pageSize","1")
+                .param("pageNum","1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+    }
+
+
 
 //    /**
 //     * 测试上传文件（txt文件、jpg文件）

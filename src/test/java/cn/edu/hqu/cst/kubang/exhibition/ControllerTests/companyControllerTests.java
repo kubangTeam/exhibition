@@ -174,11 +174,30 @@ public class companyControllerTests {
 //                .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andReturn();
 
-        File file = new File("/Users/sunquan/Downloads/psb.jpeg");
-        MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
-                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/company/updateInformation")
-                .file(firstFile)
+//        File file = new File("/Users/sunquan/Downloads/psb.jpeg");
+//        MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
+//                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
+//        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/company/updateInformation")
+//                .file(firstFile)
+//                .param("companyId",String.valueOf(company.getId()))
+//                .param("name","测试代码")
+//                .param("address","测试地址")
+//                .param("website","www.update.com")
+//                .param("type","1")
+//                .param("introduce","这是一条测试代码")
+//                .param("tel","11111111111"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn();
+//        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+//        //mvcResult.andDo(print()).andExpect(status().isOk());
+//        int status=mvcResult.getResponse().getStatus();
+//        String content =mvcResult.getResponse().getContentAsString();
+//        System.out.println(status);
+//        System.out.println(content);
+//        Assert.assertEquals(200,status);
+//        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/company/updateInformation")
                 .param("companyId",String.valueOf(company.getId()))
                 .param("name","测试代码")
                 .param("address","测试地址")
@@ -188,6 +207,7 @@ public class companyControllerTests {
                 .param("tel","11111111111"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
+
         mvcResult.getResponse().setCharacterEncoding("UTF-8");
         //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
@@ -196,7 +216,6 @@ public class companyControllerTests {
         System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-
     }
 
 

@@ -48,8 +48,8 @@ public class CompanyServiceTests {
         company.setAddress("测试地址");
         company.setWebsite("www.test.com");
         company.setTelephone("18162327341");
-        company.setIntroduction("这是一条测试数据");
-        company.setIdentifyStatus(1);//待审核
+        company.setIntroduction("这是一条测试数据aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        company.setIdentifyStatus(0);//待审核
         company.setHeadPicture("/pic/data");
         if(companyDao.addUnidentifiedCompanyInfo(company) ==1)
             System.out.println("添加测试商家数据成功");
@@ -68,7 +68,8 @@ public class CompanyServiceTests {
         //承办方id
         user.setUserOrganizerId(1);
         //测试商家认证不同情况
-        user.setUserCompanyId(company.getId());
+        //user.setUserCompanyId(company.getId());
+        user.setUserCompanyId(0);
 
         if(userDao.UserRegisterFromPhoneNumber(user) ==1)
             System.out.println("添加测试用户信息数据成功");
@@ -92,7 +93,7 @@ public class CompanyServiceTests {
         int id = user.getUserId();
 
         map = companyService.CompanyIdentify(id,company.getName(),company.getAddress(),company.getWebsite(),
-                company.getType(),company.getIntroduction(),company.getTelephone(),company.getHeadPicture());
+                company.getType(),company.getTelephone(),company.getIntroduction(),company.getHeadPicture());
 
         System.out.println(map);
         System.out.println(map.get("company"));

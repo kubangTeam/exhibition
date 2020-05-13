@@ -42,4 +42,6 @@ public interface GoodsDao {
 
     List<Goods> selectRandomGoods(@Param("num")int num, @Param("goodsStatus")int goodsStatus);
     List<Goods> selectRandomGoodsByCategoryId(@Param("num")int num, @Param("categoryId")int categoryId,@Param("goodsStatus")int goodsStatus);
+
+    List<Goods> selectGoodsByStatus(@Param("goodsStatus")int goodsStatus);
 }

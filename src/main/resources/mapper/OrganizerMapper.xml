@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.OrganizerInformationDao">
+
+
+    <sql id="selectFields">
+        id,organizer,codeCertificateType,codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,
+        responsiblePersonpic1,responsiblePersonpic2,responsiblePersonTel,headPicure,identifyStatus
+    </sql>
+
+    <sql id="insertFields">
+        organizer,codeCertificateType,codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,
+        responsiblePersonpic1,responsiblePersonpic2,responsiblePersonTel,headPicure,identifyStatus
+    </sql>
+
+    <select id="GetOrganizerInfoFromId" resultType="OrganizerInformation">
+        select <include refid="selectFields"></include>
+        from organazerinformation
+        where id = #{id}
+    </select>
+
+</mapper>

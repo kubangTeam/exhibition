@@ -111,4 +111,11 @@
         order by rand() limit #{num};
     </select>
 
+
+    <select id="selectGoodsByStatus" parameterType="int" resultType="Goods">
+        select <include refid="selectFields"></include>
+        from goodsintroduce
+        where goodsStatus = #{goodsStatus}
+    </select>
+
 </mapper>

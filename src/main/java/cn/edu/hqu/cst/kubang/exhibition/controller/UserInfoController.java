@@ -164,4 +164,6 @@ public class UserInfoController {
     public ResponseJson wxLoginIn(String code) {
         return userInfoService.wxLoginIn(code);
     }
+
+
 }
