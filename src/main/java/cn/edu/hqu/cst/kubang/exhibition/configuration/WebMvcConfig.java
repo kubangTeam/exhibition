@@ -25,11 +25,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String companyPath;
     @Value("${exhibition.path.upload.organizer}")
     private String organizerPath;
+    @Value("${exhibition.path.upload.advertisement}")
+    private String advertisement;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/goods/**").addResourceLocations("file:"+ goodsPath);
         registry.addResourceHandler("/images/user/**").addResourceLocations("file:"+ userPath);
         registry.addResourceHandler("/images/company/**").addResourceLocations("file:"+ companyPath);
         registry.addResourceHandler("/images/organizer/**").addResourceLocations("file:"+ organizerPath);
+        registry.addResourceHandler("/images/advertisement/**").addResourceLocations("file:"+ advertisement);
     }
 }

@@ -33,7 +33,7 @@ public class Goods implements Serializable {
     //存储用ik_max_word分词器，搜索用ik_smart分词器
     private String goodsName;//展品名
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Integer)
     private int categoryId;//类别ID
 
     @Field(type = FieldType.Text)

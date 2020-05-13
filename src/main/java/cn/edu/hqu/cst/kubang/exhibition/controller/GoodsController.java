@@ -197,7 +197,7 @@ public class GoodsController implements Constants {
     //添加展品信息
     //参数：展品类
     //错误状态码：-008
-    @ApiOperation(value = "添加展品信息", notes = "错误状态码：-008;根据返回的展品ID上传展品图片")
+    @ApiOperation(value = "添加展品信息", notes = "添加成功(005),添加失败(-008);根据返回的展品ID上传展品图片")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goods", value = "展品对象", required = true, dataType = "Goods", paramType = "body")
             // @ApiImplicitParam(name = "files", value = "文件数组", dataType = "MultipartFile[]", paramType = "query")
