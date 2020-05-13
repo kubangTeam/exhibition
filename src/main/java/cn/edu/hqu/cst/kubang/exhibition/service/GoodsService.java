@@ -227,13 +227,18 @@ public class GoodsService implements Constants {
             }
             });
         return true;
-
-
     }*/
    public List<Goods> getRandomGoods(int num, int categoryId){
+       List<Goods> list;
        if(categoryId == 0)
-           return this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, STATE_IS_ON_SHOW));
+           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, STATE_IS_ON_SHOW));
        else
-           return this.insertImageIntoGoods(goodsDao.selectRandomGoodsByCategoryId(num,categoryId, STATE_IS_ON_SHOW));
+           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoodsByCategoryId(num,categoryId, STATE_IS_ON_SHOW));
+       if(list.size() == num)
+           return list;
+       else {
+           log.info("推荐展品异常，个数为"+list.size()+",应该为"+num);
+           return getRandomGoods(num, categoryId);
+       }
    }
 }

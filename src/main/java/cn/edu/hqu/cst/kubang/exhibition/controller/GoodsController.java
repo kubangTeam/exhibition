@@ -100,6 +100,7 @@ public class GoodsController implements Constants {
     @ApiOperation(value = "热门展品", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
     public List<Goods> getHotGoods() {
+
         return goodsService.getRandomGoods(COUNT_RECOMMEND,0);
     }
 
