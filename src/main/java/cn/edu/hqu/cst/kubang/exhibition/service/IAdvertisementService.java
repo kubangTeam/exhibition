@@ -13,4 +13,5 @@ import java.util.Map;
 public interface IAdvertisementService {
     Map<String,Object> recommendAds(int pageNum);//推荐广告页，每页推送8个
     String examineAds(int id,int type);//审核广告
+    Map<String,Object> updateAds(Advertisement advertisement);//推荐广告页，每页推送8个
 }

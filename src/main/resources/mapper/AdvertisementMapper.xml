@@ -59,8 +59,9 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteAllAds">
+    <delete id="deleteAdsById">
         delete from advertisement
+        where id =#{id}
     </delete>
 
 </mapper>
