@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author: sunquan
@@ -215,14 +216,27 @@ public class AdminController {
     //管理员根据状态查询所有的展会
     @ApiOperation(value = "根据状态查询所有的商品",notes = "通过商品状态、页数查询长度为10的商品信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "status", value = "商品的状态", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "status", value = "商品的状态(可选)", required = true, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
-    @GetMapping("/queryGoodsByStatus/{status}/{pageNum}")
-    public PageInfo<Goods> adminQueryGoodsByStatus(@PathVariable int status, @PathVariable int pageNum) {
-        //PageHelper.startPage(pageNum, pageSize1);
-        PageInfo<Goods> pageInfo =null;
-        pageInfo   = goodsService.queryByGoodsStatus(status,pageNum,pageSize1);
-        return pageInfo;
+    //@RequestMapping(value ={"/queryGoodsByStatus/{status}/{pageNum}","/queryGoodsByStatus/{status}/{pageNum}"})
+    @GetMapping({"/queryGoodsByStatus/{pageNum}/{status}","/queryGoodsByStatus/{pageNum}"})
+    public PageInfo<Goods> adminQueryGoodsByStatus(@PathVariable Optional<Integer> status,
+                                                   @PathVariable int pageNum) {
+
+        if(status.isPresent()){
+            PageHelper.startPage(pageNum, pageSize1);
+            PageInfo<Goods>pageInfo   = goodsService.queryByGoodsStatus(status.get(),pageNum,pageSize1);
+            return pageInfo;
+        }else{
+            PageHelper.startPage(pageNum, pageSize1);
+            List<Goods> goodsList  =goodsService.queryGoodsALl();
+            PageInfo<Goods> pageInfo = new PageInfo<>(goodsList);
+            return pageInfo;
+        }
     }
+
+
+
+
 }
