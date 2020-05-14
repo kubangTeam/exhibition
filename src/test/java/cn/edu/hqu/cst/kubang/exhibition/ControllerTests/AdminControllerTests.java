@@ -42,7 +42,6 @@ public class AdminControllerTests {
     @Test
     public void testQueryAllExhibition() throws Exception{
         MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryAllExhibition/1"))
-                //.param("pageNum","1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -58,7 +57,7 @@ public class AdminControllerTests {
 
     @Test
     public void testQueryAllCompanyByStatus() throws Exception{
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryCompanyByStatus/1/1"))
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryCompanyByStatus/2/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 

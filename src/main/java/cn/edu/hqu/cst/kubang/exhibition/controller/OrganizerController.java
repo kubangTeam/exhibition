@@ -3,7 +3,10 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
+import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
+import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +54,9 @@ public class OrganizerController {
 
     @Autowired
     private ElasticsearchService elasticsearchService;
+
+    @Autowired
+    private AccountServiceImp accountServiceImp;
 
     @Value("${exhibition.path.domain}")
     private String domain;
@@ -95,50 +102,48 @@ public class OrganizerController {
 
     @ApiOperation(value = "展会举办方举办一个展会",notes = "提交展会信息字段")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "举办方账号ID", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "Date", paramType = "query"),
-            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "query"),
-            @ApiImplicitParam(name = "exhibitionHallId", value = "展馆id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "session", value = "举办届数", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "picture", value = "展会图标", required = true, dataType = "MultipartFile", paramType = "query"),
-            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true,allowMultiple=true, dataType = "String", paramType = "query")
+            @ApiImplicitParam(name = "id", value = "举办方账号ID", required = true, dataType = "int", paramType = "body"),
+            @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "Date", paramType = "body"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "body"),
+            @ApiImplicitParam(name = "exhibitionHallId", value = "展馆id", required = true, dataType = "int", paramType = "body"),
+            @ApiImplicitParam(name = "session", value = "举办届数", required = true, dataType = "int", paramType = "body"),
+            @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "file", value = "展会图标", required = true, dataType = "file", paramType = "form"),
+            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true,allowMultiple=true, dataType = "String", paramType = "body")
     })
     @PostMapping("/holdExhibition")
-    public Map<String,String> holdExhibition(@RequestParam(value = "userId") int userId,
-                                              @RequestParam(value = "name") String name,
-                                              @RequestParam(value = "startTime") Date startTime,
-                                              @RequestParam(value = "endTime") Date endTime,
-                                              @RequestParam(value = "exhibitionHallId") int exhibitionHallId,
-                                              @RequestParam(value = "session") int session,
-                                              @RequestParam(value = "period") String period,
-                                              @RequestParam(value = "introduce") String introduce,
-                                              @RequestParam(value = "picture") MultipartFile file,
-                                             @RequestParam(value = "subAreaList") String[] subAreaList,
-                                              HttpServletRequest request) throws IOException {
+    public ResponseJson<Map<String,Object>> holdExhibition(@RequestParam(value = "userId") int userId,
+                                                           @RequestParam(value = "name") String name,
+                                                           @RequestParam(value = "startTime") Date startTime,
+                                                           @RequestParam(value = "endTime") Date endTime,
+                                                           @RequestParam(value = "exhibitionHallId") int exhibitionHallId,
+                                                           @RequestParam(value = "session") int session,
+                                                           @RequestParam(value = "period") String period,
+                                                           @RequestParam(value = "introduce") String introduce,
+                                                           @RequestParam(value = "subAreaList") List<String> subAreaList,
+                                                           @RequestParam(value = "file") MultipartFile file
+                                              ) throws IOException {
 
         String value = null;
-        String code = null;
-        String path = request.getServletContext().getRealPath("/exhibitionPic");
-        if(file.isEmpty()){
-            value = "未选择文件";
-            code = "021";
-        }
-        else{
-            String webPath = domain + contextPath + "/images/organizer/";
-            String pic = UploadFile.uploadFile(path, webPath, file);
-            int status =exhibitionService.holdExhibition(userId,name,startTime,endTime,exhibitionHallId,session,period,introduce,pic);
-            if(status ==1){
-                value = "上传展会成功";
-                code = "005";
-            }
-        }
+
+        String webPath = null;
+        String pic =null;
         Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
+        webPath = domain + contextPath + "/images/company/";
+        pic = UploadFile.uploadFile(uploadPath, webPath, file);
+        if(accountServiceImp.identifyUser(userId)=="承办方"){
+            int exhibitionId =exhibitionService.holdExhibition(userId,name,startTime,endTime,exhibitionHallId,session,period,introduce,pic);
+            int result = exhibitionService.addSubareaInfo(subAreaList,exhibitionId);
+            if(exhibitionId !=0 && result ==1){
+                value = "上传展会成功";
+            }
+            map.put("response", value);
+            return new ResponseJson(true, map);
+        }else{
+            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
+        }
     }
 
 

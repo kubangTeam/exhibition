@@ -107,9 +107,28 @@ public class ExhibitionServiceImpl implements IExhibitionService{
         exhibition.setTel(userDao.GetUserInfoFromId(Id).getUserAccount());
         if (exhibitionDao.saveExhibition(exhibition) == 1) {
             exhibitionRepository.save(exhibition);//将该展会添加到ES中
-            return 1;
+            return exhibition.getId();
 
         }else return 0;
+    }
+
+    @Override
+    public int addSubareaInfo(List<String> subAreaList, int exhibitionId) {
+        String tag =null;
+        exhibitionSubarea.setExhibitionId(exhibitionId);
+        for (String temp:subAreaList){
+            exhibitionSubarea.setSubarea(temp);
+            int  i= exhibitionSubareaDao.insertExhibitionSubareaInfo(exhibitionSubarea);
+            if(i==1){
+                tag = temp;
+                continue;
+            }
+
+            else break;
+        }
+        if(tag!=subAreaList.get(subAreaList.size()-1)){
+            return 0;
+        }else return 1;
     }
 
     @Override
