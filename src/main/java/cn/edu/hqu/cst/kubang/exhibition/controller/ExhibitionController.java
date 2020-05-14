@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
@@ -43,7 +44,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/exhibition")
 @Api(tags = "展会方相关功能")
-public class ExhibitionController {
+public class ExhibitionController implements Constants {
 
     @Autowired
     private CompanyJoinExhibitionDao companyJoinExhibitionDao;
@@ -87,21 +88,21 @@ public class ExhibitionController {
 
 
     /**
-     * 根据展会id查询展会的所有商品
+     * 根据展会id推荐四个商品
      * @return
      */
-    @ApiOperation(value = " 根据展会id查询展会的四个推荐商品", notes = "")
+    @ApiOperation(value = " 根据展会Id推荐四个商品", notes = "重新请求实现换一批，没有在展商品(-008)")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "exhibitionId", value = "展会Id", required = true, dataType = "int", paramType = "query")
     })
     @GetMapping("/queryFourGoodsByExhibitionId")
     public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId) {
-        Map<String,Object>map = exhibitionService.queryAllGoodsByExhibitionId(exhibitionId);
-        if(map.get("info")=="页数错误"){
-            return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
-        }else{
-            return new ResponseJson(true, map);
+        List<Goods> list = exhibitionService.queryGoodsByExhibitionId(exhibitionId);
+        if(list.isEmpty())
+            return new ResponseJson(false, "-008","没有在展商品",null);
+        else{
+            List<Goods> result = this.getRandomNumList(COUNT_RECOMMEND_2,list);
+            return new ResponseJson(true,"005","操作成功",result);
         }
     }
 
@@ -173,6 +174,19 @@ public class ExhibitionController {
         }else{
             return new ResponseJson(false, map);
         }
+    }
+    private <T> List<T> getRandomNumList(int nums, List<T> list) {
+        List<T> result = new ArrayList<>();
+        List temp = new ArrayList<>();
+        Random r = new Random();
+        while(result.size() < nums){
+            int num = r.nextInt(list.size());
+            if(!temp.contains(num)) {
+                result.add(list.get(num));
+                temp.add(num);
+            }
+        }
+        return result;
     }
 
 

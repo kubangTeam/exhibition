@@ -26,5 +26,9 @@ public interface Constants {
     /**
      * 推荐展品数量
      */
-    int COUNT_RECOMMEND = 6;
+    int COUNT_RECOMMEND_1 = 6;
+    /**
+     * 推荐展品数量
+     */
+    int COUNT_RECOMMEND_2= 4;
 }

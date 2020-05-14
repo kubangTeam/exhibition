@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class ExhibitionServiceImpl implements IExhibitionService, Constants {
+public class ExhibitionServiceImpl implements IExhibitionService{
 
     @Autowired
     private ExhibitionDao exhibitionDao;
@@ -74,7 +74,20 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 //        map.put("CityName",city);
 //        return map;
 //    }
-
+    @NullDisable
+    public List<Exhibition> getFirstFourSubString(List<Exhibition> list, int count) {
+        List backList = null;
+        backList = new ArrayList<Exhibition>();
+        Random random = new Random();
+        int backSum = 0;
+        if (list.size() >= count) {
+            backSum = count;
+        } else {
+            backSum = list.size();
+        }
+        backList = list.subList(0,backSum);
+        return backList;
+    }
     @Override
     public int holdExhibition(int Id, String name, Date startTime,
                               Date endTime, int exhibitionHallId,
@@ -162,64 +175,24 @@ public class ExhibitionServiceImpl implements IExhibitionService, Constants {
 
 
 
-    //从Java中随机抽取List集合中特定个数的子项
-    @NullDisable
-    public List<Goods> getSubStringByRandom(List<Goods> list, int count) {
-        List backList = null;
-        backList = new ArrayList<Goods>();
-        Random random = new Random();
-        int backSum = 0;
-        if (list.size() >= count) {
-            backSum = count;
-        } else {
-            backSum = list.size();
-        }
-        for (int i = 0; i < backSum; i++) {
-            int target = random.nextInt(list.size());
-            backList.add(list.get(target));
-            list.remove(target);
-        }
-        return backList;
-    }
-    //从Java中随机抽取List集合中特定个数的子项
-    @NullDisable
-    public List<Exhibition> getFirstFourSubString(List<Exhibition> list, int count) {
-        List backList = null;
-        backList = new ArrayList<Exhibition>();
-        Random random = new Random();
-        int backSum = 0;
-        if (list.size() >= count) {
-            backSum = count;
-        } else {
-            backSum = list.size();
-        }
-        backList = list.subList(0,backSum);
-        return backList;
-    }
     @Override
-    public Map<String,Object>  queryAllGoodsByExhibitionId(int exhibitionId){
-        List<Goods> goodsList =new ArrayList<Goods>();
-        List<GoodsJoinExhibition>goodsJoinExhibitions = null;
-        Map<String,Object> map = new HashMap<>();
-        String info = null;
+    public List<Goods>  queryGoodsByExhibitionId(int exhibitionId){
+        List<Goods> goodsList =new ArrayList<>();
+        List<GoodsJoinExhibition> goodsJoinExhibitions = null;
         if(goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId)!=null){
             goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId);
             for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
                 if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
                     Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
                     goodsList.add(goods);
-                }else{
-                    continue;
                 }
+                else
+                    continue;
             }
             goodsList = insertImageIntoGoods(goodsList);
-            goodsList = getSubStringByRandom(goodsList,pageSize3);
-            map.put("goodsList",goodsList);
-        }else{
-            info = "无展品参展";
-            map.put("info",info);
+
         }
-        return map;
+        return goodsList;
     }
 
 

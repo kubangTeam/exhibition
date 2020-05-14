@@ -74,26 +74,12 @@ public class GoodsController implements Constants {
         this.elasticsearchService = elasticsearchService;
     }
 
-    private <T> List<T> getRandomNumList(int nums, List<T> list) {
-        List<T> result = new ArrayList<>();
-        List temp = new ArrayList<>();
-        Random r = new Random();
-        while(result.size() < nums){
-            int num = r.nextInt(list.size());
-            if(!temp.contains(num)) {
-                result.add(list.get(num));
-                temp.add(num);
-            }
-        }
-        return result;
-    }
-
     //展品推荐  个数：recNum  goodsStatus为0的不推荐
     @ApiOperation(value = "展品猜你喜欢", notes = "无参，重新请求可实现“换一批”")
     @RequestMapping(path = "/recommend", method = RequestMethod.GET)
     @ResponseBody
     public List<Goods> getRecommendGoods() {
-        return goodsService.getRandomGoods(COUNT_RECOMMEND,0);
+        return goodsService.getRandomGoods(COUNT_RECOMMEND_1,0);
     }
 
     //热门展品  个数：recNum  goodsStatus为0的不推荐
@@ -101,13 +87,13 @@ public class GoodsController implements Constants {
     @RequestMapping(path = "/hot", method = RequestMethod.GET)
     public List<Goods> getHotGoods() {
 
-        return goodsService.getRandomGoods(COUNT_RECOMMEND,0);
+        return goodsService.getRandomGoods(COUNT_RECOMMEND_1,0);
     }
 
-    @ApiOperation(value = "根据一级分类Id推荐4个展品", notes = "重新请求可实现“换一批”")
+    @ApiOperation(value = "根据分类Id推荐4个展品", notes = "重新请求可实现“换一批”")
     @RequestMapping(path = "/fourGoods", method = RequestMethod.GET)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "categoryId", value = "分类ID", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "Id", value = "分类ID", required = true, dataType = "int", paramType = "query")
     })
     @ResponseBody
     public List<Goods> recommendGoodsByCategoryId(int categoryId) {
