@@ -77,8 +77,8 @@ public class AdminController {
     })
     @GetMapping("/queryAllExhibition/{pageNum}")
     public PageInfo<Exhibition> adminQueryAllExhibition(@PathVariable int pageNum) {
-        List<Exhibition> exhibitionList  = exhibitionDao.queryAllExhibitions();
         PageHelper.startPage(pageNum, pageSize1);
+        List<Exhibition> exhibitionList  = exhibitionDao.queryAllExhibitions();
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -91,8 +91,8 @@ public class AdminController {
     })
     @GetMapping("/queryExhibitionByStatus/{status}/{pageNum}")
     public PageInfo<Exhibition> adminQueryExhibitionByStatus(@PathVariable int status, @PathVariable int pageNum) {
-        List<Exhibition> exhibitionList  = exhibitionDao.queryExhibitionsByStatus(status);
         PageHelper.startPage(pageNum, pageSize1);
+        List<Exhibition> exhibitionList  = exhibitionDao.queryExhibitionsByStatus(status);
         PageInfo<Exhibition> pageInfo = new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -105,8 +105,8 @@ public class AdminController {
     })
     @GetMapping("/queryExhibitionByKeyWord")
     public PageInfo<Exhibition> adminQueryExhibitionByKeyWords(@RequestParam("keyWord") String[] keyWord, @RequestParam("pageNum")int pageNum) {
-        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
         PageHelper.startPage(pageNum, pageSize1);
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByKeyWord(keyWord);
         PageInfo<Exhibition> pageInfo =new PageInfo<>(exhibitionList);
         return pageInfo;
     }
@@ -225,7 +225,4 @@ public class AdminController {
         pageInfo   = goodsService.queryByGoodsStatus(status,pageNum,pageSize1);
         return pageInfo;
     }
-
-
-
 }

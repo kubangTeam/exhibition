@@ -28,7 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -55,32 +58,42 @@ public class OrganizerControllerTests {
     @Before
     public void before(){
         //生成测试数据
-        //1、提交展会分区信息
-
-
-
-//        exhibition.setName("测试展会");
-//        exhibition.setStatus(1);
-//        exhibition.setStartTime();
-//        exhibition.setEndTime();
-//        exhibition.setExhibitionHallId();
-//        exhibition.setContractorId();
-//        exhibition.setSession();
-//        exhibition.setPeriod();
-//        exhibition.setIntroduction();
-//        exhibition.setTel();
-//        exhibition.setPicture();
-//        exhibition.setSubareaId();
-//
-//        if(companyDao.addUnidentifiedCompanyInfo(company) ==1)
-//            System.out.println("添加数据成功");
-//    }
-//
-//    @After
-//    public void after(){
-//        if(companyDao.delete(company.getId())==1)
-//            System.out.println("删除成功");
+        for(int i = 0;i<1;i++){
+            Calendar startTime = Calendar.getInstance();
+            startTime.set(2020,6-1,10);
+            Calendar endTime = Calendar.getInstance();
+            endTime.set(2020,12-1,10);
+            Date data1 = startTime.getTime();
+            Date data2 = endTime.getTime();
+            exhibition.setName("测试展会");
+            exhibition.setStatus(100);//测试用
+            exhibition.setStartTime(data1);
+            exhibition.setEndTime(data2);
+            exhibition.setExhibitionHallId(1);
+            //需要将该字段设为organizer表的外键，否则可能出现错误
+            exhibition.setContractorId(1);
+            exhibition.setSession(1);
+            exhibition.setIntroduction("测试");
+            exhibition.setPeriod("测试");
+            exhibition.setPicture("/pic/data");
+            if(exhibitionDao.saveExhibition(exhibition) ==1)
+                System.out.println("添加数据成功");
+        }
     }
+
+    @After
+    public void after(){
+        int row  = exhibitionDao.deleteByStatus(100);
+        if(row == 1)
+            System.out.println("删除成功测试展会信息");
+
+        int i = exhibitionSubareaDao.deleteExhibitionSubareaInfoByExhibitionId(exhibition.getId());
+        System.out.println(i);
+        if(i!=0)
+            System.out.println("删除成功测试展会分区信息");
+    }
+
+
 
 
 
@@ -132,6 +145,43 @@ public class OrganizerControllerTests {
 //        Assert.assertEquals(200,status);
 //        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
+
+
+
+    @Test
+    public void testHoldExhibition() throws Exception{
+        int userId = 1;
+       // String[] subAreaList = {"测试展区1","测试展区2","测试展区3"};
+        List<String> subAreaList = new ArrayList<String>();
+        subAreaList.add("测试1");
+        subAreaList.add("测试2");
+        File file = new File("/Users/sunquan/Downloads/psb.jpeg");
+        MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
+                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.multipart("/organizer/holdExhibition")
+                .file(firstFile)
+                .param("userId",String.valueOf(userId))
+                .param("name",exhibition.getName())
+                .param("startTime",String.valueOf(exhibition.getStartTime()))
+                .param("endTime",String.valueOf(exhibition.getEndTime()))
+                .param("exhibitionHallId",String.valueOf(exhibition.getExhibitionHallId()))
+                .param("session",String.valueOf(exhibition.getSession()))
+                .param("period",exhibition.getPeriod())
+                .param("introduce",exhibition.getIntroduction())
+                .param("subAreaList", String.valueOf(subAreaList)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+    }
+
 
 
 }

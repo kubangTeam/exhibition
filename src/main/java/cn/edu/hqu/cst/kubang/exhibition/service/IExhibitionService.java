@@ -27,6 +27,8 @@ public interface IExhibitionService {
     int holdExhibition(int userId, String name, Date startTime, Date endTime,
                        int exhibitionHallId,int session,String period,
                        String introduce, String picPath);
+    //添加展会分区信息
+    int addSubareaInfo(List<String> subAreaList,int exhibitionId);
     //管理员查询所有展会
     List<Exhibition>queryAllExhibitionInfo();
     //若为承办方查询所有其举办的展会 若为个人用户查询自己参加过的展会

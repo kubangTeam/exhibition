@@ -138,27 +138,40 @@ public class AccountServiceImp implements IAccountService {
 
     @Override
     public String identifyUser(int userId) {
-        User user = userDao.GetUserInfoFromId(userId);
-        Integer companyId = user.getUserCompanyId();
-        company = companyDao.selectCompanyInformationById(companyId);
-        int companyStatus = company.getIdentifyStatus();
+        if(userDao.GetUserInfoFromId(userId)!=null){
+            User user = userDao.GetUserInfoFromId(userId);
+            Integer companyId = null;
+            Integer companyStatus =null;
+            if(user.getUserCompanyId()!=null){
+                companyId = user.getUserCompanyId();
+                company = companyDao.selectCompanyInformationById(companyId);
+                companyStatus = company.getIdentifyStatus();
+            }
 
-        Integer organizerId =  user.getUserOrganizerId();
-        organizerInformation = organizerInformationDao.GetOrganizerInfoFromId(organizerId);
-        int organizerStatus = organizerInformation.getIdentifyStatus();
+            Integer organizerId = null;
+            Integer organizerStatus = null;
+            if(user.getUserOrganizerId()!=null){
+                organizerId =  user.getUserOrganizerId();
+                organizerInformation = organizerInformationDao.GetOrganizerInfoFromId(organizerId);
+                organizerStatus = organizerInformation.getIdentifyStatus();
+            }
 
-        if(companyId != null && organizerId ==null){
-            if(companyStatus ==2)
-                return "商家";
-            else return  "商家，未处于认证状态";
-        }else if(companyId == null && organizerId !=null){
-            if(organizerStatus ==2)
-                return "承办方";
-            else return  "承办方，未处于认证状态";
-        }else if(companyId == null && organizerId ==null){
-            return "个人用户";
-        }else
-            return("用户状态异身份异常");
+            if(companyId != null && organizerId ==null){
+                if(companyStatus ==2)
+                    return "商家";
+                else return  "商家，未处于已认证状态";
+            }else if(companyId == null && organizerId !=null){
+                if(organizerStatus ==2)
+                    return "承办方";
+                else return  "承办方，未处于已认证状态";
+            }else if(companyId == null && organizerId ==null){
+                return "个人用户";
+            }else
+                return("用户状态异身份异常");
+        }else{
+            return "账户不存在";
+        }
+
     }
 
     @Override

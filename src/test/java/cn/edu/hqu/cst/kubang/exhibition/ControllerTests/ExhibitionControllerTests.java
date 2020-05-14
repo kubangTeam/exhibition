@@ -181,5 +181,22 @@ public class ExhibitionControllerTests {
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
 
+//    @Test
+//    public void testHoldExhibition() throws Exception{
+//        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.post("/exhibition/holdExhibition")
+//                .param("exhibitionId","1"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn();
+//
+//        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+//        //mvcResult.andDo(print()).andExpect(status().isOk());
+//        int status=mvcResult.getResponse().getStatus();
+//        String content =mvcResult.getResponse().getContentAsString();
+//        System.out.println(status);
+//        System.out.println(content);
+//        Assert.assertEquals(200,status);
+//        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+//    }
+
 
 }

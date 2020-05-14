@@ -93,5 +93,11 @@ public class CompanyMapperTests {
         System.out.println(companyDao.selectAll());
     }
 
+    @Test
+    public void tesGetByIdentifyStatus(){
+        System.out.println(companyDao.getCompaniesByIdentifyStatus(5).size());
+        System.out.println(companyDao.getCompaniesByIdentifyStatus(5));
+    }
+
 
 }
