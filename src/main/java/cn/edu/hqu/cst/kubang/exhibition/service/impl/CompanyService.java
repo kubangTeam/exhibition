@@ -127,11 +127,12 @@ public class CompanyService implements ICompanyService {
         List exbitionList = new ArrayList<Exhibition>();
 
         if(companyJoinExhibitionDao.selectExhibitionByCompanyId(companyId)!=null){
+            companyJoinExhibitionList = companyJoinExhibitionDao.selectExhibitionByCompanyId(companyId);
             for(int i  = 0;i<companyJoinExhibitionList.size();i++){
                 CompanyJoinExhibition temp = companyJoinExhibitionList.get(i);
-                exhibition = exhibitionDao.queryExhibitionByID(temp.getExhibitionId());
                 //查询到了展会就添加进去，为查询到展会就跳过继续查询
-                if(exhibition!=null) {
+                if(exhibitionDao.queryExhibitionByID(temp.getExhibitionId())!=null) {
+                    exhibition = exhibitionDao.queryExhibitionByID(temp.getExhibitionId());
                     exhibitionId.add(i, temp.getExhibitionId());
                     exbitionList.add(i, exhibition);
                 }else continue;

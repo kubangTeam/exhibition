@@ -101,6 +101,11 @@ public class CompanyServiceTests {
 
     @Test
     public void testQueryCompanyAttendedExhibition(){
+        map = companyService.queryCompanyAttendedExhibition(2,1);
+
+        System.out.println(map);
+        System.out.println(map.get("company"));
+
     }
 
 
