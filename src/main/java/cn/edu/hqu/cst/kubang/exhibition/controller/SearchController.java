@@ -6,6 +6,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -46,7 +47,6 @@ public class SearchController {
 
     private GoodsService goodsService;
 
-    private CompanyDao companyDao;
 
     @Autowired
     public SearchController(IExhibitionService exhibitionService,
@@ -73,20 +73,22 @@ public class SearchController {
     @RequestMapping(value = "/init/exhibition", method = RequestMethod.GET)
     public ResponseJson<String> initExhibitionSearchData(){
         List<Exhibition> listExhibition = exhibitionService.queryAll();
-        System.out.println(listExhibition.get(0));
+        if(listExhibition.isEmpty())
+            return new ResponseJson(false, ResponseCodeEnums.FAIL_GETDATA);
+        //System.out.println(listExhibition.get(0));
         for(Exhibition exhibition : listExhibition)
-          elasticsearchService.saveExhibition(exhibition);
+           elasticsearchService.saveExhibition(exhibition);
         return new ResponseJson(true, "005", "操作成功","添加了"+listExhibition.size()+"条数据");
     }
-    @ApiOperation(value = "添加所有展会数据到ES中",notes = "mysql to ES")
+    @ApiOperation(value = "添加所有商家数据到ES中",notes = "mysql to ES")
     @RequestMapping(value = "/init/company", method = RequestMethod.GET)
     public ResponseJson<String> initCompanySearchData(){
-        List<Company> listCompany = companyDao.selectAll();
-        //System.out.println(listCompany.get(0));
+        List<Company> listCompany = companyService.queryAll();
+        if(listCompany.isEmpty())
+            return new ResponseJson(false, ResponseCodeEnums.FAIL_GETDATA);
         for(Company company : listCompany)
             elasticsearchService.saveCompany(company);
         return new ResponseJson(true, "005", "操作成功","添加了"+listCompany.size()+"条数据");
-
     }
     @ApiOperation(value = "删除ES中的展品数据",notes = "如果数据库中字段或实体类更改，需要删除ES的原数据，否则会报错")
     @RequestMapping(value = "/delete/goods", method = RequestMethod.GET)

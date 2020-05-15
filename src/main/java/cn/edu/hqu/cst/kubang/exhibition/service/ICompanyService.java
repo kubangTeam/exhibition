@@ -18,5 +18,5 @@ public interface ICompanyService {
     Map<String, Object>queryCompanyByStatus(int pageNum,int status);
     Map<String, Object> CompanyInfoUpdate(int companyId, String name, String address,
                                         String website, String type, String tel, String introduce, String HeadPicture);
-
+    List<Company> queryAll();
 }

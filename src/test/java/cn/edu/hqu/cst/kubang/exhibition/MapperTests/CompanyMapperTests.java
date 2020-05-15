@@ -35,7 +35,7 @@ public class CompanyMapperTests {
         System.out.println("before class");
     }
 
-    @Before
+   /* @Before
     public void before(){
         //生成测试数据
         company.setName("测试数据");
@@ -53,7 +53,7 @@ public class CompanyMapperTests {
     public void after(){
         if(companyDao.delete(company.getId())==1)
             System.out.println("删除成功");
-    }
+    }*/
 
     @Test
     public void testGetUnidentifiedCompanies(){
