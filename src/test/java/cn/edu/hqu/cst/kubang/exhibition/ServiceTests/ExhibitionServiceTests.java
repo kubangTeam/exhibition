@@ -65,7 +65,7 @@ public class ExhibitionServiceTests {
 //        if(row == 4)
 //            System.out.println("删除成功");
 //    }
-    @Before
+   /* @Before
     public void before(){
         //生成测试数据
         for(int i = 0;i<1;i++){
@@ -99,13 +99,14 @@ public class ExhibitionServiceTests {
             System.out.println("删除成功测试展会分区信息");
     }
 
-
+*/
 
     @Test
-    public void testQueryOngoingExhibitionInfo(){
-        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//整数页
+    public void testQueryOngoingExhibitionInfo() throws Exception {
+        //System.out.println(exhibitionService.queryOngoingExhibitionInfo());//整数页
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//残余尾页
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//异常页
+        System.out.println(exhibitionService.getExhibitionIdInRedis());
     }
 
     @Test

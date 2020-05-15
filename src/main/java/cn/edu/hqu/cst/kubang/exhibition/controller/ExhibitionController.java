@@ -17,8 +17,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -59,7 +61,7 @@ public class ExhibitionController implements Constants {
     private ExhibitionSubareaDao exhibitionSubareaDao;
 
     @Autowired
-    private ExhibitionServiceImpl exhibitionService;
+    private IExhibitionService exhibitionService;
     @Autowired
     private Exhibition exhibition;
     @Autowired
@@ -67,6 +69,8 @@ public class ExhibitionController implements Constants {
 
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个
+
+
 
     /**
      * 根据展会id返回展会分区信息
@@ -167,14 +171,32 @@ public class ExhibitionController implements Constants {
             //@ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
     @GetMapping("/queryOngoingExhibitionInfo")
-    public  ResponseJson<Map<String,Object>> queryOngoingExhibitionInfo() {
-        Map<String,Object>map = exhibitionService.queryOngoingExhibitionInfo();
-        if(map.get("info")=="查询成功"){
-            return new ResponseJson(true, map);
-        }else{
-            return new ResponseJson(false, map);
+    public  ResponseJson<List<ExhibitionNew>> queryOngoingExhibitionInfo() {
+        List list = exhibitionService.getExhibitionIdInRedis();
+        List<ExhibitionNew> result= new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            ExhibitionNew exhibitionNew = exhibitionService.queryExhibitionDetailById(Integer.parseInt(list.get(i).toString()));
+            result.add(exhibitionNew);
+        }
+        return new ResponseJson(true,"005","操作成功",result);
+    }
+    @ApiOperation(value = "展会页面推荐展品",notes = "1/2/3/4分别对应第1/2/3/4张卡片")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "num", value = "第几个卡片", required = true, dataType = "int", paramType = "path")
+    })
+    @GetMapping("/recommend/{num}")
+    public ResponseJson<List<Goods>> recommendGoods(@PathVariable int num){
+        List list = exhibitionService.getExhibitionIdInRedis();
+        System.out.println(list);
+        List<Goods> goodsList = exhibitionService.queryGoodsByExhibitionId(Integer.parseInt(list.get(num-1).toString()));
+        if(list.isEmpty())
+            return new ResponseJson(false, "-008","没有在展商品",null);
+        else{
+            List<Goods> result = this.getRandomNumList(COUNT_RECOMMEND_2,goodsList);
+            return new ResponseJson(true,"005","操作成功",result);
         }
     }
+
     private <T> List<T> getRandomNumList(int nums, List<T> list) {
         List<T> result = new ArrayList<>();
         List temp = new ArrayList<>();

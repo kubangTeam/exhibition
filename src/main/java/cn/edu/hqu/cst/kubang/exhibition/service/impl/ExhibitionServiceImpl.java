@@ -10,11 +10,17 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.util.concurrent.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
 @Service
 public class ExhibitionServiceImpl implements IExhibitionService{
@@ -63,6 +69,12 @@ public class ExhibitionServiceImpl implements IExhibitionService{
 
     @Autowired
     private ExhibitionSubareaDao exhibitionSubareaDao;
+
+    @Resource(name = "redisKeyDb")
+    private RedisTemplate<String, Object> redisKeyDb;
+
+    ListeningExecutorService executorService = MoreExecutors.
+            listeningDecorator(Executors.newFixedThreadPool(1));
 
 
 //    public Map<String,Object> addExhibitionCity(Exhibition exhibition){
@@ -214,11 +226,7 @@ public class ExhibitionServiceImpl implements IExhibitionService{
         return goodsList;
     }
 
-
-
-    @Override
-    public Map<String,Object> queryOngoingExhibitionInfo() {
-        Map<String,Object> map = new HashMap<>();
+    public List<Exhibition> queryOnGoing() {
         //查询审核通过的展会列表 初审通过为2 终审通过为5
         List<Exhibition> exhibitionList = null;
         if(exhibitionDao.queryExhibitionsByStatus(5)!=null){
@@ -240,12 +248,9 @@ public class ExhibitionServiceImpl implements IExhibitionService{
             Comparator comp = new ComparatorImpl();
             Collections.sort(exhibitionList,comp);
             exhibitionList = getFirstFourSubString(exhibitionList,4);
-            map.put("info","查询成功");
-            map.put("exhibitionList",exhibitionList);
-        }else{
-            map.put("info","展会不存在或者认证状态出错");
+
         }
-        return map;
+        return exhibitionList;
     }
 
     @Override
@@ -307,6 +312,31 @@ public class ExhibitionServiceImpl implements IExhibitionService{
             }
         }
         return list;
+    }
+    @Override
+    public List getExhibitionIdInRedis(){
+        Set sets = redisKeyDb.opsForZSet().range("Exhibition",0, -1);
+        return new ArrayList<>(sets);
+    }
+    @Override
+    public void addExhibitionIntoRedis(int id){
+        redisKeyDb.opsForZSet().add("Exhibition",id, 0);
+    }
+    @Override
+    @Scheduled(cron = "0 0 1 * * ?")
+    public boolean updateExhibitionInRedis()throws Exception{
+        ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                List<Exhibition> list = queryOnGoing();
+                for(Exhibition exhibition : list){
+                    redisKeyDb.opsForZSet().add("Exhibition", exhibition.getId(), 0);
+                    System.out.println(exhibition.getId());
+                }
+                return true;
+            }
+        });
+        return true;
     }
 
 

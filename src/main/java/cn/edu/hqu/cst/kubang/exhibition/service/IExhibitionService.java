@@ -41,11 +41,13 @@ public interface IExhibitionService {
     List<Exhibition> queryAll();
     List<Goods> queryGoodsByExhibitionId(int exhibitionId);
 
-    Map<String,Object> queryOngoingExhibitionInfo();
     Map<String ,Object>queryGoodsByExhibitionIdAndSubareaId(int exhibitionId,int subAreaId,int pageNum);
 
 
     Map<String ,Object>querySubareaByExhibitionId(int exhibitionId);
+    List getExhibitionIdInRedis();
+    boolean updateExhibitionInRedis() throws Exception;
+    void addExhibitionIntoRedis(int id);
 
 
 

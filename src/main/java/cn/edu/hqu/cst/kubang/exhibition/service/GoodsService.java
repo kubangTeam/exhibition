@@ -203,40 +203,6 @@ public class GoodsService implements Constants {
         company =companyDao.selectCompanyInformationById(goods.getCompanyId());
         return  company;
     }
-   /* public List getGoodsIdInRedis(){
-        Set sets = redisKeyDb.opsForZSet().range("Goods",0, -1);
-        return new ArrayList<>(sets);
-    }
-    public void addGoodsIntoRedis(int goodsId){
-        redisKeyDb.opsForZSet().add("Goods", goodsId, 0);
-    }
-
-    @Scheduled(cron = "0 0 1 * * ?")
-    public boolean updateGoodsInRedis()throws Exception{
-        ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                List<Goods> list = goodsDao.selectAllGoods();
-                System.out.println(list.size());
-                for(Goods goods : list){
-                    redisKeyDb.opsForZSet().add("Goods", goods.getGoodsId(), 0);
-                }
-                return true;
-            }
-        });
-
-        Futures.addCallback(future, new FutureCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean v) {
-                log.info("@Goods: update redis data for Goods successfully");
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
-                log.info("@HotWord: fail to update redis data for goods, message is {}", throwable.getMessage());
-            }
-            });
-        return true;
-    }*/
    public List<Goods> getRandomGoods(int num, int categoryId){
        List<Goods> list;
        if(categoryId == 0)
@@ -250,4 +216,5 @@ public class GoodsService implements Constants {
            return getRandomGoods(num, categoryId);
        }
    }
+
 }
