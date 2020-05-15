@@ -74,14 +74,14 @@ public class CompanyController {
 
     @ApiOperation(value = "公司认证", notes = "前端需要传送的参数：用户ID、公司名称、地址、网址、公司类别、简介、营业执照（照片）")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "file", value = "企业营业执照", required = true, dataType = "MultipartFile", paramType = "query")
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "body"),
+            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "file", value = "企业营业执照", required = true, dataType = "file", paramType = "form")
     })
     @PostMapping("/identify")
     /**
@@ -142,14 +142,14 @@ public class CompanyController {
      */
     @ApiOperation(value = "修改商家资料",notes = "前端需要传送的参数：商家类")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "companyId", value = "商家ID", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "query"),
-            @ApiImplicitParam(name = "file", value = "头像", required = true, dataType = "MultipartFile", paramType = "query")
+            @ApiImplicitParam(name = "companyId", value = "商家ID", required = true, dataType = "int", paramType = "body"),
+            @ApiImplicitParam(name = "name", value = "企业名称", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "address", value = "企业地址", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "website", value = "企业网站", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "type", value = "企业类型", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "tel", value = "企业电话", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "introduce", value = "企业简介", required = true, dataType = "String", paramType = "body"),
+            @ApiImplicitParam(name = "file", value = "头像(可选)", required = true, dataType = "file", paramType = "form")
     })
     @PostMapping("/updateInformation")
     /**

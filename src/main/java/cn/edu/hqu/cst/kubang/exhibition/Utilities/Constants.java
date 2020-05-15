@@ -8,9 +8,9 @@ package cn.edu.hqu.cst.kubang.exhibition.Utilities;
  */
 public interface Constants {
     /**
-     * 保存成功，等待上传
+     * 上传成功，等待审核
      */
-    int STATE_IS_ON_READY = 0;
+    int STATE_IS_ON_READY = 1;
     /**
      * 审核通过
      */

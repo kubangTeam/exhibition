@@ -237,7 +237,7 @@ public class GoodsController implements Constants {
     //上传展品图片
     @ApiOperation(value = "单张上传展品图片（已知展品Id）", notes = "错误状态码：-008")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "展品图片", required = true, dataType = "MultipartFile", paramType = "query"),
+            @ApiImplicitParam(name = "file", value = "展品图片", required = true,  dataType = "file", paramType = "form"),
             @ApiImplicitParam(name = "goodsId", value = "展品Id", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)

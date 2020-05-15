@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class AdminControllerTests {
 
     @Autowired
     private Exhibition exhibition;
+
+
+
 
     @Test
     public void testQueryAllExhibition() throws Exception{
@@ -196,6 +200,37 @@ public class AdminControllerTests {
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
     }
+
+    @Test
+    public void testSelectGoodsByStatus() throws Exception{
+
+//        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryGoodsByStatus/1/1"))//状态为1 页数为1
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn();
+//        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+//        //mvcResult.andDo(print()).andExpect(status().isOk());
+//        int status=mvcResult.getResponse().getStatus();
+//        String content =mvcResult.getResponse().getContentAsString();
+//        System.out.println(status);
+//        System.out.println(content);
+//        Assert.assertEquals(200,status);
+//        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/Admin/queryGoodsByStatus/1"))//页数为1
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        mvcResult.getResponse().setCharacterEncoding("UTF-8");
+        //mvcResult.andDo(print()).andExpect(status().isOk());
+        int status=mvcResult.getResponse().getStatus();
+        String content =mvcResult.getResponse().getContentAsString();
+        System.out.println(status);
+        System.out.println(content);
+        Assert.assertEquals(200,status);
+        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+
+
+    }
+
 
 
 

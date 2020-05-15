@@ -91,14 +91,14 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
                 it.remove();
             }
         }
-        System.out.println(advertisementList);
+        //System.out.println(advertisementList);
         //从符合时间条件的广告中分出不同的优先级
         for (int i = 0; i < advertisementList.size(); i++) {
-            if (advertisementList.get(i).getPriority() == 2) {
+            if (advertisementList.get(i).getPriority() == 3) {
                 priority2.add(advertisementList.get(i));
-            } else if (advertisementList.get(i).getPriority() == 1) {
+            } else if (advertisementList.get(i).getPriority() == 2) {
                 priority1.add(advertisementList.get(i));
-            } else if (advertisementList.get(i).getPriority() == 0) {
+            } else if (advertisementList.get(i).getPriority() == 1) {
                 priority0.add(advertisementList.get(i));
             } else {
                 System.out.println("优先级字段出错");
@@ -150,4 +150,23 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
         }
         return "提交成功，等待生气审核";
     }
+
+    @Override
+    public Map<String, Object> updateAds(Advertisement advertisement) {
+        Integer temp = null;
+        String info = null;
+        Map<String,Object> map = new HashMap<>();
+        temp = advertisementDao.updateAds(advertisement.getId(),advertisement.getStartTime(),
+                advertisement.getEndTime(),advertisement.getPicture(),advertisement.getPriority());
+        //temp==1不一定修改成功了
+        if(temp==1){
+            info = "修改成功";
+        }else{
+            info = "修改失败";
+        }
+        map.put("info",info);
+        return map;
+    }
+
+
 }
