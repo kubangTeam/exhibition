@@ -48,8 +48,8 @@ public interface IExhibitionService {
     Map<String,Object>queryReadyToStartExhibitionInfo(int pageNum);
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
     List<Exhibition> queryAll();
-    List<Goods> queryGoodsByExhibitionId(int exhibitionId);
-
+    List<Goods> queryRandomGoodsByExhibitionId(int exhibitionId);
+    List<Exhibition> queryOnGoing();
     Map<String ,Object>queryGoodsByExhibitionIdAndSubareaId(int exhibitionId,int subAreaId,int pageNum);
 
     Map<String ,Object>querySubareaByExhibitionId(int exhibitionId);

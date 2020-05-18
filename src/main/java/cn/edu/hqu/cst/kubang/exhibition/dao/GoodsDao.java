@@ -20,14 +20,15 @@ import java.util.List;
 public interface GoodsDao {
     List<Goods> selectAllGoods();//查询所有在展商品
     Goods selectGoodsById(int goodsId);//根据展品ID查询商品
-    List<Goods> selectGoodsByName(@Param("goodsName")String goodsName, @Param("goodsStatus")int goodsStatus);//根据展品名称查询在展或未展商品（goodsStatus=0/1/2/3/4）
-    List<Goods> selectGoodsByCompanyId(@Param("companyId")int companyId, @Param("goodsStatus")int goodsStatus);//根据公司id查询某状态的商品（goodsStatus=0/1/2/3/4）
+    List<Goods> selectGoodsByName(@Param("goodsName")String goodsName, @Param("goodsStatus")Integer goodsStatus);//根据展品名称查询在展或未展商品（goodsStatus=0/1/2/3/4）
+    List<Goods> selectGoodsByCompanyId(@Param("companyId")int companyId, @Param("goodsStatus")Integer goodsStatus);//根据公司id查询某状态的商品（goodsStatus=0/1/2/3/4）
     List<Goods> selectGoodsByCategoryId(@Param("categoryId")int categoryId, @Param("goodsStatus")int goodsStatus);
     List<GoodsPic> selectGoodsPicByGoodsId(int goodsId);//查询一个展品的所有图片
     int selectGoodsCount();//查询商品总数
     int selectStatusById(int goodsId);//查询商品在展状态
     int insertGoods(Goods goods);//添加展品
     int insertGoodsPic(GoodsPic goodsPic);//添加展品图片
+    int updateGoods(Goods goods);
     int updateStatus(@Param("goodsId")int goodsId, @Param("goodsStatus")int goodsStatus);//修改展品状态
     int updatePriority(@Param("goodsId")int goodsId, @Param("priority")int priority);//修改展品优先级
     int deleteGoods(int goodId);//根据展品ID删除
@@ -44,4 +45,5 @@ public interface GoodsDao {
     List<Goods> selectRandomGoodsByCategoryId(@Param("num")int num, @Param("categoryId")int categoryId,@Param("goodsStatus")int goodsStatus);
 
     List<Goods> selectGoodsByStatus(@Param("goodsStatus")int goodsStatus);
+    List<Integer> selectGoodsIdByCompanyId(@Param("companyId")int companyId);
 }

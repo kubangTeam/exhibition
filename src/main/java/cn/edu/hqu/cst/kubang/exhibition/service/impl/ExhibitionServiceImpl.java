@@ -11,6 +11,7 @@ import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -234,25 +235,46 @@ public class ExhibitionServiceImpl implements IExhibitionService{
 
 
     @Override
-    public List<Goods>  queryGoodsByExhibitionId(int exhibitionId){
-        List<Goods> goodsList =new ArrayList<>();
+    public List<Goods>  queryRandomGoodsByExhibitionId(int exhibitionId){
+        List<Integer> goodsIdList =new ArrayList<>();
+        List<Goods> result = new ArrayList<>();
         List<GoodsJoinExhibition> goodsJoinExhibitions = null;
         if(goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId)!=null){
             goodsJoinExhibitions = goodsJoinExhibitionDao.selectByExhibitionId(exhibitionId);
             for(GoodsJoinExhibition goodsJoinExhibition:goodsJoinExhibitions){
                 if(goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId())!=null){
-                    Goods goods = goodsDao.selectGoodsById(goodsJoinExhibition.getGoodsId());
-                    goodsList.add(goods);
+                    goodsIdList.add(goodsJoinExhibition.getGoodsId());
                 }
                 else
                     continue;
             }
-            goodsList = insertImageIntoGoods(goodsList);
-
+            List<Integer> goodsIdListAfterRandom = getRandomNumList(Constants.COUNT_RECOMMEND_2,goodsIdList);
+            for(Integer goodsId : goodsIdListAfterRandom) {
+                Goods goods = goodsDao.selectGoodsById(goodsId);
+                if(goodsDao.selectGoodsPicByGoodsId(goodsId).get(0)!=null) {
+                    GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goodsId).get(0);
+                    String image = goodsPic.getPic();
+                    goods.setImage(image);
+                }
+                result.add(goods);
+            }
         }
-        return goodsList;
+        return result;
     }
-
+    private <T> List<T> getRandomNumList(int nums, List<T> list) {
+        List<T> result = new ArrayList<>();
+        List temp = new ArrayList<>();
+        Random r = new Random();
+        while(result.size() < nums){
+            int num = r.nextInt(list.size());
+            if(!temp.contains(num)) {
+                result.add(list.get(num));
+                temp.add(num);
+            }
+        }
+        return result;
+    }
+    @Override
     public List<Exhibition> queryOnGoing() {
         //查询审核通过的展会列表 初审通过为2 终审通过为5
         List<Exhibition> exhibitionList = null;

@@ -25,7 +25,10 @@
     <select id="selectGoodsByCompanyId" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where goodsStatus = #{goodsStatus} and companyId = #{companyId}
+        where companyId = #{companyId}
+        <if test="goodsStatus!=0">
+         and goodsStatus = #{goodsStatus}
+        </if>
     </select>
     <select id="selectGoodsByCategoryId" resultType="Goods">
         select <include refid="selectFields"></include>
@@ -61,6 +64,14 @@
         value
         (#{goodsId},#{pic})
     </insert>
+    <update id="updateGoods" parameterType="Goods">
+        update goodsintroduce
+        set goodsName=#{goodsName},categoryId=#{categoryId},companyId=#{companyId},
+        goodsAreaNumber=#{goodsAreaNumber},website=#{website},originPlace=#{originPlace},
+        originalPrice=#{originalPrice},currentPrice=#{currentPrice},goodsIntroduce=#{goodsIntroduce},
+        startTime=#{startTime},endTime=#{endTime}
+        where goodsId=#{goodsId}
+    </update>
     <update id="updatePriority">
         update goodsintroduce set priority = #{priority} where goodsId = #{goodsId}
     </update>
@@ -106,7 +117,7 @@
     <select id="selectRandomGoodsByCategoryId" parameterType="int" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where  categoryId = #{categoryId} and goodsStatus = #{goodsStatus}
+        where categoryId = #{categoryId} and goodsStatus = #{goodsStatus}
         order by rand() limit #{num};
     </select>
 
@@ -115,6 +126,12 @@
         select <include refid="selectFields"></include>
         from goodsintroduce
         where goodsStatus = #{goodsStatus}
+    </select>
+
+    <select id="selectGoodsIdByCompanyId" parameterType="int">
+        select goodsId
+        from goodsintroduce
+        where companyId = #{companyId}
     </select>
 
 </mapper>

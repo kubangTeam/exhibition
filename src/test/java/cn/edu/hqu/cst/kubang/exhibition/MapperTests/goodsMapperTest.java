@@ -48,15 +48,15 @@ public class goodsMapperTest {
     public void testSelectGoodsByCompanyId(){
         List<Goods> list = goodsDao.selectGoodsByCompanyId(1,0);
         System.out.println(list.size());
-        System.out.println(list);
+        //System.out.println(list);
 
         list = goodsDao.selectGoodsByCompanyId(1,1);
         System.out.println(list.size());
-        System.out.println(list);
+        //System.out.println(list);
 
         list = goodsDao.selectGoodsByCompanyId(1,2);
         System.out.println(list.size());
-        System.out.println(list);
+        //System.out.println(list);
     }
 
     @Test
@@ -86,6 +86,13 @@ public class goodsMapperTest {
             goodsDao.updateStatus(i, 2);
 
         }
+    }
+    @Test
+    public void testUpdateGoods(){
+        Goods goods = goodsDao.selectGoodsById(3);
+        goods.setOriginPlace("临沂");
+        goods.setWebsite("www.google.com");
+        goodsDao.updateGoods(goods);
     }
 
 }

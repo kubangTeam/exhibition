@@ -101,12 +101,11 @@ public class ExhibitionController implements Constants {
     })
     @GetMapping("/queryFourGoodsByExhibitionId")
     public ResponseJson<Map<String,Object>> queryGoodsByExhibitionId(@RequestParam(value = "exhibitionId")int exhibitionId) {
-        List<Goods> list = exhibitionService.queryGoodsByExhibitionId(exhibitionId);
+        List<Goods> list = exhibitionService.queryRandomGoodsByExhibitionId(exhibitionId);
         if(list.isEmpty())
             return new ResponseJson(false, "-008","没有在展商品",null);
         else{
-            List<Goods> result = this.getRandomNumList(COUNT_RECOMMEND_2,list);
-            return new ResponseJson(true,"005","操作成功",result);
+            return new ResponseJson(true,"005","操作成功",list);
         }
     }
 
@@ -187,29 +186,15 @@ public class ExhibitionController implements Constants {
     @GetMapping("/recommend/{num}")
     public ResponseJson<List<Goods>> recommendGoods(@PathVariable int num){
         List list = exhibitionService.getExhibitionIdInRedis();
-        System.out.println(list);
-        List<Goods> goodsList = exhibitionService.queryGoodsByExhibitionId(Integer.parseInt(list.get(num-1).toString()));
-        if(list.isEmpty())
+        List<Goods> goodsList = exhibitionService.queryRandomGoodsByExhibitionId(Integer.parseInt(list.get(num-1).toString()));
+        if(goodsList.isEmpty())
             return new ResponseJson(false, "-008","没有在展商品",null);
-        else{
-            List<Goods> result = this.getRandomNumList(COUNT_RECOMMEND_2,goodsList);
-            return new ResponseJson(true,"005","操作成功",result);
-        }
+        else
+            return new ResponseJson(true,"005","操作成功",goodsList);
+
     }
 
-    private <T> List<T> getRandomNumList(int nums, List<T> list) {
-        List<T> result = new ArrayList<>();
-        List temp = new ArrayList<>();
-        Random r = new Random();
-        while(result.size() < nums){
-            int num = r.nextInt(list.size());
-            if(!temp.contains(num)) {
-                result.add(list.get(num));
-                temp.add(num);
-            }
-        }
-        return result;
-    }
+
 
 
 

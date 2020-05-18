@@ -10,19 +10,27 @@ public interface Constants {
     /**
      * 上传成功，等待审核
      */
-    int STATE_IS_ON_READY = 1;
+    int STATE_WAIT_VERIFY = 1;
     /**
      * 审核通过
      */
-    int STATE_IS_ON_SHOW = 2;
+    int STATE_IS_PASS = 2;
     /**
      * 审核未通过
      */
-    int STATE_IS_ON_REFUSE = 3;
+    int STATE_IS_REFUSE = 3;
+    /**
+     * 修改展品优先级后等待审核
+     */
+    int STATE_WAIT_VERIFY_PRIORITY = 4;
+    /**
+     * 修改展品信息后等待审核
+     */
+    int STATE_WAIT_VERIFY_INFO= 5;
     /**
      * 已删除状态
      */
-    int STATE_IS_DELETED = 4;
+    int STATE_IS_DELETED = 6;
     /**
      * 推荐展品数量
      */
