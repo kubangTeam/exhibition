@@ -231,7 +231,7 @@ public class AdminController {
     //管理员根据状态查询所有的展会
     @ApiOperation(value = "根据状态查询所有的商品",notes = "通过商品状态、页数查询长度为10的商品信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "status", value = "商品的状态(可选)", required = true, dataType = "int", paramType = "path"),
+            @ApiImplicitParam(name = "status", value = "商品的状态(可选)", required = false, dataType = "int", paramType = "path"),
             @ApiImplicitParam(name = "pageNum", value = "请求第几页", required = true, dataType = "int", paramType = "path")
     })
     //@RequestMapping(value ={"/queryGoodsByStatus/{status}/{pageNum}","/queryGoodsByStatus/{status}/{pageNum}"})
