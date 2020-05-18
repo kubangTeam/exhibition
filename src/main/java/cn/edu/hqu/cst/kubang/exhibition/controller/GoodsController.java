@@ -153,26 +153,21 @@ public class GoodsController implements Constants {
     //根据公司Id查询所有在展的商品;
     //参数：公司Id8
     //默认查询在展商品
-    @ApiOperation(value = "根据公司Id查询所有通过审核的商品", notes = "分页查询，默认查询在展商品")
+    @ApiOperation(value = "根据公司Id查询指定状态的展品", notes = "分页查询，goodsStatus为0即为查询所有状态的展品")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "goodsStatus", value = "商品状态(可选，默认为2（已通过审核))", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "goodsStatus", value = "商品状态", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })
-    //@RequestMapping(value = "/query/company", method = RequestMethod.GET)
-    @GetMapping("/query/company")
+    @RequestMapping(value = "/query/company", method = RequestMethod.GET)
     public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
-                                                    @RequestParam(value = "goodsStatus",required = false) Integer goodsStatus,
+                                                    @RequestParam(value = "goodsStatus") Integer goodsStatus,
                                                     @RequestParam(value = "pageNum") int pageNum,
                                                     @RequestParam(value = "pageSize") int pageSize) {
 
         PageInfo<Goods> pageInfo =null;
-        if(goodsStatus!=null){
-            pageInfo = goodsService.queryGoodsByCompanyIdAndStatus(companyId, goodsStatus,pageNum, pageSize);
-        }else{
-            pageInfo = goodsService.queryAllGoodsByCompanyId(companyId,pageNum, pageSize);
-        }
+        pageInfo = goodsService.queryAllGoodsByCompanyId(companyId,pageNum, pageSize, goodsStatus);
         return pageInfo;
     }
 
@@ -187,8 +182,7 @@ public class GoodsController implements Constants {
             @ApiImplicitParam(name = "keyword", value = "关键词", required = true, dataType = "String", paramType = "query")
     })
     public List<Goods> queryAllGoodsByKeyword(@RequestParam(value = "keyword") String keyword) {
-        List<Goods> list = new ArrayList<>();
-        list = goodsService.queryAllGoodsByName(keyword);
+        List<Goods> list = goodsService.queryAllGoodsByName(keyword);
         return list;
     }
 
@@ -303,21 +297,13 @@ public class GoodsController implements Constants {
             @ApiImplicitParam(name = "goodsStatus", value = "展品状态", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/modify/goodStatus", method = RequestMethod.POST)
-    public Map<String, String> modifyGoodsStatus(@RequestParam(value = "goodsId") int goodsId,
+    public ResponseJson<String> modifyGoodsStatus(@RequestParam(value = "goodsId") int goodsId,
                                                  @RequestParam(value = "goodsStatus") int goodsStatus) {
-        String value = "";
-        String code = "";
         if (goodsService.modifyGoodsStatus(goodsId, goodsStatus) > 0) {
-            value = "修改成功";
-            code = "005";
+            return new ResponseJson(true,"005","修改成功","展品状态修改为"+goodsStatus);
         } else {
-            value = "修改失败";
-            code = "-008";
+            return new ResponseJson(false,"-008","修改失败");
         }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
     }
 
     /*
@@ -326,27 +312,20 @@ public class GoodsController implements Constants {
    参数2：展品优先级
    错误状态码：-008
    */
-    @ApiOperation(value = "修改展品优先级", notes = "错误状态码：-008")
+    @ApiOperation(value = "修改展品优先级", notes = "后台管理系统，错误状态码：-008")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "priority", value = "展品优先级", required = true, dataType = "int", paramType = "query")
     })
     @RequestMapping(value = "/modify/priority", method = RequestMethod.POST)
-    public Map<String, String> modifyGoodsPriority(@RequestParam(value = "goodsId") int goodsId,
+    public ResponseJson<String> modifyGoodsPriority(@RequestParam(value = "goodsId") int goodsId,
                                                    @RequestParam(value = "priority") int priority) {
-        String value = "";
-        String code = "";
         if (goodsService.modifyGoodsPriority(goodsId, priority) > 0) {
-            value = "修改成功";
-            code = "005";
+            goodsService.modifyGoodsStatus(goodsId,STATE_WAIT_VERIFY_PRIORITY);
+                return new ResponseJson(true,"005","修改成功","展品状态修改为“优先级待审核”");
         } else {
-            value = "修改失败";
-            code = "-008";
+            return new ResponseJson(false,"-008","修改失败");
         }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
     }
 
     /*
@@ -354,25 +333,19 @@ public class GoodsController implements Constants {
     参数：展品ID
     错误状态码：-008
     */
-    @ApiOperation(value = "删除展品（将展品状态改为2，不从数据库删除）", notes = "错误状态码：-008")
+    @ApiOperation(value = "删除展品（修改展品状态，不从数据库删除）", notes = "错误状态码：-008")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "goodsId", value = "展品ID", required = true, dataType = "int", paramType = "query")
     })
-    @DeleteMapping(value = "/delete")
-    public Map<String, String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
+    @GetMapping(value = "/delete")
+    public ResponseJson<String> deleteGoods(@RequestParam(value = "goodsId") int goodsId) {
         String value = "";
         String code = "";
         if (goodsService.modifyGoodsStatus(goodsId, STATE_IS_DELETED) > 0) {
-            value = "删除成功";
-            code = "005";
+            return new ResponseJson(true,"005","删除成功","展品状态修改为已删除:"+STATE_IS_DELETED);
         } else {
-            value = "删除失败";
-            code = "-008";
+            return new ResponseJson(false,"-008","删除失败");
         }
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
     }
     /*public String uploadFile(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();  // 获取上传图像的原始文件名

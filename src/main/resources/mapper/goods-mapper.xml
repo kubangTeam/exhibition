@@ -25,7 +25,10 @@
     <select id="selectGoodsByCompanyId" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where goodsStatus = #{goodsStatus} and companyId = #{companyId}
+        where companyId = #{companyId}
+        <if test="goodsStatus!=0">
+         and goodsStatus = #{goodsStatus}
+        </if>
     </select>
     <select id="selectGoodsByCategoryId" resultType="Goods">
         select <include refid="selectFields"></include>

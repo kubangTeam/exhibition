@@ -82,29 +82,12 @@ public class GoodsService implements Constants {
     }
 
     //根据公司ID和状态查询在展和不在展的商品
-    public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize) {
+    public PageInfo<Goods> queryAllGoodsByCompanyId(int companyId, int pageNum, int pageSize, int goodsStatus) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, STATE_IS_ON_SHOW));
+        List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId, goodsStatus));
         PageInfo<Goods> pageInfo = new PageInfo<>(list);
         return pageInfo;
     }
-
-    //根据公司ID和状态查询在展和不在展的商品
-    public PageInfo<Goods> queryGoodsByCompanyIdAndStatus(int companyId,int status, int pageNum, int pageSize) {
-        if(status<0 || status>4) {
-            return null;
-        }else{
-            PageHelper.startPage(pageNum, pageSize);
-            List<Goods> list = this.insertImageIntoGoods(goodsDao.selectGoodsByCompanyId(companyId,status));
-            PageInfo<Goods> pageInfo = new PageInfo<>(list);
-            return pageInfo;
-        }
-
-    }
-
-
-
-
     //根据公司ID和状态查询在展和不在展的商品
     public PageInfo<Goods> queryByGoodsStatus(int status,int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -124,8 +107,8 @@ public class GoodsService implements Constants {
     public Map<String,Object> queryAllGoodsByCategoryId(int categoryId,int pageNum) {
         Map<String,Object> map = new HashMap<>();
         List<Goods> list=null;
-        if(goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW)!=null){
-            list = goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_ON_SHOW);
+        if(goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_PASS)!=null){
+            list = goodsDao.selectGoodsByCategoryId(categoryId, STATE_IS_PASS);
             list = this.insertImageIntoGoods(list);
         }
         map = Pagination.paginationGoods(pageNum,pageSize2,list);
@@ -134,7 +117,7 @@ public class GoodsService implements Constants {
 
         //根据名字查询在展和不在展的商品
     public List<Goods> queryAllGoodsByName(String name) {
-        return this.insertImageIntoGoods(goodsDao.selectGoodsByName(name,STATE_IS_ON_SHOW));
+        return this.insertImageIntoGoods(goodsDao.selectGoodsByName(name,STATE_IS_PASS));
     }
     //查询商品总数
     public int queryGoodsCount(){
@@ -161,14 +144,7 @@ public class GoodsService implements Constants {
     //修改展品优先级
     public int modifyGoodsPriority(int goodsId, int priority){
         //用户提交优先级审核，修改商品原来的状态，变为待审核
-        Integer i =null;
-        Integer j =null;
-        i = goodsDao.updateStatus(goodsId,STATE_IS_ON_READY);
-        j=  goodsDao.updatePriority(goodsId, priority);
-        if(i==1 && j==1)
-            return 1;
-        else
-            return 0;
+        return  goodsDao.updatePriority(goodsId, priority);
     }
 
     //修改展品在展状态
@@ -206,9 +182,9 @@ public class GoodsService implements Constants {
    public List<Goods> getRandomGoods(int num, int categoryId){
        List<Goods> list;
        if(categoryId == 0)
-           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, STATE_IS_ON_SHOW));
+           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoods(num, STATE_IS_PASS));
        else
-           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoodsByCategoryId(num,categoryId, STATE_IS_ON_SHOW));
+           list =  this.insertImageIntoGoods(goodsDao.selectRandomGoodsByCategoryId(num,categoryId, STATE_IS_PASS));
        if(list.size() == num)
            return list;
        else {

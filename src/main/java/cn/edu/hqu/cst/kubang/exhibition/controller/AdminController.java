@@ -1,12 +1,12 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.GoodsService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,7 +17,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,19 @@ public class AdminController {
 
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8
+
+    @Value("${exhibition.path.domain}")
+    private String domain;
+    @Value("${exhibition.path.upload.goods}")
+    private String uploadPathGoods;
+    @Value("${exhibition.path.upload.organizer}")
+    private String uploadPathOrganizer;
+    @Value("${exhibition.path.upload.company}")
+    private String uploadPathCompany;
+    @Value("${exhibition.path.upload.advertisement}")
+    private String uploadPathAdvertisement;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     //管理员根据状态查询所有的展会
     @ApiOperation(value = "返回所有状态的展会",notes = "通过页数查询固定长度（pageSize1=10）的展会信息")
@@ -235,6 +250,34 @@ public class AdminController {
             return pageInfo;
         }
     }
+    @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
+    public ResponseJson<String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
+                                              @RequestParam(value = "flag") int flag)
+            throws IOException {
+        if (file.isEmpty()) {
+            return new ResponseJson(false, ResponseCodeEnums.No_FileSELECT);
+        } else {
+            String url = null, webPath = domain + contextPath;
+            switch (flag){
+                case 1:
+                    webPath += "/images/goods/organizer";
+                    url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
+                    break;
+                case 2:
+                    webPath += "/images/goods/company";
+                    url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
+                    break;
+                case 3:
+                    webPath += "/images/goods/goods";
+                    url = UploadFile.uploadFile(uploadPathGoods, webPath, file);
+                    break;
+
+            }
+            return new ResponseJson(true,url);
+        }
+    }
+
+
 
 
 
