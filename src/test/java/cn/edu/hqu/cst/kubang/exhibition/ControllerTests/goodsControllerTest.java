@@ -4,6 +4,7 @@ import cn.edu.hqu.cst.kubang.exhibition.ExhibitionApplication;
 import cn.edu.hqu.cst.kubang.exhibition.controller.GoodsController;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import com.alibaba.fastjson.JSONObject;
 import com.mysql.cj.util.LogUtils;
 import org.junit.After;
@@ -59,6 +60,9 @@ public class goodsControllerTest {
     private Goods goods;
     @Autowired
     private GoodsDao goodsDao;
+    @Autowired
+    private GoodsPic goodsPic;
+
     @Before
     public void before(){
         goods.setGoodsName("测试商品");
@@ -68,14 +72,22 @@ public class goodsControllerTest {
         goods.setGoodsStatus(1);
         goods.setPriority(0);
         if(goodsDao.insertGoods(goods)==1)
-            System.out.println("保存成功");
+            System.out.println("商品信息保存成功");
+
+        goodsPic.setGoodsId(goods.getGoodsId());
+        goodsPic.setPic("www.test.com");
+        //goodsDao.insertGoodsPic(goodsPic);
+        if(goodsDao.insertGoodsPic(goodsPic)==1)
+            System.out.println("商品图片保存成功");
 
     }
 
     @After
     public void after(){
         if(goodsDao.deleteGoods(goods.getGoodsId())==1)
-            System.out.println("删除成功");
+            System.out.println("商品信息删除成功");
+        if(goodsDao.deleteGoodsPic(goodsPic.getPicId())==1)
+            System.out.println("商品图片删除成功");
     }
 
     @Test
@@ -195,6 +207,7 @@ public class goodsControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
+
         mvcResult.getResponse().setCharacterEncoding("UTF-8");
         //mvcResult.andDo(print()).andExpect(status().isOk());
         int status=mvcResult.getResponse().getStatus();
@@ -207,61 +220,24 @@ public class goodsControllerTest {
 
 
     @Test
-    public void testGoodsByCompanyIdAndStatus() throws Exception{
+    public void testGoodsByCompanyIdAndStatus() throws Exception {
         //根据商品分类查询商品
-        MvcResult mvcResult=mockMvc.perform(MockMvcRequestBuilders.get("/goods/query/company")
-                .param("companyId","1")
-                //.param("goodsStatus","2")
-                .param("pageSize","1")
-                .param("pageNum","1"))
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/goods/query/company")
+                .param("companyId", "1")
+                .param("goodsStatus","1")
+                .param("pageSize", "10")
+                .param("pageNum", "1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
         mvcResult.getResponse().setCharacterEncoding("UTF-8");
         //mvcResult.andDo(print()).andExpect(status().isOk());
-        int status=mvcResult.getResponse().getStatus();
-        String content =mvcResult.getResponse().getContentAsString();
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
         System.out.println(status);
         System.out.println(content);
-        Assert.assertEquals(200,status);
-        Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
+        Assert.assertEquals(200, status);
+        Assert.assertTrue(content.length() > 0);//里面是一个Boolean 判断
     }
-
-
-
-//    /**
-//     * 测试上传文件（txt文件、jpg文件）
-//     */
-//    @Test
-//    public void testUploadFile() throws Exception {
-//        File file = new File("/Users/sunquan/Downloads/test.txt");
-//        MockMultipartFile firstFile = new MockMultipartFile("file", "test.txt",
-//                "text/plain", new FileInputStream(file));
-//
-//        mockMvc.perform(MockMvcRequestBuilders.multipart("/goods/uploadFileTest")
-//                .file(firstFile))//文件
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
-//
-//    /**
-//     * 测试上传文件（txt文件、jpg文件）
-//     */
-//    @Test
-//    public void testUploadFilePic() throws Exception {
-//        File file = new File("/Users/sunquan/Downloads/psb.jpeg");
-//        String goodsId = "1";
-//        MockMultipartFile firstFile = new MockMultipartFile("file", "psb.jpeg",
-//                MediaType.TEXT_PLAIN_VALUE, new FileInputStream(file));
-//
-//        mockMvc.perform(MockMvcRequestBuilders.multipart("/goods/upload/picture")
-//                .file(firstFile)//文件
-//                .param("goodsId", goodsId))//参数
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
-
-
-
-
-
 
 }

@@ -64,7 +64,6 @@ public class BindEmailControllerTests {
         System.out.println(content);
         Assert.assertEquals(200,status);
         Assert.assertTrue(content.length()>0);//里面是一个Boolean 判断
-
     }
     @Test
     public void testRegisterSendEmail() throws Exception {

@@ -25,8 +25,14 @@
     <select id="selectGoodsByCompanyId" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
-        where goodsStatus = #{goodsStatus} and companyId = #{companyId}
+        where
+        1=1
+        <if test="goodsStatus!=null">
+            and  goodsStatus = #{goodsStatus}
+        </if>
+            and companyId = #{companyId}
     </select>
+
     <select id="selectGoodsByCategoryId" resultType="Goods">
         select <include refid="selectFields"></include>
         from goodsintroduce
@@ -72,7 +78,7 @@
         where goodsId = #{goodsId}
     </delete>
     <delete id="deleteGoodsPic">
-        delete from goodsintroduce
+        delete from goodspicture
         where picId = #{picId}
     </delete>
     <select id="selectCategoryNameById" resultType="String">

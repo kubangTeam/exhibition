@@ -153,10 +153,10 @@ public class GoodsController implements Constants {
     //根据公司Id查询所有在展的商品;
     //参数：公司Id8
     //默认查询在展商品
-    @ApiOperation(value = "根据公司Id查询所有通过审核的商品", notes = "分页查询，默认查询在展商品")
+    @ApiOperation(value = "根据公司Id查询所有通过审核的商品", notes = "分页查询，默认查询全部在展商品;需要确保数据有图片不然会报错")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "companyId", value = "公司Id", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "goodsStatus", value = "商品状态(可选，默认为2（已通过审核))", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "goodsStatus", value = "商品状态(可选，默认为全部商品))", required = false, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "每页有几条", required = true, dataType = "int", paramType = "query")
     })

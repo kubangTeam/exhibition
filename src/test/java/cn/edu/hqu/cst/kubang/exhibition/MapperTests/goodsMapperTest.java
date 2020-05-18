@@ -57,6 +57,10 @@ public class goodsMapperTest {
         list = goodsDao.selectGoodsByCompanyId(1,2);
         System.out.println(list.size());
         System.out.println(list);
+
+        list = goodsDao.selectGoodsByCompanyId(1,null);
+        System.out.println(list.size());
+        System.out.println(list);
     }
 
     @Test
