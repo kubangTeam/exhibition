@@ -250,6 +250,11 @@ public class AdminController {
             return pageInfo;
         }
     }
+    @ApiOperation(value = "统一上传展品图片", notes = "未选择文件（021）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "展品图片", required = true,  dataType = "file", paramType = "form"),
+            @ApiImplicitParam(name = "goodsId", value = "展品Id", required = true, dataType = "int", paramType = "query")
+    })
     @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
     public ResponseJson<String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
                                               @RequestParam(value = "flag") int flag)
@@ -260,18 +265,17 @@ public class AdminController {
             String url = null, webPath = domain + contextPath;
             switch (flag){
                 case 1:
-                    webPath += "/images/goods/organizer";
+                    webPath += "/images/organizer";
                     url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
                     break;
                 case 2:
-                    webPath += "/images/goods/company";
+                    webPath += "/images/company";
                     url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
                     break;
                 case 3:
-                    webPath += "/images/goods/goods";
+                    webPath += "/images/goods";
                     url = UploadFile.uploadFile(uploadPathGoods, webPath, file);
                     break;
-
             }
             return new ResponseJson(true,url);
         }
