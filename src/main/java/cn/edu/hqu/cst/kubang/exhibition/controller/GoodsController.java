@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
+import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewDto;
@@ -162,7 +163,7 @@ public class GoodsController implements Constants {
     })
     @RequestMapping(value = "/query/company", method = RequestMethod.GET)
     public PageInfo<Goods> queryAllGoodsByCompanyId(@RequestParam(value = "companyId") int companyId,
-                                                    @RequestParam(value = "goodsStatus") Integer goodsStatus,
+                                                    @RequestParam(value = "goodsStatus") int goodsStatus,
                                                     @RequestParam(value = "pageNum") int pageNum,
                                                     @RequestParam(value = "pageSize") int pageSize) {
 
@@ -326,6 +327,19 @@ public class GoodsController implements Constants {
         } else {
             return new ResponseJson(false,"-008","修改失败");
         }
+    }
+    @NullDisable
+    @ApiOperation(value = "修改展品信息（根据goodsId）", notes = "修改成功(005), 修改失败(-008), goodsId不能为空，image不需要传，其他字段需要传新值或旧值")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "goods", value = "展品对象", required = true, dataType = "Goods", paramType = "body")
+    })
+    @RequestMapping(value = "/modify/goodsInfo", method = RequestMethod.POST)
+    public ResponseJson modifyGoods(@RequestBody Goods goods) {
+        if (goodsService.modifyGoodsInfo(goods) > 0) {
+            return new ResponseJson(true,ResponseCodeEnums.SUCCESS_OPTION);
+        }
+        else
+            return new ResponseJson(false,"-008","修改失败，请重试！");
     }
 
     /*

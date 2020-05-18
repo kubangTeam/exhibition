@@ -87,5 +87,12 @@ public class goodsMapperTest {
 
         }
     }
+    @Test
+    public void testUpdateGoods(){
+        Goods goods = goodsDao.selectGoodsById(3);
+        goods.setOriginPlace("临沂");
+        goods.setWebsite("www.google.com");
+        goodsDao.updateGoods(goods);
+    }
 
 }

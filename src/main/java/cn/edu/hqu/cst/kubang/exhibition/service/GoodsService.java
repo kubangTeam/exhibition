@@ -146,6 +146,9 @@ public class GoodsService implements Constants {
         //用户提交优先级审核，修改商品原来的状态，变为待审核
         return  goodsDao.updatePriority(goodsId, priority);
     }
+    public int modifyGoodsInfo(Goods goods){
+        return goodsDao.updateGoods(goods);
+    }
 
     //修改展品在展状态
     public int modifyGoodsStatus(int goodsId, int goodsStatus) {
