@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao">
 
-
     <sql id="selectFields">
         id,name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
         period,introduction,Tel,picture,subareaId
@@ -15,10 +14,15 @@
         period,introduction,Tel,picture,subareaId
     </sql>
 
+    <select id="getExhibitionsByOrganizerID" parameterMap="int" resultType="Exhibition">
+        select <include refid="selectFields"></include>
+        from exhibitiondetail
+        where organizer = #{organizerID}
+    </select>
 
 
     <select id="queryAllExhibitions" resultType="Exhibition">
-        select <include refid="selectFields"></include>
+        select *<include refid="selectFields"></include>
         from exhibitiondetail
     </select>
 
@@ -27,6 +31,7 @@
         from exhibitiondetail
         where id = #{id}
     </select>
+
 
     <select id="queryExhibitionDetailsByID" parameterType="int" resultType="ExhibitionNew">
         select exhibitiondetail.id id,`name`,startTime,endTime,exhibitionName address,

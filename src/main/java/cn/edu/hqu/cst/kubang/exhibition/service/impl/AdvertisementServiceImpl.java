@@ -20,9 +20,9 @@ import java.util.*;
  *  @Description: 广告的service层接口实现类
  */
 @Service
-public class AdvertisementServiceImpl  implements IAdvertisementService {
+public class AdvertisementServiceImpl implements IAdvertisementService {
     @Autowired
-    AdvertisementDao advertisementDao;
+    private AdvertisementDao advertisementDao;
 
     @Value("${pagehelper.pageSize2}")
     private int pageSize2;//一页显示8个
@@ -61,8 +61,9 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
         }
         return backList;
     }
-
-    //推荐广告页，每一页8个，暂时只推荐一个页面
+    //旧版recommendAds
+    /*
+     //推荐广告页，每一页8个，暂时只推荐一个页面
     @Override
     @NullDisable
     public Map<String,Object>  recommendAds(int pageNum) {
@@ -115,7 +116,81 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
         map = Pagination.paginationAds(pageNum,pageSize2,advertisementList);
         return map;
     }
+    * */
+    //推荐广告页，每一页8个，暂时只推荐一个页面
+    @Override
+    @NullDisable
+    public Map<String,Object>  recommendAds(int pageNum) {
 
+        List<Advertisement> advertisementList = advertisementDao.selectByAdsStatus(2);
+        List<Advertisement> result = new ArrayList<>();
+
+        //获取当前时间
+        Date data = new Date();
+        long value = data.getTime();
+        data.setTime(value);
+
+        //如果发现有一个时间已经过期，就再找一个
+        //首先找到优先级1--8的
+        Iterator<Advertisement> it = advertisementList.iterator();
+        while (it.hasNext()) {
+            Advertisement advertisement = it.next();
+            int priority = advertisement.getPriority();
+            if (priority >= 1 && priority <= 8) {
+                Date endTime = advertisement.getEndTime(); //结束时间
+                int compareEnd = data.compareTo(endTime);
+                if (compareEnd == -1) {
+                    //如果过期了，再找一个
+                    it.remove();
+                    Advertisement ad =  findReplacement(it);
+                    //修改ad的 优先级为advertisement的优先级
+                    //修改优先级为advertisement的优先级的优先级为0
+                    advertisementDao.updateAds(ad.getId(),ad.getStartTime(),ad.getEndTime(),ad.getPicture(),advertisement.getPriority());
+                    advertisementDao.updateAds(advertisement.getId(),advertisement.getStartTime(),advertisement.getEndTime(),advertisement.getPicture(),0);
+                    result.add(ad);
+                }
+                else{
+                    result.add(advertisement);
+                }
+            }
+        }
+        Map<String,Object> map = new HashMap<>();
+        map = Pagination.paginationAds(pageNum,pageSize2,result);
+        return map;
+    }
+    private Advertisement findReplacement(Iterator<Advertisement> it){
+        Advertisement result = null;
+
+        //获取当前时间
+        Date data = new Date();
+        long value = data.getTime();
+        data.setTime(value);
+
+        while (it.hasNext()) {
+            Advertisement advertisement = it.next();
+            int priority = advertisement.getPriority();
+
+            int compareStart = data.compareTo(advertisement.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
+            int compareEnd = data.compareTo(advertisement.getEndTime());
+
+            if (priority == 0) { //找到优先级为0
+                //日期不符合要求，跳过
+                if (!(compareStart == 1 && compareEnd == -1)) {
+                    continue;
+                } else {//否则作为寻找最接近时间的目标
+                    if (result != null) {//如果不为空，就要比较时间谁更加接近目前时间
+                        //当前遍历的advertisement startTime比较早，就替换当前result
+                        if(advertisement.getStartTime().compareTo(result.getStartTime())==-1){
+                            result = advertisement;
+                        }
+                    } else {
+                        result = advertisement;
+                    }
+                }
+            }
+        }
+        return result;
+    }
     //检查发起的申请
     @Override
     public String examineAds(int id, int type) {
@@ -167,6 +242,4 @@ public class AdvertisementServiceImpl  implements IAdvertisementService {
         map.put("info",info);
         return map;
     }
-
-
 }

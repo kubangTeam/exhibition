@@ -91,7 +91,6 @@ public class AdvertisementController {
     @PostMapping("/updateAdsStatus")
     public ResponseJson<Map<String,Object>> updateAdsStatus(@RequestParam(value = "id") int id,
                                                       @RequestParam(value = "status") int status){
-
         int i = advertisementDao.updateAdsStatus(id,status);
         if(i==1){
             return new ResponseJson(true, "修改成功");
@@ -99,6 +98,4 @@ public class AdvertisementController {
             return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
         }
     }
-
-
 }

@@ -2,11 +2,13 @@ package cn.edu.hqu.cst.kubang.exhibition.dao;
 
 import cn.edu.hqu.cst.kubang.exhibition.entity.Advertisement;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
 @Mapper
+@Repository
 public interface AdvertisementDao {
     int insertAds(Advertisement advertisement);//插入广告页面
 

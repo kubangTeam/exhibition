@@ -29,12 +29,21 @@ public interface IExhibitionService {
                        String introduce, String picPath);
     //添加展会分区信息
     int addSubareaInfo(List<String> subAreaList,int exhibitionId);
+
     //管理员查询所有展会
-    List<Exhibition>queryAllExhibitionInfo();
-    //若为承办方查询所有其举办的展会 若为个人用户查询自己参加过的展会
-    List<Exhibition>queryExhibitionInfoByUserId(int userId);
+    List<Exhibition> queryAllExhibitionInfoByAdmin();
+    //举办方查询所有展会
+    List<Exhibition> queryAllExhibitionInfoByOrganizerID(int organizerID);
+
+    //若为承办方查询所有其举办的展会 若为个人用户查询自己参加过的展会（注释掉了）
+    //List<Exhibition>queryExhibitionInfoByUserId(int userId);
+
+    //用户查询他参加过的展会?
+    List<Exhibition> queryExhibitionInfoByUser(int userID);
+
     //根据账号id和展会状态查询展会信息 若为管理员则对所有展会按照状态查询 若为承办方 则按照承办方的所举办的展会的状态来查询
     List<Exhibition>queryExhibitionInfoByUserIdAndStatus(int userId,int status);
+
 
     Map<String,Object>queryReadyToStartExhibitionInfo(int pageNum);
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
@@ -42,7 +51,6 @@ public interface IExhibitionService {
     List<Goods> queryGoodsByExhibitionId(int exhibitionId);
 
     Map<String ,Object>queryGoodsByExhibitionIdAndSubareaId(int exhibitionId,int subAreaId,int pageNum);
-
 
     Map<String ,Object>querySubareaByExhibitionId(int exhibitionId);
     List getExhibitionIdInRedis();

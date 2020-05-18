@@ -66,7 +66,7 @@ public class OrganizerController {
     private String contextPath;
 
 
-    @ApiOperation(value = "承办方账号认证",notes = "传入的参数为承办方的认证信息")
+    @ApiOperation(value = "承办方账号认证", notes = "传入的参数为承办方的认证信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID(通过注册后返回个人信息取得用户id)", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "organizer", value = "承办方名称", required = true, dataType = "String", paramType = "query"),
@@ -81,17 +81,17 @@ public class OrganizerController {
             @ApiImplicitParam(name = "headPicure", value = "负责人头像", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/identifyAsOrganizer")
-    public Map<String,String> registerAsOrganizer(@RequestParam(value = "userId") int userId,
-                                                  @RequestParam(value = "organizer") String organizer,
-                                                  @RequestParam(value = "codeCertificateType") String codeCertificateType,
-                                                  @RequestParam(value = "codeCertificateId") String codeCertificateId,
-                                                  @RequestParam(value = "codeCertificatePic") MultipartFile codeCertificatePic,
-                                                  @RequestParam(value = "responsiblePersonName") String responsiblePersonName,
-                                                  @RequestParam(value = "responsiblePersonIdcard") String responsiblePersonIdcard,
-                                                  @RequestParam(value = "responsiblePersonpic1") MultipartFile responsiblePersonpic1,
-                                                  @RequestParam(value = "responsiblePersonpic2") MultipartFile responsiblePersonpic2,
-                                                  @RequestParam(value = "responsiblePersonTel") String responsiblePersonTel,
-                                                  @RequestParam(value = "headPicure") MultipartFile headPicure) throws IOException {
+    public Map<String, String> registerAsOrganizer(@RequestParam(value = "userId") int userId,
+                                                   @RequestParam(value = "organizer") String organizer,
+                                                   @RequestParam(value = "codeCertificateType") String codeCertificateType,
+                                                   @RequestParam(value = "codeCertificateId") String codeCertificateId,
+                                                   @RequestParam(value = "codeCertificatePic") MultipartFile codeCertificatePic,
+                                                   @RequestParam(value = "responsiblePersonName") String responsiblePersonName,
+                                                   @RequestParam(value = "responsiblePersonIdcard") String responsiblePersonIdcard,
+                                                   @RequestParam(value = "responsiblePersonpic1") MultipartFile responsiblePersonpic1,
+                                                   @RequestParam(value = "responsiblePersonpic2") MultipartFile responsiblePersonpic2,
+                                                   @RequestParam(value = "responsiblePersonTel") String responsiblePersonTel,
+                                                   @RequestParam(value = "headPicure") MultipartFile headPicure) throws IOException {
         String value = null;
         String code = null;
         Map<String, String> map = new HashMap<>();
@@ -100,7 +100,7 @@ public class OrganizerController {
         return map;
     }
 
-    @ApiOperation(value = "展会举办方举办一个展会",notes = "提交展会信息字段")
+    @ApiOperation(value = "展会举办方举办一个展会", notes = "提交展会信息字段")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "举办方账号ID", required = true, dataType = "int", paramType = "body"),
             @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "body"),
@@ -111,63 +111,66 @@ public class OrganizerController {
             @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "body"),
             @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "body"),
             @ApiImplicitParam(name = "file", value = "展会图标", required = true, dataType = "file", paramType = "form"),
-            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true,allowMultiple=true, dataType = "String", paramType = "body")
+            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true, allowMultiple = true, dataType = "String", paramType = "body")
     })
     @PostMapping("/holdExhibition")
-    public ResponseJson<Map<String,Object>> holdExhibition(@RequestParam(value = "userId") int userId,
-                                                           @RequestParam(value = "name") String name,
-                                                           @RequestParam(value = "startTime") Date startTime,
-                                                           @RequestParam(value = "endTime") Date endTime,
-                                                           @RequestParam(value = "exhibitionHallId") int exhibitionHallId,
-                                                           @RequestParam(value = "session") int session,
-                                                           @RequestParam(value = "period") String period,
-                                                           @RequestParam(value = "introduce") String introduce,
-                                                           @RequestParam(value = "subAreaList") List<String> subAreaList,
-                                                           @RequestParam(value = "file") MultipartFile file
-                                              ) throws IOException {
+    public ResponseJson<Map<String, Object>> holdExhibition(@RequestParam(value = "userId") int userId,
+                                                            @RequestParam(value = "name") String name,
+                                                            @RequestParam(value = "startTime") Date startTime,
+                                                            @RequestParam(value = "endTime") Date endTime,
+                                                            @RequestParam(value = "exhibitionHallId") int exhibitionHallId,
+                                                            @RequestParam(value = "session") int session,
+                                                            @RequestParam(value = "period") String period,
+                                                            @RequestParam(value = "introduce") String introduce,
+                                                            @RequestParam(value = "subAreaList") List<String> subAreaList,
+                                                            @RequestParam(value = "file") MultipartFile file
+    ) throws IOException {
 
         String value = null;
 
         String webPath = null;
-        String pic =null;
+        String pic = null;
         Map<String, String> map = new HashMap<>();
         webPath = domain + contextPath + "/images/company/";
         pic = UploadFile.uploadFile(uploadPath, webPath, file);
-        if(accountServiceImp.identifyUser(userId)=="承办方"){
-            int exhibitionId =exhibitionService.holdExhibition(userId,name,startTime,endTime,exhibitionHallId,session,period,introduce,pic);
-            int result = exhibitionService.addSubareaInfo(subAreaList,exhibitionId);
-            if(exhibitionId !=0 && result ==1){
+        if (accountServiceImp.identifyUser(userId) == "承办方") {
+            int exhibitionId = exhibitionService.holdExhibition(userId, name, startTime, endTime, exhibitionHallId, session, period, introduce, pic);
+            int result = exhibitionService.addSubareaInfo(subAreaList, exhibitionId);
+            if (exhibitionId != 0 && result == 1) {
                 value = "上传展会成功";
             }
             map.put("response", value);
             return new ResponseJson(true, map);
-        }else{
+        } else {
             return new ResponseJson(false, ResponseCodeEnums.BAD_REQUEST);
         }
     }
 
 
-    @ApiOperation(value = "查看承办方举办的展会列表展",notes = "传入的参数为承办方id，返回展会信息")
+    @ApiOperation(value = "查看承办方举办的展会列表展", notes = "传入的参数为承办方id，返回展会信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query")
     })
     @PostMapping("/checkOrganizerHoldExhibition")
-    public Map<String,String> checkOrganizerHoldExhibition(@RequestParam(value = "id") int userId) throws IOException {
+    public Map<String, Object> checkOrganizerHoldExhibition(@RequestParam(value = "id") int userId) throws IOException {
         String value = null;
         String code = null;
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
+        Map<String, Object> map = new HashMap<>();
+
+        List<Exhibition> exhibitions = exhibitionService.queryAllExhibitionInfoByOrganizerID(userId);
+
+        map.put("count", exhibitions.size());
+        map.put("code", exhibitions);
         return map;
     }
 
 
-    @ApiOperation(value = "查看审核参加自己举办的展会的商家申请",notes = "传入的参数为展会id，返回参加该展会的商家信息以及参展商品信息")
+    @ApiOperation(value = "查看审核参加自己举办的展会的商家申请", notes = "传入的参数为展会id，返回参加该展会的商家信息以及参展商品信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
     })
     @PostMapping("/checkCompanyApplyByExhibitionId")
-    public Map<String,String> checkCompanyApplyByExhibitionId (@RequestParam(value = "id") int userId) throws IOException {
+    public Map<String, String> checkCompanyApplyByExhibitionId(@RequestParam(value = "id") int userId) throws IOException {
         String value = null;
         String code = null;
         Map<String, String> map = new HashMap<>();
@@ -176,14 +179,13 @@ public class OrganizerController {
         return map;
     }
 
-
-    @ApiOperation(value = "审核通过参加自己举办的展会的某商家的申请",notes = "传入的参数为商家id，以及展会id")
+    @ApiOperation(value = "审核通过参加自己举办的展会的某商家的申请", notes = "传入的参数为商家id，以及展会id")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query")
 
     })
     @PostMapping("/verifyCompanyApplyByExhibitionId")
-    public Map<String,String> verifyCompanyApplyByExhibitionId(@RequestParam(value = "id") int userId) throws IOException {
+    public Map<String, String> verifyCompanyApplyByExhibitionId(@RequestParam(value = "id") int userId) throws IOException {
         String value = null;
         String code = null;
         Map<String, String> map = new HashMap<>();
@@ -191,6 +193,4 @@ public class OrganizerController {
         map.put("code", code);
         return map;
     }
-
-
 }

@@ -32,6 +32,9 @@ public class ExhibitionServiceImpl implements IExhibitionService{
     private Exhibition exhibition;
 
     @Autowired
+    private OrganizerInformationDao organizerInformationDao;
+
+    @Autowired
     private UserDao userDao;
 
     @Autowired
@@ -144,26 +147,50 @@ public class ExhibitionServiceImpl implements IExhibitionService{
     }
 
     @Override
-    public List<Exhibition> queryAllExhibitionInfo() {
+    //管理员查询所有展会
+    //By Timor 2020/5/18
+    public List<Exhibition> queryAllExhibitionInfoByAdmin()
+    {
+        return exhibitionDao.queryAllExhibitions();
+    }
+
+    @Override
+    //举办方查询所有展会
+    //By Timor 2020/5/18
+    public List<Exhibition> queryAllExhibitionInfoByOrganizerID(int organizerID)
+    {
+        return exhibitionDao.getExhibitionsByOrganizerID(organizerID);
+    }
+
+    @Override
+    //用户查询他参加过的展会
+    //By Timor 2020/5/18
+    public List<Exhibition> queryExhibitionInfoByUser(int userID)
+    {
+        //暂未实现
         return null;
     }
 
-
-
     @Override
-    public List<Exhibition> queryExhibitionInfoByUserId(int userId) {
-        if(accountServiceImp.identifyUser(userId) == "商家"){
+    //根据账号id和展会状态查询展会信息 若为管理员则对所有展会按照状态查询 若为承办方 则按照承办方的所举办的展会的状态来查询
+    //By Timor 2020/5/18
+    public List<Exhibition> queryExhibitionInfoByUserIdAndStatus(int userId, int status) {
+        ArrayList<Exhibition> result= new ArrayList<>();
+        //如果是举办方(organizer)
+        if(accountServiceImp.identifyUser(userId)!="承办方"){
+            List<Exhibition> list = exhibitionDao.getExhibitionsByOrganizerID(userId);
+            for(Exhibition exhibition:list){
+                if(exhibition.getStatus() == status){
+                    result.add(exhibition);
+                }
+            }
+        }
+        else //有管理员 ID？？
+        {
 
         }
-        return null;
+        return result;
     }
-
-    @Override
-    public List<Exhibition> queryExhibitionInfoByUserIdAndStatus(int userId, int status) {
-        return null;
-    }
-
-
 
     @Override
     public Map<String,Object> queryReadyToStartExhibitionInfo(int pageNum) {

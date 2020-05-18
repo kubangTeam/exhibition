@@ -45,6 +45,10 @@ public interface ExhibitionDao {
 
     int deleteByStatus(int status);//删除测试数据，测试用
 
+    //根据举办方ID查询展会
+    //By Timor 2020/5/18
+    List<Exhibition> getExhibitionsByOrganizerID(int organizerID);
+
     // 根据展会id查找它的轮播图
     List<String> queryExbitionPicById(int exhibitionId);
 }
