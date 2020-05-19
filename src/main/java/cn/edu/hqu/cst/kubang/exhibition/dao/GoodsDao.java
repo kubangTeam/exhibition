@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
+import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionGoodsDTO;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsNewPojo;
 import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
@@ -46,4 +47,6 @@ public interface GoodsDao {
 
     List<Goods> selectGoodsByStatus(@Param("goodsStatus")int goodsStatus);
     List<Integer> selectGoodsIdByCompanyId(@Param("companyId")int companyId);
+
+    List<ExhibitionGoodsDTO> listExhibitionGoods(int id);
 }

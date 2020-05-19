@@ -2,10 +2,12 @@ package cn.edu.hqu.cst.kubang.exhibition.service;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
+import cn.edu.hqu.cst.kubang.exhibition.annotation.NullDisable;
 import cn.edu.hqu.cst.kubang.exhibition.dao.CompanyDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
+import cn.edu.hqu.cst.kubang.exhibition.util.ConvertBean;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.*;
@@ -195,5 +197,4 @@ public class GoodsService implements Constants {
            return getRandomGoods(num, categoryId);
        }
    }
-
 }
