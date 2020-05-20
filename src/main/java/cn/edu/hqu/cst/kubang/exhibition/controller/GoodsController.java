@@ -380,4 +380,9 @@ public class GoodsController implements Constants {
         return url;
     }*/
 
+
+    @GetMapping("/query/exhibitionId/{id}")
+    public ResponseJson getAllGoodsByExhibitionId(@PathVariable Integer id){
+        return goodsMobileService.getAllExhibitionGoods(id);
+    }
 }
