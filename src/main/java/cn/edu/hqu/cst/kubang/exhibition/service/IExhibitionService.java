@@ -44,7 +44,7 @@ public interface IExhibitionService {
     //根据账号id和展会状态查询展会信息 若为管理员则对所有展会按照状态查询 若为承办方 则按照承办方的所举办的展会的状态来查询
     List<Exhibition>queryExhibitionInfoByUserIdAndStatus(int userId,int status);
 
-
+    boolean setOngoingPriority(int exhibitionId,int priority) throws Exception;
     Map<String,Object>queryReadyToStartExhibitionInfo(int pageNum);
     ExhibitionNew queryExhibitionDetailById(int exhibitionId);
     List<Exhibition> queryAll();

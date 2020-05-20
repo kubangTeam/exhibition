@@ -51,4 +51,9 @@ public interface ExhibitionDao {
 
     // 根据展会id查找它的轮播图
     List<String> queryExbitionPicById(int exhibitionId);
+
+    //设置前四个在展的展会的优先级
+    //By Timor 2020/5/19
+    void setOngoingPriority(int exhibitionId, int priority);
+
 }

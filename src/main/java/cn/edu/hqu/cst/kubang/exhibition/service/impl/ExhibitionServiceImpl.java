@@ -194,6 +194,18 @@ public class ExhibitionServiceImpl implements IExhibitionService{
     }
 
     @Override
+    public boolean setOngoingPriority(int exhibitionId, int priority) throws Exception {
+        ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                exhibitionDao.setOngoingPriority(exhibitionId,priority);
+                return true;
+            }
+        });
+        return true;
+    }
+
+    @Override
     public Map<String,Object> queryReadyToStartExhibitionInfo(int pageNum) {
         Map<String,Object> map = new HashMap<>();
         List<Exhibition> readyToStartExhibition =null;

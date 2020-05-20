@@ -151,8 +151,8 @@ public class OrganizerController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query")
     })
-    @PostMapping("/checkOrganizerHoldExhibition")
-    public Map<String, Object> checkOrganizerHoldExhibition(@RequestParam(value = "id") int userId) throws IOException {
+    @PostMapping("/queryOrganizerHoldExhibition")
+    public Map<String, Object> queryOrganizerHoldExhibition(@RequestParam(value = "id") int userId) throws IOException {
         String value = null;
         String code = null;
         Map<String, Object> map = new HashMap<>();
@@ -160,7 +160,7 @@ public class OrganizerController {
         List<Exhibition> exhibitions = exhibitionService.queryAllExhibitionInfoByOrganizerID(userId);
 
         map.put("count", exhibitions.size());
-        map.put("code", exhibitions);
+        map.put("data", exhibitions);
         return map;
     }
 

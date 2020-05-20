@@ -6,7 +6,7 @@
 
     <sql id="selectFields">
         id,name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
-        period,introduction,Tel,picture,subareaId
+        period,introduction,Tel,picture,subareaId,priority
     </sql>
 
     <sql id="insertFields">
@@ -14,12 +14,16 @@
         period,introduction,Tel,picture,subareaId
     </sql>
 
-    <select id="getExhibitionsByOrganizerID" parameterMap="int" resultType="Exhibition">
+    <select id="getExhibitionsByOrganizerID" parameterType="int" resultType="Exhibition">
         select <include refid="selectFields"></include>
         from exhibitiondetail
         where organizer = #{organizerID}
     </select>
-
+    <update id="setOngoingPriority" parameterType="int">
+        update exhibitiondetail
+        set priority = #{priority}
+        where id = #{exhibitionId}
+    </update>
 
     <select id="queryAllExhibitions" resultType="Exhibition">
         select *<include refid="selectFields"></include>

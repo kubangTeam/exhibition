@@ -1,6 +1,7 @@
 package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
+import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
 import cn.edu.hqu.cst.kubang.exhibition.dao.*;
 import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
@@ -193,12 +194,75 @@ public class ExhibitionController implements Constants {
             return new ResponseJson(true,"005","操作成功",goodsList);
 
     }
+    @ApiOperation(value = "修改展会的优先级",notes="优先级为1，2，3，4，代表在客户端上显示的顺序")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name ="id",value="展会的ID",required = true,dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name ="priority",value="要设置的优先级",required = true,dataType = "int", paramType = "query")
+    })
+    @PostMapping("/setPriority")
+    public ResponseJson<String> setOngoingPriority(int id,int priority){
+        exhibitionDao.setOngoingPriority(id,priority);
+        if(priority<0||priority>4)
+            return new ResponseJson(false,"-020","优先级必须在0-4之间");
+        else
+            return new ResponseJson(true,"005","操作成功");
+    }
 
+    @ApiOperation(value = "找到优先级不为0的前四个展会")
+    @GetMapping("/queryFrontOnGoing")
+    public ResponseJson<List<Exhibition>> queryFrontOnGoing() throws Exception {
+        List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
+        //获取当前时间
+        Date data = new Date();
+        long value = data.getTime();
+        data.setTime(value);
+        //去掉不符合时间的展会
+        Iterator<Exhibition> it = exhibitionList.iterator();
+        while (it.hasNext()) {
+            exhibition = it.next();
+            int compareStart = data.compareTo(exhibition.getStartTime());//前者小于后者返回-1；前者大于后者返回1；相等返回0
+            int compareEnd = data.compareTo(exhibition.getEndTime());
+            if (!(compareStart == 1 && compareEnd == -1)) {//起始时间大于当前时间，且结束时间大于当前时间
+                it.remove();
+                if(exhibition.getPriority()!=0)
+                    exhibitionService.setOngoingPriority(exhibition.getId(),0);
+            }
+        }
+        List<Exhibition> result = new ArrayList<>();
+        int count = 0;
 
-
-
-
-
-
+        Map<Integer,Boolean> priorityMap=new HashMap<>();
+        it = exhibitionList.iterator();
+        while (it.hasNext()) {
+            exhibition = it.next();
+            if(exhibition.getPriority()>=1&&exhibition.getPriority()<=4){
+                result.add(exhibition);
+                it.remove();
+                count++;
+                if(count == 4)
+                    break;
+                priorityMap.put(exhibition.getPriority(),true);
+            }
+        }
+        if(count<4){
+            //找到代替的
+            int delta = 4-count;
+            for(Exhibition exhibition:exhibitionList) {
+                result.add(exhibition);
+                for(int i = 1;i<=4;i++){
+                    if(priorityMap.containsKey(i) == false){
+                        //设置代替的优先级
+                        priorityMap.put(i,true);
+                        exhibitionService.setOngoingPriority(exhibition.getId(),i);
+                        exhibition.setPriority(i);
+                    }
+                }
+                delta--;
+                if(delta == 0)
+                    break;
+            }
+        }
+        return new ResponseJson(true,"005","操作成功",result);
+    }
 
 }

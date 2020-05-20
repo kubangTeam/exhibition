@@ -139,7 +139,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
             if (priority >= 1 && priority <= 8) {
                 Date endTime = advertisement.getEndTime(); //结束时间
                 int compareEnd = data.compareTo(endTime);
-                if (compareEnd == -1) {
+                if (compareEnd == 1) {
                     //如果过期了，再找一个
                     it.remove();
                     Advertisement ad =  findReplacement(it);
@@ -160,7 +160,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
     }
     private Advertisement findReplacement(Iterator<Advertisement> it){
         Advertisement result = null;
-
+        Iterator<Advertisement> it_temp = it;
         //获取当前时间
         Date data = new Date();
         long value = data.getTime();
@@ -189,6 +189,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                 }
             }
         }
+        it = it_temp;
         return result;
     }
     //检查发起的申请

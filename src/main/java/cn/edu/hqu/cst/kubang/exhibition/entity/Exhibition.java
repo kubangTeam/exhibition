@@ -78,6 +78,9 @@ public class Exhibition implements Serializable {
     @Field(type = FieldType.Integer)
     private Integer subareaId;
 
+    @Field(type = FieldType.Integer)
+    private int priority;
+
     public Integer getSubareaId() {
         return subareaId;
     }
@@ -214,6 +217,13 @@ public class Exhibition implements Serializable {
         this.picture = picture;
     }
 
+    public int getPriority(){
+        return this.priority;
+    }
+
+    public void setPriority(int priority){
+        this.priority = priority;
+    }
     @Override
     public String toString() {
         return "Exhibition{" +
@@ -233,7 +243,8 @@ public class Exhibition implements Serializable {
                 ", Tel='" + Tel + '\'' +
                 ", status=" + status +
                 ", picture='" + picture + '\'' +
-                ", subareaId=" + subareaId +
+                ", subareaId=" + subareaId +'\'' +
+                ", priority="+priority +
                 '}';
     }
 }
