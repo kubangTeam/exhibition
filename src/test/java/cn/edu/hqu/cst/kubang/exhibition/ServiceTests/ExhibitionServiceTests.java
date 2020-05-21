@@ -106,6 +106,13 @@ public class ExhibitionServiceTests {
         //System.out.println(exhibitionService.queryOngoingExhibitionInfo());//整数页
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//残余尾页
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//异常页
+        //System.out.println(exhibitionService.queryOnGoing().size());
+        exhibitionService.deleteExhibitionIntoRedis();
+        List<Exhibition> list = exhibitionService.queryOnGoing();
+        for(Exhibition exhibition : list){
+            exhibitionService.addExhibitionIntoRedis(exhibition.getId());
+            System.out.println(exhibition.getId());
+        }
         System.out.println(exhibitionService.getExhibitionIdInRedis());
     }
 

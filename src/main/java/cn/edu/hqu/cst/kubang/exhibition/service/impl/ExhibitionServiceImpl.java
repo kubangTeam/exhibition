@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service.impl;
 
+import ch.qos.logback.classic.Logger;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.ComparatorImpl;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Constants;
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.Pagination;
@@ -12,9 +13,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.*;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 @Service
+@Slf4j
+@EnableScheduling
 public class ExhibitionServiceImpl implements IExhibitionService{
 
     @Autowired
@@ -384,17 +389,31 @@ public class ExhibitionServiceImpl implements IExhibitionService{
         redisKeyDb.opsForZSet().add("Exhibition",id, 0);
     }
     @Override
+    public void deleteExhibitionIntoRedis(){
+        redisKeyDb.opsForZSet().removeRange("Exhibition", 0, -1);
+    }
+    @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public boolean updateExhibitionInRedis()throws Exception{
         ListenableFuture<Boolean> future = executorService.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
+                redisKeyDb.opsForZSet().removeRange("Exhibition", 0, -1);
                 List<Exhibition> list = queryOnGoing();
                 for(Exhibition exhibition : list){
                     redisKeyDb.opsForZSet().add("Exhibition", exhibition.getId(), 0);
-                    System.out.println(exhibition.getId());
                 }
                 return true;
+            }
+        });
+        Futures.addCallback(future, new FutureCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean v) {
+                log.info("@Exhibition: update redis data for exhibition ago successfully");
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+                log.info("@Exhibition: fail to clear redis data, message is {}", throwable.getMessage());
             }
         });
         return true;

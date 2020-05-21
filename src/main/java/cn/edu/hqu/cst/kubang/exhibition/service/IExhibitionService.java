@@ -56,6 +56,7 @@ public interface IExhibitionService {
     List getExhibitionIdInRedis();
     boolean updateExhibitionInRedis() throws Exception;
     void addExhibitionIntoRedis(int id);
+    void deleteExhibitionIntoRedis();
 
 
 
