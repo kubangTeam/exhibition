@@ -42,9 +42,7 @@ public class GoodsMobileServiceImpl implements IGoodsMobileService {
     @Override
     @NullDisable
     public ResponseJson<List<ExhibitionGoodsDTO>> getAllExhibitionGoods(Integer exhibitionId) {
-            // do ...
             List<ExhibitionGoodsDTO> list = goodsDao.listExhibitionGoods(exhibitionId);
-            // do ...
             return new ResponseJson(true,"005","查询成功",list);
     }
 

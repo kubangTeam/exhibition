@@ -381,6 +381,15 @@ public class GoodsController implements Constants {
     }*/
 
 
+    /*
+     * 通过展会的id查询该展会所有的展品
+     *
+     **/
+
+    @ApiOperation(value = "通过展会的id查询该展会所有的展品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "展会ID", required = true, dataType = "int", paramType = "path")
+    })
     @GetMapping("/query/exhibitionId/{id}")
     public ResponseJson getAllGoodsByExhibitionId(@PathVariable Integer id){
         return goodsMobileService.getAllExhibitionGoods(id);

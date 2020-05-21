@@ -135,7 +135,7 @@
     </select>
 
     <select id="listExhibitionGoods" parameterType="int" resultType="ExhibitionGoodsDTO">
-        select gi.goodsId,gi.goodsName,gi.categoryId,gi.currentPrice,gp.pic from goodsintroduce gi inner join goodspicture gp on gi.goodsId = gp.goodsId where gi.goodsId in (select goodsId from goodsjoinexhibition where exhibitionId = #{id})
+        select gi.goodsId,gi.goodsName,gi.categoryId,gi.currentPrice,gp.pic image from goodsintroduce gi inner join goodspicture gp on gi.goodsId = gp.goodsId where gi.goodsId in (select goodsId from goodsjoinexhibition where exhibitionId = #{id})
          group by gi.goodsName order by gi.goodsId desc;
     </select>
 </mapper>
