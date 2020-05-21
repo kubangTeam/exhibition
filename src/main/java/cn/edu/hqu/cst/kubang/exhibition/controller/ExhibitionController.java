@@ -174,6 +174,7 @@ public class ExhibitionController implements Constants {
     public  ResponseJson<List<ExhibitionNew>> queryOngoingExhibitionInfo() {
         List list = exhibitionService.getExhibitionIdInRedis();
         List<ExhibitionNew> result= new ArrayList<>();
+        System.out.println(list.size());
         for(int i = 0; i < list.size(); i++){
             ExhibitionNew exhibitionNew = exhibitionService.queryExhibitionDetailById(Integer.parseInt(list.get(i).toString()));
             result.add(exhibitionNew);
