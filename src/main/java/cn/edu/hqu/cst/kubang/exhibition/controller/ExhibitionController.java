@@ -263,6 +263,19 @@ public class ExhibitionController implements Constants {
                     break;
             }
         }
+        //2020.5.25新增加的排序
+        Collections.sort(result, new Comparator<Exhibition>(){
+            public int compare(Exhibition ex1, Exhibition ex2) {
+                //排序属性
+                if(ex1.getPriority() < ex2.getPriority()){
+                    return -1;
+                }
+                if(ex1.getPriority() == ex2.getPriority()){
+                    return 0;
+                }
+                return 1;
+            }
+        });
         return new ResponseJson(true,"005","操作成功",result);
     }
 
