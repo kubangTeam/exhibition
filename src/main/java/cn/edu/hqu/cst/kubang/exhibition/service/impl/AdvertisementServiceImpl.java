@@ -154,6 +154,19 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                 }
             }
         }
+        //2020.5.25新增加的排序
+        Collections.sort(result, new Comparator<Advertisement>(){
+            public int compare(Advertisement ad1, Advertisement ad2) {
+                //排序属性
+                if(ad1.getPriority() < ad2.getPriority()){
+                    return -1;
+                }
+                if(ad1.getPriority() == ad2.getPriority()){
+                    return 0;
+                }
+                return 1;
+            }
+        });
         Map<String,Object> map = new HashMap<>();
         map = Pagination.paginationAds(pageNum,pageSize2,result);
         return map;
