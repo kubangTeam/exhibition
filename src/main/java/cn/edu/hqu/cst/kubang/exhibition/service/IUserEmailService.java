@@ -21,4 +21,5 @@ public interface IUserEmailService {
 
     // 收件人 主题 内容
     int sendSimpleMail(String to, String subject, String content);
+
 }

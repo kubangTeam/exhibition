@@ -5,7 +5,9 @@ import cn.edu.hqu.cst.kubang.exhibition.dao.UserCodeDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.UserDao;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.entity.UserCode;
+import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.IUserEmailService;
+import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,14 +36,27 @@ import java.util.UUID;
 @RequestMapping("/email")
 @Api(tags = "邮箱服务")
 public class BindEmailController {
-    @Autowired
+
     private IUserEmailService userEmailService;
-    @Autowired
+
     private UserDao userDao;
-    @Autowired
+
     private UserCodeDao userCodeDao;
-    @Autowired
+
     private AccountServiceImp accountServiceImp;
+
+    private UserService userService;
+    @Autowired
+    public BindEmailController(IUserEmailService userEmailService,
+                               UserDao userDao, UserCodeDao userCodeDao,
+                               AccountServiceImp accountServiceImp,
+                               UserService userService) {
+        this.userEmailService = userEmailService;
+        this.userDao = userDao;
+        this.userCodeDao = userCodeDao;
+        this.accountServiceImp = accountServiceImp;
+        this.userService = userService;
+    }
 
     /**
      * 根据用户的id和邮箱发送验证码
@@ -126,7 +141,19 @@ public class BindEmailController {
             return stringResponseJson;
         }
     }
+    @ApiOperation(value = "邮箱解绑", notes = "")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true, dataType = "int", paramType = "query")
+    })
+    @PostMapping("/unbind")
+    public ResponseJson unbindEmail(@RequestParam("userId") int userId) {
+        if(userService.deleteEmail(userId) > 0)
+            return new ResponseJson(true, ResponseCodeEnums.SUCCESS_OPTION);
+        else
+            return new ResponseJson(false,"-008","解绑失败，请重试");
 
+
+    }
     @ApiOperation(value = "邮箱注册")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "email", value = "电子邮件", required = true, dataType = "String", paramType = "query"),

@@ -26,7 +26,7 @@
     </update>
 
     <select id="queryAllExhibitions" resultType="Exhibition">
-        select *<include refid="selectFields"></include>
+        select <include refid="selectFields"></include>
         from exhibitiondetail
     </select>
 
@@ -43,7 +43,7 @@
          where exhibitiondetail.id = #{id}
     </select>
 
-    <select id="queryExbitionPicById" parameterType="int" resultType="String">
+    <select id="queryExhibitionPicById" parameterType="int" resultType="String">
         select picture from exhibitionpicture where exhibition_id = #{exhibitionId}
     </select>
 
