@@ -8,10 +8,7 @@ import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.AccountServiceImp;
 import cn.edu.hqu.cst.kubang.exhibition.service.impl.ExhibitionServiceImpl;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -100,41 +100,47 @@ public class OrganizerController {
         return map;
     }
 
-    @ApiOperation(value = "展会举办方举办一个展会", notes = "提交展会信息字段")
+    @ApiOperation(value = "展会举办方举办一个展会", notes = "日期格式：yyyy-MM-dd，日期格式错误(-008)")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "举办方账号ID", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "body"),
-            @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "Date", paramType = "body"),
-            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "body"),
-            @ApiImplicitParam(name = "exhibitionHallId", value = "展馆id", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "session", value = "举办届数", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "body"),
-            @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "body"),
-            @ApiImplicitParam(name = "file", value = "展会图标", required = true, dataType = "file", paramType = "form"),
-            @ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true, allowMultiple = true, dataType = "String", paramType = "body")
+            @ApiImplicitParam(name = "userId", value = "举办方账号ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "name", value = "展会名称", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "exhibitionHallId", value = "展馆id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "session", value = "举办届数", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "period", value = "举办周期", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "introduce", value = "展会简介", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "icon", value = "展会图标url", required = true, dataType = "String", paramType = "query"),
+            //@ApiImplicitParam(name = "subAreaList", value = "展会分区信息数据集", required = true, allowMultiple = true, dataType = "String", paramType = "body")
     })
     @PostMapping("/holdExhibition")
     public ResponseJson<Map<String, Object>> holdExhibition(@RequestParam(value = "userId") int userId,
                                                             @RequestParam(value = "name") String name,
-                                                            @RequestParam(value = "startTime") Date startTime,
-                                                            @RequestParam(value = "endTime") Date endTime,
+                                                            @RequestParam(value = "startTime") String startTime,
+                                                            @RequestParam(value = "endTime") String endTime,
                                                             @RequestParam(value = "exhibitionHallId") int exhibitionHallId,
                                                             @RequestParam(value = "session") int session,
                                                             @RequestParam(value = "period") String period,
                                                             @RequestParam(value = "introduce") String introduce,
-                                                            @RequestParam(value = "subAreaList") List<String> subAreaList,
-                                                            @RequestParam(value = "file") MultipartFile file
-    ) throws IOException {
+                                                            @RequestParam(value = "subAreaList") @ApiParam(value = "展会分区信息数据集") List<String> subAreaList,
+                                                            @RequestParam(value = "icon") String pic
+    ) {
 
         String value = null;
 
-        String webPath = null;
-        String pic = null;
         Map<String, String> map = new HashMap<>();
-        webPath = domain + contextPath + "/images/company/";
-        pic = UploadFile.uploadFile(uploadPath, webPath, file);
         if (accountServiceImp.identifyUser(userId) == "承办方") {
-            int exhibitionId = exhibitionService.holdExhibition(userId, name, startTime, endTime, exhibitionHallId, session, period, introduce, pic);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = new Date();
+            Date endDate = new Date();
+            try {
+                startDate = dateFormat.parse(startTime);
+                endDate = dateFormat.parse(endTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return new ResponseJson(false,"-008","日期格式错误");
+            }
+            int exhibitionId = exhibitionService.holdExhibition(userId, name, startDate, endDate, exhibitionHallId, session, period, introduce, pic);
             int result = exhibitionService.addSubareaInfo(subAreaList, exhibitionId);
             if (exhibitionId != 0 && result == 1) {
                 value = "上传展会成功";
