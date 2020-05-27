@@ -252,12 +252,12 @@ public class AdminController {
     }
     @ApiOperation(value = "统一上传展品图片", notes = "未选择文件（021）")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "file", value = "展品图片", required = true,  dataType = "file", paramType = "form"),
-            @ApiImplicitParam(name = "goodsId", value = "展品Id", required = true, dataType = "int", paramType = "query")
+            @ApiImplicitParam(name = "file", value = "展品图片", required = true,  dataType = "file", paramType = "query"),
+            @ApiImplicitParam(name = "type", value = "类型", required = true, dataType = "int", paramType = "path")
     })
-    @RequestMapping(value = "/upload/picture", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload/picture/{type}", method = RequestMethod.POST)
     public ResponseJson<String> uploadPicture(@RequestParam(value = "file") MultipartFile file,
-                                              @RequestParam(value = "flag") int flag)
+                                              @PathVariable(value = "type") int flag)
             throws IOException {
         if (file.isEmpty()) {
             return new ResponseJson(false, ResponseCodeEnums.No_FileSELECT);
