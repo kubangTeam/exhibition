@@ -56,25 +56,28 @@ public class AdvertisementController {
     }
 
 
-
+    //2020/5/27 新增了String 类型的picture字段
     @ApiOperation(value = "修改广告信息（不包括状态）",notes = "")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "body"),
             @ApiImplicitParam(name = "priority", value = "优先级由高到底3 2 1", required = true, dataType = "int", paramType = "body"),
             @ApiImplicitParam(name = "startTime", value = "起始时间", required = true, dataType = "Date", paramType = "body"),
-            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "body")
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "body"),
+            @ApiImplicitParam(name = "picture", value = "图片地址", required = true, dataType = "String", paramType = "body")
     })
     @PostMapping("/updateAds")
     public ResponseJson<Map<String,Object>> updateAds(@RequestParam(value = "id") int id,
                                                       @RequestParam(value = "priority") int priority,
                                                       @RequestParam(value = "startTime") Date startTime,
-                                                      @RequestParam(value = "endTime") Date endTime){
-
+                                                      @RequestParam(value = "endTime") Date endTime,
+                                                      @RequestParam(value = "picture") String picture)
+    {
         System.out.println(priority);
         advertisement.setId(id);
         advertisement.setPriority(priority);
         advertisement.setStartTime(startTime);
         advertisement.setEndTime(endTime);
+        advertisement.setPicture(picture);
         Map<String,Object>map = advertisementService.updateAds(advertisement);
         if(map.get("info")=="修改成功"){
             return new ResponseJson(true, map);

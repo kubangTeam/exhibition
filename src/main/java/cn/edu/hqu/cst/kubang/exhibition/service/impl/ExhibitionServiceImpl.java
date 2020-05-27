@@ -392,6 +392,25 @@ public class ExhibitionServiceImpl implements IExhibitionService{
     public void deleteExhibitionIntoRedis(){
         redisKeyDb.opsForZSet().removeRange("Exhibition", 0, -1);
     }
+
+    @Override
+    public Map<String, Object> companyAttendExhibition(int exhibitionId, int companyId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        exhibitionDao.companyAttendExhibition(exhibitionId,companyId);
+        map.put("info","成功");
+        return map;
+    }
+    @Override
+    public void verifyCompanyApplyByExhibitionId(int companyId, int exhibitionId)
+    {
+        exhibitionDao.verifyCompanyApplyByExhibitionId(companyId,exhibitionId);
+    }
+
+    @Override
+    public List<Company> getUnverifiedCompaniesByExhibitionId(int exhibitionId) {
+        return exhibitionDao.getUnverifiedCompaniesByExhibitionId(exhibitionId);
+    }
+
     @Override
     @Scheduled(cron = "0 0 1 * * ?")
     public boolean updateExhibitionInRedis()throws Exception{

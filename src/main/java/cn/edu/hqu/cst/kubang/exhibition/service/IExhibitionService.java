@@ -1,5 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
@@ -58,6 +59,9 @@ public interface IExhibitionService {
     void addExhibitionIntoRedis(int id);
     void deleteExhibitionIntoRedis();
 
+    Map<String, Object> companyAttendExhibition(int exhibitionId, int companyId);
 
+    void verifyCompanyApplyByExhibitionId(int companyId, int exhibitionId);
 
+    List<Company> getUnverifiedCompaniesByExhibitionId(int exhibitionId);
 }

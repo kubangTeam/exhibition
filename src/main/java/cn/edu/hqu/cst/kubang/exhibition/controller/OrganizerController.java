@@ -2,6 +2,7 @@ package cn.edu.hqu.cst.kubang.exhibition.controller;
 
 import cn.edu.hqu.cst.kubang.exhibition.Utilities.UploadFile;
 import cn.edu.hqu.cst.kubang.exhibition.dao.ExhibitionDao;
+import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
@@ -19,10 +20,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: sunquan
@@ -176,27 +174,19 @@ public class OrganizerController {
             @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
     })
     @PostMapping("/checkCompanyApplyByExhibitionId")
-    public Map<String, String> checkCompanyApplyByExhibitionId(@RequestParam(value = "id") int userId) throws IOException {
-        String value = null;
-        String code = null;
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
+    public ResponseJson<List<Company>> checkCompanyApplyByExhibitionId(@RequestParam(value = "exhibitionId") int exhibitionId) throws IOException {
+        List<Company> result =   exhibitionService.getUnverifiedCompaniesByExhibitionId(exhibitionId);
+        return new ResponseJson(true,result);
     }
 
     @ApiOperation(value = "审核通过参加自己举办的展会的某商家的申请", notes = "传入的参数为商家id，以及展会id")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "举办方ID", required = true, dataType = "int", paramType = "query")
-
+            @ApiImplicitParam(name = "companyId", value = "举办方ID", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "exhibitionId", value = "举办方ID", required = true, dataType = "int", paramType = "query")
     })
     @PostMapping("/verifyCompanyApplyByExhibitionId")
-    public Map<String, String> verifyCompanyApplyByExhibitionId(@RequestParam(value = "id") int userId) throws IOException {
-        String value = null;
-        String code = null;
-        Map<String, String> map = new HashMap<>();
-        map.put("response", value);
-        map.put("code", code);
-        return map;
+    public ResponseJson<String> verifyCompanyApplyByExhibitionId(@RequestParam(value = "companyId") int companyId,@RequestParam("exhibitionId") int exhibitionId) throws IOException {
+        exhibitionService.verifyCompanyApplyByExhibitionId(companyId,exhibitionId);
+       return new ResponseJson(true,"审核成功");
     }
 }

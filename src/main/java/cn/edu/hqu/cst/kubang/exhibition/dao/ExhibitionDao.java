@@ -1,9 +1,6 @@
 package cn.edu.hqu.cst.kubang.exhibition.dao;
 
-import cn.edu.hqu.cst.kubang.exhibition.entity.CompanyJoinExhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
-import cn.edu.hqu.cst.kubang.exhibition.entity.ExhibitionNew;
-import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -56,4 +53,9 @@ public interface ExhibitionDao {
     //By Timor 2020/5/19
     void setOngoingPriority(int exhibitionId, int priority);
 
+    void companyAttendExhibition(int exhibitionId, int companyId);
+
+    void verifyCompanyApplyByExhibitionId(int companyId, int exhibitionId);
+
+    List<Company> getUnverifiedCompaniesByExhibitionId(int exhibitionId);
 }

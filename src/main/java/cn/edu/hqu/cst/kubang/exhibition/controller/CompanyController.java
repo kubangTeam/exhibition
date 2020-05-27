@@ -7,6 +7,7 @@ import cn.edu.hqu.cst.kubang.exhibition.entity.ResponseJson;
 import cn.edu.hqu.cst.kubang.exhibition.pub.enums.ResponseCodeEnums;
 import cn.edu.hqu.cst.kubang.exhibition.service.ElasticsearchService;
 import cn.edu.hqu.cst.kubang.exhibition.service.ICompanyService;
+import cn.edu.hqu.cst.kubang.exhibition.service.IExhibitionService;
 import cn.edu.hqu.cst.kubang.exhibition.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -61,6 +62,9 @@ public class CompanyController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private IExhibitionService exhibitionService;
 
     @Value("${pagehelper.pageSize1}")
     private int pageSize1;//一页显示8个
@@ -198,5 +202,21 @@ public class CompanyController {
         }else{
             return new ResponseJson(true, map);
         }
+    }
+
+    @ApiOperation(value = "商家参加展会")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "companyId", value = "商家id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "exhibitionId", value = "展会id", required = true, dataType = "int", paramType = "query")
+    })
+    @PostMapping("/attendExhibition")
+    public ResponseJson<Map<String,Object>> attendExhibition(@RequestParam("companyId") int companyId,@RequestParam("exhibitionId") int exhibitionId)
+    {
+        Map<String,Object> result =exhibitionService.companyAttendExhibition(exhibitionId,companyId);
+
+        if(result.get("info") == "申请参展失败")
+            return new ResponseJson(false,ResponseCodeEnums.BAD_REQUEST);
+        else
+            return new ResponseJson(true,result);
     }
 }

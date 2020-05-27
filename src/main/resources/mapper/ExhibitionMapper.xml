@@ -13,7 +13,14 @@
         name,status,startTime,endTime,exhibitionHallId,showRoom,acreage,trade,organizer,contractorId,session,
         period,introduction,Tel,picture,subareaId
     </sql>
-
+    <insert id="companyAttendExhibition" parameterType="int">
+        insert into companyjoinexhibition(companyId,exhibitionId)
+        values (#{companyId},#{exhibitionId})
+    </insert>
+    <select id = "getUnverifiedCompaniesByExhibitionId" parameterType="int" resultType="Company">
+        select  companyInformation.id,name,type,address,website,telephone,area,introduction,identifyStatus,codeCertificateType,codeCertificateId,codeCertificatePic,responsiblePersonName,responsiblePersonIdcard,headPicture from companyjoinexhibition,companyInformation
+        where companyjoinexhibition.exhibitionId = #{exhibitionId} and companyjoinexhibition.status = 0 and companyjoinexhibition.companyId = companyInformation.id
+    </select>
     <select id="getExhibitionsByOrganizerID" parameterType="int" resultType="Exhibition">
         select <include refid="selectFields"></include>
         from exhibitiondetail
@@ -24,7 +31,11 @@
         set priority = #{priority}
         where id = #{exhibitionId}
     </update>
-
+    <update id="verifyCompanyApplyByExhibitionId" parameterType="int">
+        update companyjoinexhibition
+        set status = 1
+        where companyId = #{companyId} and exhibitionId = #{exhibitionId}
+    </update>
     <select id="queryAllExhibitions" resultType="Exhibition">
         select <include refid="selectFields"></include>
         from exhibitiondetail
