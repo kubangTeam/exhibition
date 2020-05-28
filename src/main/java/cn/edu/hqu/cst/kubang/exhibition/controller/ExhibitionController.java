@@ -209,8 +209,8 @@ public class ExhibitionController implements Constants {
             return new ResponseJson(true,"005","操作成功");
     }
 
-    @ApiOperation(value = "找到优先级不为0的前四个展会")
-    @GetMapping("/queryFrontOnGoing")
+    @ApiOperation(value = "找到优先级不为0的展会，优先级前4排序")
+    @GetMapping("/querySortOnGoing")
     public ResponseJson<List<Exhibition>> queryFrontOnGoing() throws Exception {
         List<Exhibition> exhibitionList = exhibitionDao.queryExhibitionsByStatus(5);
         //获取当前时间
@@ -248,8 +248,11 @@ public class ExhibitionController implements Constants {
         if(count<4){
             //找到代替的
             int delta = 4-count;
-            for(Exhibition exhibition:exhibitionList) {
+            it = exhibitionList.iterator();
+            while (it.hasNext()) {
+                exhibition = it.next();
                 result.add(exhibition);
+                it.remove();
                 for(int i = 1;i<=4;i++){
                     if(priorityMap.containsKey(i) == false){
                         //设置代替的优先级
@@ -276,6 +279,7 @@ public class ExhibitionController implements Constants {
                 return 1;
             }
         });
+        result.addAll(exhibitionList);
         return new ResponseJson(true,"005","操作成功",result);
     }
 
