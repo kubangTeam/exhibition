@@ -228,7 +228,7 @@ public class GoodsController implements Constants {
         map.put("goodsId", String.valueOf(goodsId));
         return map;
     }
-    @ApiOperation(value = "添加展品信息", notes = "添加失败(-008);根据返回的展品ID上传展品图片")
+    @ApiOperation(value = "添加展品信息(参数方式)", notes = "添加失败(-008);根据返回的展品ID上传展品图片")
     @RequestMapping(value = "/addForAndroid", method = RequestMethod.POST)
     public ResponseJson<Integer> addGoodsFor(@RequestParam(value = "goodsName") String goodsName,
                                            @RequestParam(value = "goodsIntroduce") String goodsIntroduce,
