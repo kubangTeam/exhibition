@@ -59,11 +59,11 @@ public class AdvertisementController {
     //2020/5/27 新增了String 类型的picture字段
     @ApiOperation(value = "修改广告信息（不包括状态）",notes = "")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "priority", value = "优先级由高到底3 2 1", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "startTime", value = "起始时间", required = true, dataType = "Date", paramType = "body"),
-            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "body"),
-            @ApiImplicitParam(name = "picture", value = "图片地址", required = true, dataType = "String", paramType = "body")
+            @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "priority", value = "优先级由高到底3 2 1", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "起始时间", required = true, dataType = "Date", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "query"),
+            @ApiImplicitParam(name = "picture", value = "图片地址", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/updateAds")
     public ResponseJson<Map<String,Object>> updateAds(@RequestParam(value = "id") int id,
@@ -88,8 +88,8 @@ public class AdvertisementController {
 
     @ApiOperation(value = "修改广告状态",notes = "1：已提交 2：通过 3：未通过 4：删除")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "body"),
-            @ApiImplicitParam(name = "status", value = "状态", required = true, dataType = "int", paramType = "body")
+            @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "query"),
+            @ApiImplicitParam(name = "status", value = "状态", required = true, dataType = "int", paramType = "query")
     })
     @PostMapping("/updateAdsStatus")
     public ResponseJson<Map<String,Object>> updateAdsStatus(@RequestParam(value = "id") int id,
