@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class ImageUtil {
     // 图片默认缩放比率
-    private static final double DEFAULT_SCALE = 0.3d;
+    private static final double DEFAULT_SCALE = 0.4d;
 
     // 缩略图后缀
     private static final String SUFFIX = "-thumbnail";
