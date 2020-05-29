@@ -228,6 +228,33 @@ public class GoodsController implements Constants {
         map.put("goodsId", String.valueOf(goodsId));
         return map;
     }
+    @ApiOperation(value = "添加展品信息(参数方式)", notes = "添加失败(-008);根据返回的展品ID上传展品图片")
+    @RequestMapping(value = "/addForAndroid", method = RequestMethod.POST)
+    public ResponseJson<Integer> addGoodsFor(@RequestParam(value = "goodsName") String goodsName,
+                                           @RequestParam(value = "goodsIntroduce") String goodsIntroduce,
+                                            @RequestParam(value = "categoryId") int categoryId,
+                                             @RequestParam(value = "originalPrice") String originalPrice,
+                                                @RequestParam(value = "currentPrice") String currentPrice,
+                                                    @RequestParam(value = "originPlace") String originPlace,
+                                                @RequestParam(value = "website") String website){
+        int goodsId = 0;
+        Goods goods = new Goods();
+        goods.setGoodsName(goodsName);
+        goods.setWebsite(website);
+        goods.setOriginPlace(originalPrice);
+        goods.setCurrentPrice(currentPrice);
+        goods.setGoodsIntroduce(goodsIntroduce);
+        goods.setCategoryId(categoryId);
+        goods.setOriginPlace(originPlace);
+        if (goodsService.addGoods(goods) > 0) {
+            goodsId = goods.getGoodsId();
+            return new ResponseJson(true,goodsId);
+
+
+        } else {
+            return new ResponseJson(false,"-008","添加失败");
+        }
+    }
 
     //上传展品图片
     @ApiOperation(value = "单张上传展品图片（已知展品Id）", notes = "未选择文件（021）上传成功（005）")

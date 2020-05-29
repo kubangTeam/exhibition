@@ -265,15 +265,15 @@ public class AdminController {
             String url = null, webPath = domain + contextPath;
             switch (flag){
                 case 1:
-                    webPath += "/images/organizer";
+                    webPath += "/images/organizer/";
                     url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
                     break;
                 case 2:
-                    webPath += "/images/company";
+                    webPath += "/images/company/";
                     url = UploadFile.uploadFile(uploadPathOrganizer, webPath, file);
                     break;
                 case 3:
-                    webPath += "/images/goods";
+                    webPath += "/images/goods/";
                     url = UploadFile.uploadFile(uploadPathGoods, webPath, file);
                     break;
             }

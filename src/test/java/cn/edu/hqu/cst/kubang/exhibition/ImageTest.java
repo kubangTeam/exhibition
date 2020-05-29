@@ -21,8 +21,7 @@ import java.util.List;
 public class ImageTest {
     @Test
     public void testGenerateThumbnail2Directory() throws IOException {
-        String path = "D:\\SunChonggao\\Pictures\\ScreenCapture";
-        String file = ImageUtil.generateThumbnail2Directory(path,"capture_20190813111340763.bmp");
-        System.out.println(file);
+        String path = "D:\\Programming\\CouponProject\\轮播图";
+        ImageUtil.generateDirectoryThumbnail(path);
     }
 }

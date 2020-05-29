@@ -1,11 +1,13 @@
 package cn.edu.hqu.cst.kubang.exhibition.service;
 
+import cn.edu.hqu.cst.kubang.exhibition.dao.GoodsDao;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.CompanyRepository;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.ExhibitionRepository;
 import cn.edu.hqu.cst.kubang.exhibition.dao.elasticsearch.GoodsRepository;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Company;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Exhibition;
 import cn.edu.hqu.cst.kubang.exhibition.entity.Goods;
+import cn.edu.hqu.cst.kubang.exhibition.entity.GoodsPic;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,15 +48,19 @@ public class ElasticsearchService {
 
     private ElasticsearchTemplate elasticTemplate;
 
+    private GoodsDao goodsDao;
+
     @Autowired
     public ElasticsearchService(GoodsRepository goodsRepository,
                                 ExhibitionRepository exhibitionRepository,
                                 CompanyRepository companyRepository,
-                                ElasticsearchTemplate elasticTemplate) {
+                                ElasticsearchTemplate elasticTemplate,
+                                GoodsDao goodsDao) {
         this.goodsRepository = goodsRepository;
         this.exhibitionRepository = exhibitionRepository;
         this.companyRepository = companyRepository;
         this.elasticTemplate = elasticTemplate;
+        this.goodsDao = goodsDao;
     }
 
     public void saveGoods(Goods goods) {
@@ -208,6 +215,16 @@ public class ElasticsearchService {
                     map.put("companyName", companyName);
                     String headPicture = hit.getSourceAsMap().get("headPicture").toString();
                     map.put("headPicture", headPicture);
+                    List<Goods> goodsList= goodsDao.selectGoodsByCompanyId(Integer.valueOf(companyId),2);
+                    List<String> images = new ArrayList<>();
+                    int i = 0;
+                    for(Goods goods : goodsList) {
+                        GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+                        String image = goodsPic.getPic();
+                        images.add(image);
+                        if(i++ >= 2) break;
+                    }
+                    map.put("images", images);
                     list.add(map);
                     /*Company company = new Company();
                     String id = hit.getSourceAsMap().get("id").toString();
