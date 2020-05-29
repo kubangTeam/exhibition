@@ -233,6 +233,7 @@ public class GoodsController implements Constants {
     public ResponseJson<Integer> addGoodsFor(@RequestParam(value = "goodsName") String goodsName,
                                            @RequestParam(value = "goodsIntroduce") String goodsIntroduce,
                                             @RequestParam(value = "categoryId") int categoryId,
+                                             @RequestParam(value = "companyId") int companyId,
                                              @RequestParam(value = "originalPrice") String originalPrice,
                                                 @RequestParam(value = "currentPrice") String currentPrice,
                                                     @RequestParam(value = "originPlace") String originPlace,
@@ -245,6 +246,7 @@ public class GoodsController implements Constants {
         goods.setCurrentPrice(currentPrice);
         goods.setGoodsIntroduce(goodsIntroduce);
         goods.setCategoryId(categoryId);
+        goods.setCompanyId(companyId);
         goods.setOriginPlace(originPlace);
         if (goodsService.addGoods(goods) > 0) {
             goodsId = goods.getGoodsId();

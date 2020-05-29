@@ -24,7 +24,7 @@ public class UploadFile {
         file.transferTo(dest);
         //图片大于100k 压缩图片
         if(dest.length() > 102400)
-           fileName = ImageUtil.generateThumbnail2Directory(localPath,fileName);//fileName加了后缀
+           fileName = ImageUtil.generateSingleThumbnail2Directory(localPath,fileName);//fileName加了后缀
         //Web访问路径
         String url = webPath + fileName;
         return url;

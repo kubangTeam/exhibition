@@ -26,7 +26,7 @@ public class ImageUtil {
      * @param file 要生成缩略图的文件
      * @throws IOException
      */
-    public static String generateThumbnail2Directory(String pathname, String fileName) throws IOException {
+    public static String generateSingleThumbnail2Directory(String pathname, String fileName) throws IOException {
         String file = pathname + "\\" + fileName;
         Thumbnails.of(file)
                 // 图片缩放率，不能和size()一起使用
