@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -61,22 +64,32 @@ public class AdvertisementController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "广告id", required = true, dataType = "int", paramType = "query"),
             @ApiImplicitParam(name = "priority", value = "优先级由高到底3 2 1", required = true, dataType = "int", paramType = "query"),
-            @ApiImplicitParam(name = "startTime", value = "起始时间", required = true, dataType = "Date", paramType = "query"),
-            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "Date", paramType = "query"),
+            @ApiImplicitParam(name = "startTime", value = "起始时间", required = true, dataType = "String", paramType = "query"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = true, dataType = "String", paramType = "query"),
             @ApiImplicitParam(name = "picture", value = "图片地址", required = true, dataType = "String", paramType = "query")
     })
     @PostMapping("/updateAds")
     public ResponseJson<Map<String,Object>> updateAds(@RequestParam(value = "id") int id,
                                                       @RequestParam(value = "priority") int priority,
-                                                      @RequestParam(value = "startTime") Date startTime,
-                                                      @RequestParam(value = "endTime") Date endTime,
+                                                      @RequestParam(value = "startTime") String startTime,
+                                                      @RequestParam(value = "endTime") String endTime,
                                                       @RequestParam(value = "picture") String picture)
     {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = new Date();
+        Date endDate = new Date();
+        try {
+            startDate = dateFormat.parse(startTime);
+            endDate = dateFormat.parse(endTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new ResponseJson(false,"-008","日期格式错误");
+        }
         System.out.println(priority);
         advertisement.setId(id);
         advertisement.setPriority(priority);
-        advertisement.setStartTime(startTime);
-        advertisement.setEndTime(endTime);
+        advertisement.setStartTime(startDate);
+        advertisement.setEndTime(endDate);
         advertisement.setPicture(picture);
         Map<String,Object>map = advertisementService.updateAds(advertisement);
         if(map.get("info")=="修改成功"){
