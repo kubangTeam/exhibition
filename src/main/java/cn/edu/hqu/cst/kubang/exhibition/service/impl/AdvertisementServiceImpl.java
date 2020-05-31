@@ -143,11 +143,13 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                     //如果过期了，再找一个
                     it.remove();
                     Advertisement ad =  findReplacement(it);
-                    //修改ad的 优先级为advertisement的优先级
-                    //修改优先级为advertisement的优先级的优先级为0
-                    advertisementDao.updateAds(ad.getId(),ad.getStartTime(),ad.getEndTime(),ad.getPicture(),advertisement.getPriority());
+                    if(ad != null){
+                        //修改ad的 优先级为advertisement的优先级
+                        //修改优先级为advertisement的优先级的优先级为0
+                        advertisementDao.updateAds(ad.getId(),ad.getStartTime(),ad.getEndTime(),ad.getPicture(),advertisement.getPriority());
+                        result.add(ad);
+                    }
                     advertisementDao.updateAds(advertisement.getId(),advertisement.getStartTime(),advertisement.getEndTime(),advertisement.getPicture(),0);
-                    result.add(ad);
                 }
                 else{
                     result.add(advertisement);
