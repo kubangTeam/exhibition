@@ -98,7 +98,6 @@ public class GoodsController implements Constants {
     })
     @ResponseBody
     public List<Goods> recommendGoodsByCategoryId(int categoryId) {
-
         List<Goods> list = goodsService.getRandomGoods(4,categoryId);
         return list;
 

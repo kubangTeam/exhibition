@@ -26,10 +26,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author SunChonggao
@@ -216,13 +213,15 @@ public class ElasticsearchService {
                     String headPicture = hit.getSourceAsMap().get("headPicture").toString();
                     map.put("headPicture", headPicture);
                     List<Goods> goodsList= goodsDao.selectGoodsByCompanyId(Integer.valueOf(companyId),2);
-                    List<String> images = new ArrayList<>();
+                    List<String> images = Arrays.asList("0","0","0");
                     int i = 0;
                     for(Goods goods : goodsList) {
                         GoodsPic goodsPic = goodsDao.selectGoodsPicByGoodsId(goods.getGoodsId()).get(0);
+                        if(goodsPic == null || i > 2)
+                            break;
                         String image = goodsPic.getPic();
-                        images.add(image);
-                        if(i++ >= 2) break;
+                        images.set(i, image);
+                        i++;
                     }
                     map.put("images", images);
                     list.add(map);

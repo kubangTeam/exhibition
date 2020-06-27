@@ -13,7 +13,7 @@ public class UploadFile {
         String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 获取后缀名
         //为了避免用户传递的图像文件名称相同，需要重新给上传的图像文件命名
         fileName = UUID.randomUUID() + suffixName;
-        String path = localPath + "/" + fileName;
+        String path = localPath + fileName;
         // 创建文件实例
         File dest = new File(path);
         // 如果文件目录不存在，创建目录

@@ -15,10 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -107,13 +104,15 @@ public class ExhibitionServiceTests {
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//残余尾页
 //        System.out.println(exhibitionService.queryOngoingExhibitionInfo());//异常页
         //System.out.println(exhibitionService.queryOnGoing().size());
-        exhibitionService.deleteExhibitionIntoRedis();
+        /*exhibitionService.deleteExhibitionIntoRedis();
         List<Exhibition> list = exhibitionService.queryOnGoing();
         for(Exhibition exhibition : list){
             exhibitionService.addExhibitionIntoRedis(exhibition.getId());
             System.out.println(exhibition.getId());
         }
-        System.out.println(exhibitionService.getExhibitionIdInRedis());
+        System.out.println(exhibitionService.getExhibitionIdInRedis());*/
+        System.out.println(exhibitionService.queryReadyToStartExhibitionInfo(1));
+
     }
 
     @Test

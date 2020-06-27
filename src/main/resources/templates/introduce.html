@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="full-height" lang="en-US" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>酷邦网首页</title>
+    <meta name="description" content="酷邦网，kubang，coupon580"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/mdb.min.css}" rel="stylesheet">
+    <link th:href="@{/stylesheets/main.css}" rel="stylesheet">
+      <script type = "text/javascript">
+          url = window.location.href
+          if(url.indexOf("https") < 0) {
+              //url = url.replace("http", "https");
+              window.location.replace(url);
+          }
+    </script>
+      <style>
+          .parent{
+              width: 500px;
+              height: 200px;
+              position: relative;
+              background: #cccccc;
+          }
+          .child{
+              width: 1200px;
+              height: 500px;
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%);
+          }
+      </style>
+  </head>
+  <body id="top" style="min-width:600px">
+    <header>
+
+      <!-- Navbar-->
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar" id="navbar">
+        <div class="container"><a class="navbar-brand" href="#"><strong>酷邦网</strong></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav ml-auto">
+              <a class="nav-link active" href="#guanggao">招商引资</a>
+             <a class="nav-link active" href="#app">app介绍</a>
+              <a class="nav-link" href="#zhanhui">展会咨询</a>
+              <a class="nav-link active" href="#about">关于我们</a>
+            <a class="btn btn-default btn-rounded my-0" href="">立即下载</a>
+            </ul>
+        </div>
+        </div>
+      </nav>
+      <!-- Intro Section-->
+        <section class="view" id="intro">
+       <div class="full-bg-img align-items-center" style="margin-top:1%">
+           <div>
+           <div class="h1 h1-responsive text-center mt-5" style="color:#FFFFFF; font-size:40px">酷&nbsp邦</div>
+           </div>
+           <div class="row" style="margin-top:3%">
+               <div class="col-md-2"></div>
+               <div class="container py5">
+                   <iframe height=498 width=510 src='https://player.youku.com/embed/XNDcyODQ2OTAxNg==' frameborder=0></iframe>
+                   <iframe height=498 width=510 src='https://player.youku.com/embed/XNDcyODQ3MDI0OA==' frameborder=0 style="margin-left:3%"></iframe>
+               </div>
+               <div class="col-md-2"></div>
+           </div>
+       </div>
+     </section>-->
+    </header>
+    <div id="container"> 
+        <div class="wow fadeIn">
+            <h2 class="h1 h1-responsive text-center my-5">酷邦</h2>
+            <div class="row">
+                <div class="col-md-1"></div>
+            <p class="px-5 mb-5 pb-3 lead text-center blue-grey-text col-md-10" style="margin-top:5%">
+                酷邦助手是一款掌上互联网展会app，
+                用于商家推广商品，展示产品信息。使用户能便捷地查询商品，获取感兴趣的产品信息。我们致力于用互联网展会形式提升商家的知名度，产品的曝光度，利用大数据技术对用户进行个性推荐，实现高效推广
+            </p>
+                <div class="col-md-1"></div>
+          </div>
+        </div>
+        <section id="guanggao" style="">
+          <div class="container py-5">
+           <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <div class="wow fadeInUp">
+                <div class="row d-flex justify-content-center">
+                  <div class="text-center pt-3">
+                      <div class="carousel slide carousel-fade text-center" id="carousel-ma" data-ride="carousel">
+                          <div class="carousel-inner text-center pb-5" role="listbox">
+
+                              <div class="carousel-item active"><img class="img-fluid z-depth-2" th:src="@{/img/EducationAds.png}" alt="教育" style="width:80%;height:80%"></div>
+                              <div class="carousel-item"><img class="img-fluid z-depth-2" th:src="@{/img/AgricultureAds.png}" alt="农业" style="width:80%;height:80%"></div>
+                              <div class="carousel-item"><img class="img-fluid z-depth-2" th:src="@{/img/MakeupAds.png}" alt="美容" style="width:80%;height:80%"></div>
+                              <div class="carousel-item"><img class="img-fluid z-depth-2" th:src="@{/img/AthleteAds.png}" alt="运动" style="width:80%;height:80%"></div>
+
+                          </div>
+
+                          <a class="carousel-control-prev justify-content-start" href="#carousel-ma" role="button" data-slide="prev" style="margin-left:-20px">
+                              <span aria-hidden="true"><i class="fa fa-arrow-left indigo-text "></i></span>
+                              <span class="sr-only text-blue">Previous</span>
+                          </a>
+
+                          <a class="carousel-control-next justify-content-end" href="#carousel-ma" role="button" data-slide="next" style="margin-right:-20px;z-index: 999999">
+                              <span aria-hidden="true"><i class="fa fa-arrow-right indigo-text "></i></span>
+                              <span class="sr-only text-blue">Next</span>
+                          </a>-->
+
+                      </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                  <div class="wow fadeIn" style="padding-top: 20px;">
+                      <p> &nbsp</p>
+                      <p></p>
+                <h2 class="h1 h1-responsive text-center" style="margin-top:-10%">广告招商</h2>
+                <p class="px-5 mb-5 lead text-left blue-grey-text mt-3">需要展示商品请主动联系我们，商家注册后在预留展厅拍照上传商品信息，我们会定时安排会展
+                    我们会在热门推荐优先展示您的商品信息，在猜你喜欢模块向感兴趣的用户进行推荐
+                    如果有更大需求可以为您设置专属展厅，欢迎洽谈
+                </p>
+                      <div class="row col-12 ml-1 ">
+                          <div class="col-6"></div>
+                          <div class="text-right col-6" style="cursor:pointer"><a href="#about" style="font-weight:600;">点击联系我们>></a></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-5 grey lighten-4" id="app">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="wow fadeIn">
+                  <h2 class="h1 h1-responsive text-left my-5"> App介绍</h2>
+                  <span>
+                      <p class="lead blue-grey-text text-left">
+                         <strong>首页</strong> 
+                         &nbsp;   分为热门推荐和个性推荐，展示平台内的热门信息,和针对用户的个性推荐<br></p>
+                      <p class="lead blue-grey-text text-left" >
+                          <strong>分类</strong> 
+                          &nbsp;&nbsp;      目前主要有5个板块：教育展会,农业展会,运动展会,美妆展会,其他，未来可能会增添更多版块<br></p>
+                      <p class="lead blue-grey-text text-left" >
+                          <strong> 热门推荐与智能搜索</strong>
+                          &nbsp;   顶部搜索栏设置了历史搜索和大数据高频搜索词，方便您快速检索商品</p>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="wow fadeInUp">
+                  <div class="pt-5">
+                    <div class="carousel slide carousel-fade text-center" id="carousel-screenshot" data-ride="carousel"> 
+                      <div class="carousel-inner text-center pb-5" role="listbox">
+
+                        <div class="carousel-item active"><img class="img-fluid z-depth-2" th:src="@{/img/sgream (1).jpg}" alt="screenshot image" style="height:450px; width:auto;"/></div>
+                        <div class="carousel-item"><img class="img-fluid z-depth-2" th:src="@{/img/sgream (2).jpg}" alt="screenshot image-1" style="height:450px; width:auto;"/></div>
+                        <div class="carousel-item"><img class="img-fluid z-depth-2" th:src="@{/img/sgream (3).jpg}" alt="screenshot image-2" style="height:450px; width:auto;"/></div>
+
+                      </div>
+
+                      <a class="carousel-control-prev" href="#carousel-screenshot" role="button" data-slide="prev">
+                        <span aria-hidden="true"><i class="fa fa-arrow-left indigo-text "></i></span>
+                        <span class="sr-only text-blue">Previous</span>
+                      </a>
+
+                      <a class="carousel-control-next" href="#carousel-screenshot" role="button" data-slide="next">
+                        <span aria-hidden="true"><i class="fa fa-arrow-right indigo-text "></i></span>
+                        <span class="sr-only">Next</span>
+                      </a>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-5" id="zhanhui">
+            <div class="container">
+              <div class="wow fadeIn">
+                <h2 class="h1 h1-responsive text-center my-5">展会咨询</h2>
+                <p class="px-5 mb-5 pb-3 lead text-center blue-grey-text">
+                    目前有教育展会，农业展会，美妆展会，运动展会和预留展会模块,随着后续发展会有更多会展，请持续关注我们
+                </p>
+              </div>
+              <div class="row mb-lg-4 text-center text-md-left">
+                <div class="col-lg-6 col-md-12 mb-5 wow fadeInLeft" data-wow-delay=".3s">
+                  <div class="col-md-6 float-left"><img class="img-fluid rounded z-depth-1 mb-3" th:src="@{/img/edu.jpg}" alt="edu"/></div>
+                  <div class="col-md-6 float-right">
+                    <div class="h4">教育展会</div>
+                    <h6 class="h6 blue-grey-text mb-3">Education Exhibition</h6>
+                    <p class="grey-text">教育展会涵盖了中小学语文、数学、英语等在线课程以及编程，舞蹈，摄影，击剑，攀岩，书画等特色教育课程</p><a class="indigo-text" href="#" target="_blank"><span class="ml-1">点击进入展厅</span></a>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-5 wow fadeInRight" data-wow-delay=".3s">
+                  <div class="col-md-6 float-left"><img class="img-fluid rounded z-depth-1 mb-3" th:src="@{/img/agr.jpg}" alt="arg"/></div>
+                  <div class="col-md-6 float-right">
+                    <div class="h4">农业展会</div>
+                    <h6 class="h6 blue-grey-text mb-3">Agricultural Exhibition</h6>
+                    <p class="grey-text">农业展会主要以各地的特色农产品为主。在这里，您可以搜索您所感兴趣的相关信息，也可以发布您想要进行宣传交流的相关产品信息</p><a class="indigo-text" href="#" target="_blank"><span class="ml-1">点击进入展厅</span></a>
+                  </div>
+                </div>
+              </div>
+              <div class="row text-center text-md-left">
+                <div class="col-lg-6 col-md-12 mb-5 wow fadeInLeft" data-wow-delay=".3s">
+                  <div class="col-md-6 float-left"><img class="img-fluid rounded z-depth-1 mb-3" th:src="@{/img/mak_sp.jpg}" alt="mak_sp"/></div>
+                  <div class="col-md-6 float-right">
+                    <div class="h4">美妆运动展会</div>
+                    <h6 class="h6 blue-grey-text mb-3">Beauty & sports</h6>
+                    <p class="grey-text">美妆展会和运动展会目前所展示的信息来自于各大电商平台的优惠券，您可以进行搜索和领取，并在相应的平台进行使用</p><a class="indigo-text" href="#" target="_blank"><span class="ml-1">点击进入展厅</span></a>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-5 wow fadeInRight" data-wow-delay=".3s">
+                  <div class="col-md-6 float-left"><img class="img-fluid rounded z-depth-1 mb-3" th:src="@{/img/per.jpg}" alt="pre"/></div>
+                  <div class="col-md-6 float-right">
+                    <div class="h4">预留展位</div>
+                    <h6 class="h6 blue-grey-text mb-3">Reserved space</h6>
+                    <p class="grey-text">即将发布展会为预留空位，我们将在这里做最新的展会预告和相关的产品宣传，您所有的发布信息经过审核后都会在这里进行展示，预留展厅里会预告即将参展的商品</p><a class="indigo-text" href="#" target="_blank"><span class="ml-1">点击进入展厅</span></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        
+
+          <section id="about" class="text-center text-white" style=" height: 570px; background:url('/img/bg.jpg')no-repeat center center;
+          background-size: cover;display:block">
+            <div class=" py-5">
+              <div class="container my-5">
+                  <div class="wow fadeInDown"><i class="fa fa-cloud-download fa-5x "></i></div>
+                  <div class="wow fadeIn">
+                    <!--<h3 class="h1 h1-responsive pt-5 pb-2 text-center">立即下载</h3>-->
+                    <h3> &nbsp;</h3>
+                    
+                  </div>
+                  <div class="container">
+                      <div class="row">
+                        <div class="col-md-8">
+                          <div style="width: 30px;">
+                          </div>
+                              <div style="width: 185px; text-align: center;float: left;" >
+		<!--<img style="width: 170px;height: 170px;" src="https://www.coupon580.com/images/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.jpg" alt="wechat_code">-->
+                                <!--<p style="font-size: 18px"><B>WeChat Sub</B></p>-->
+                             </div>
+                             <div style="width: 185px;text-align: center;float: left;" >
+                                <!--<img style="width: 170px;height: 170px;" src="https://www.coupon580.com/img/AndriodDownloadPic.png" alt="app_code">-->
+                                <!--<p style="font-size: 18px"><B>Android App</B></p>-->
+
+                              </div>
+                              <div style="width: 185px;text-align: center;float: left;" >
+                                <!--<img style="width: 170px;height: 170px;" src="https://www.coupon580.com/img/erweima.png" alt="ios_code">-->
+                                  <!--<p style="font-size: 18px"><B>IOS Store</B></p>-->
+                              </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="pfh-text">
+                                <br>
+                                <p class="text-left">联系我们:QQ号 1972718348</p>
+                                <p class="text-left">微信公众号：酷邦助手</p>
+                                <p class="text-left">官方邮箱：1972718348@qq.com</p>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+                
+              </div>
+            </div>
+          </section>
+ 
+
+
+      
+    </div>
+          
+
+    <footer class="page-footer special-color-dark">
+        <div class="container py-4">
+          
+          <div class="container-fluid text-center">
+            <p class="mb-0">版权所有 &copy; <a href="https://www.coupon580.com">2019 Coupon580</a>&nbsp&nbsp华大酷邦团队&nbsp&nbsp&nbsp保留一切权利&nbsp&nbsp&nbsp<a href="http://beian.miit.gov.cn/state/outPortal/loginPortal.action">闽ICP备18016960号-2&nbsp<img src="./img/police.png" style="width:15px;height:15px"></a></p>
+          </div>
+        </div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script type="text/javascript" src="@{/js/popper.min.js"}></script>
+    <script type="text/javascript" src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="@{/js/mdb.min.js}"></script>
+    <script>new WOW().init();</script>
+
+    <script>
+        //-------------------------------------------轮播图---------------------------------------
+        $('#carousel-ma').carousel({
+            interval: 3000,
+        })
+    </script>
+  </body>
+</html>
